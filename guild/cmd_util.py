@@ -2,6 +2,8 @@ import argparse
 import re
 import textwrap
 
+import guild
+
 __CONSOLE_WIDTH = None
 
 def add_parser(subparsers, cmd, help, description):
@@ -32,3 +34,12 @@ def console_width():
         _, cols = os.popen('stty size', 'r').read().split()
         __CONSOLE_WIDTH = int(cols)
     return __CONSOLE_WIDTH
+
+def add_project_arguments(parser, flag_support=False):
+    pass
+
+def project_for_args(args):
+    return guild.project.Project()
+
+def model_or_resource_for_args(args, project):
+    return None

@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 import guild
 
@@ -25,3 +26,6 @@ def add_command(module, subparsers):
 
 def handle_args(args):
     args.func(args)
+
+def error(fmt, args=()):
+    sys.stderr.write(fmt % args)
