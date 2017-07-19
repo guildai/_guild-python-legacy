@@ -1,3 +1,6 @@
 #!/usr/bin/env python
 
-print("Hello Guild!")
+import guild
+
+guild.devmode.maybe_set_git_commit()
+guild.cli.main()
