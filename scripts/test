@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+
+import doctest
+import os
+import sys
+
+def test(name):
+    sys.stdout.write(name + ":")
+    doctest.testfile(testfile_path(name))
+    sys.stdout.write(" ok\n")
+
+def testfile_path(name):
+    return os.path.join(tests_dir(), name + ".rst")
+
+def tests_dir():
+    return "../tests"
+
+test("hello")
