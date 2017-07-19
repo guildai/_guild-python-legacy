@@ -1,18 +1,55 @@
 #!/usr/bin/env python
 
+import argparse
 import doctest
 import os
+import pprint
 import sys
+
+ALL_TESTS = [
+    "hello",
+    "project"
+]
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("tests", nargs="*", help="tests to run")
+    args = p.parse_args()
+    tests = args.tests or ALL_TESTS
+    errors = False
+    for name in tests:
+        success = test(name)
+        errors = errors or not success
+    if errors:
+        sys.exit(1)
 
 def test(name):
     sys.stdout.write(name + ":")
-    doctest.testfile(testfile_path(name))
-    sys.stdout.write(" ok\n")
+    failures, tests = doctest.testfile(
+        testfile_path(name),
+        globs=test_globals(),
+        optionflags=(
+            doctest.REPORT_ONLY_FIRST_FAILURE |
+            doctest.ELLIPSIS))
+    if not failures:
+        sys.stdout.write(" ok\n")
+    return failures == 0
+
+def test_globals():
+    return {
+        "pprint": pprint.pprint,
+        "sample": sample,
+        "samples_dir": samples_dir
+    }
+
+def sample(name):
+    return os.path.join(samples_dir(), name)
+
+def samples_dir():
+    return os.path.join("tests", "samples")
 
 def testfile_path(name):
-    return os.path.join(tests_dir(), name + ".rst")
+    return os.path.join("../tests", name + ".rst")
 
-def tests_dir():
-    return "../tests"
-
-test("hello")
+if __name__ == "__main__":
+    main()
