@@ -41,7 +41,8 @@ def add_project_arguments(parser, flag_support=False):
         "-P", "--project",
         help="project directory (default is current directory)",
         metavar="DIR",
-        dest="project_dir")
+        dest="project_dir",
+        default=".")
     if flag_support:
         add_flag_arguments(parser)
 
@@ -49,8 +50,7 @@ def add_flag_arguments(parser):
     parser.add_argument(
         "-p", "--profile",
         help="use alternate flags profile",
-        metavar="NAME",
-        default=".")
+        metavar="NAME")
     parser.add_argument(
         "-F", "--flag",
         help="define a project flag; may be used multiple times",
@@ -96,4 +96,35 @@ def project_dir_for_args(args):
     return args.project_dir or "."
 
 def model_or_resource_for_args(args, project):
-    return None
+    if args.model_or_resource:
+        section = model_or_resource(args.model_or_resource, project)
+        if section:
+            return section
+        no_such_model_or_resource_error(args.model_or_resource)
+    model = default_model(project)
+    if model:
+        return model
+    resource = default_resource(project)
+    if resource:
+        return resource
+    no_default_model_or_resource_error()
+
+def model_or_resource(name, project):
+    model = project.section("models", name)
+    if model:
+        return model
+    return project.section("resources", name)
+
+def default_model(project):
+    return project.default_section("models")
+
+def default_resource(project):
+    return project.default_section("resources")
+
+def no_such_model_or_resource_error(name):
+    guild.cli.error(
+        "There are no models or resources with the name '%s' in the project"
+        % name)
+
+def no_default_model_or_resource_error():
+    guild.cli.error("There are no default models or resources in the project")

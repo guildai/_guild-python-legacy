@@ -4,20 +4,18 @@ def add_parser(subparsers):
     p = guild.cmd_util.add_parser(
         subparsers,
         "prepare", "prepare model for training",
-        """Prepare MODEL for training if specified, otherwise prepares the
-        default model. This line goes on and on and on.
+        """Prepare MODEL_OR_RESOURCE for training if specified, otherwise
+        prepares the model designed as 'default' in the project.
 
-        The default model is the first model defined in the project config.
-
-        Models are prepared by their configured 'prepare' operation, if
-        specified. If the specified model doesn't define a prepare operation,
-        the command exits with an error message.
+        Models and resources are prepared by their configured 'prepare'
+        operation, if specified. If the specified model or resource doesn't
+        define a prepare operation, the command exits with an error message.
         """)
     p.add_argument(
-        "model",
-        metavar="MODEL",
+        "model_or_resource",
+        metavar="MODEL_OR_RESOURCE",
         nargs="?",
-        help="model to prepare")
+        help="model or resource to prepare")
     guild.cmd_util.add_project_arguments(p, flag_support=True)
     p.add_argument(
         "--preview",
@@ -36,11 +34,11 @@ def prepare_op(args):
     project = guild.cmd_util.project_for_args(args)
     section = guild.cmd_util.model_or_resource_for_args(args, project)
     spec = section.attr("prepare")
-    return prepare_op_for_spec(spec, model, project)
+    return prepare_op_for_spec(spec, section)
 
-def prepare_op_for_spec(spec, section, project):
+def prepare_op_for_spec(spec, section):
     if spec is not None:
-        return guild.prepare_op.from_spec(spec, section, project)
+        return guild.prepare_op.from_spec(spec, section)
     else:
         not_preparable_error(section)
 
