@@ -7,6 +7,7 @@ import pprint
 import sys
 
 ALL_TESTS = [
+    "cmd-util,"
     "hello",
     "project"
 ]
@@ -30,7 +31,8 @@ def test(name):
         globs=test_globals(),
         optionflags=(
             doctest.REPORT_ONLY_FIRST_FAILURE |
-            doctest.ELLIPSIS))
+            doctest.ELLIPSIS |
+            doctest.IGNORE_EXCEPTION_DETAIL))
     if not failures:
         sys.stdout.write(" ok\n")
     return failures == 0

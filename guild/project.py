@@ -41,8 +41,8 @@ class Section(object):
     def attr(self, key):
         return self.data.get(key)
 
-def from_dir(path):
-    return from_file(os.path.join(path, "guild.yml"))
+def from_dir(path, name="guild.yml"):
+    return from_file(os.path.join(path, name))
 
 def from_file(path):
     with open(path, "r") as f:

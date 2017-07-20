@@ -47,8 +47,8 @@ def prepare_op_for_spec(spec, section, project):
 def not_preparable_error(section):
     guild.cli.error(
         "section%s does not support a prepare operation\n"
-        "Try 'guild prepare --help' for more information.",
-        maybe_section_name(section))
+        "Try 'guild prepare --help' for more information."
+        % maybe_section_name(section))
 
 def maybe_section_name(section):
     if section.name:

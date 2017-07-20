@@ -19,6 +19,12 @@ They can also be loaded from a directory, provided the project name is
 >>> p_from_dir.path
 'tests/samples/guild.yml'
 
+An IOError is raised if the project file doesn't exist:
+
+>>> guild.project.from_file("does_not_exist")
+Traceback (most recent call last):
+IOError: [Errno 2] No such file or directory: 'does_not_exist'
+
 We'll use the project reference `p` for the remaining tests.
 
 >>> p = p_from_file

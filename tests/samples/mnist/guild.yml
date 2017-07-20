@@ -1,0 +1,15 @@
+name: MNIST
+
+flags:
+  datadir: ./data
+  rundir: $RUNDIR
+  batch_size: 100
+  epochs: 10
+
+models:
+  intro:
+    train: intro
+    default: true
+    prepare: intro --prepare
+    train_requires: ./data
+    evaluate: intro --test
