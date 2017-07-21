@@ -7,7 +7,7 @@ import pprint
 import sys
 
 ALL_TESTS = [
-    "cmd-util,"
+    "cmd-support",
     "hello",
     "project"
 ]

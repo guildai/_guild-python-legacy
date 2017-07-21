@@ -9,5 +9,6 @@ import guild.op_support
 import guild.prepare_cmd
 import guild.project
 import guild.train_cmd
+import guild.util
 
 VERSION = None
