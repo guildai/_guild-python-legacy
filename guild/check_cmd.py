@@ -11,7 +11,7 @@ def add_parser(subparsers):
     p.description = "Check Guild setup."
     p.set_defaults(func=main)
 
-def main(args):
+def main(_args):
     print_guild_info()
     print_python_info()
     print_tensorflow_info()

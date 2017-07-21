@@ -26,12 +26,11 @@ def format_par(par):
     return "\n".join(lines)
 
 def strip_repeating_ws(s):
-    return re.sub("\s+", " ", s)
+    return re.sub(r"\s+", " ", s)
 
 def console_width():
     global __CONSOLE_WIDTH
     if __CONSOLE_WIDTH is None:
-        import os
         _, cols = os.popen('stty size', 'r').read().split()
         __CONSOLE_WIDTH = int(cols)
     return __CONSOLE_WIDTH

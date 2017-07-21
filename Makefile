@@ -7,3 +7,6 @@ install:
 
 check:
 	scripts/test
+
+lint:
+	pylint guild

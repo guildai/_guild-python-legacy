@@ -7,6 +7,7 @@ import guild
 class Exit(Exception):
 
     def __init__(self, msg, exit_status):
+        super(Exit, self).__init__()
         self.msg = msg
         self.exit_status = exit_status
 
@@ -24,6 +25,7 @@ def main():
 def print_error_and_exit(msg, exit_status):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
+    # pylint: disable=protected-access
     os._exit(exit_status)
 
 def parser():

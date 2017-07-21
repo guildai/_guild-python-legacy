@@ -26,8 +26,7 @@ class Project(object):
 
     def default_section(self, heading):
         for s in self.sections(heading):
-            # Explicitly check for True rather than truthy
-            if s.attr("default") == True:
+            if s.attr("default") is True:
                 return s
         return None
 

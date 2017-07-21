@@ -1,7 +1,7 @@
 import guild
 
 def add_parser(subparsers):
-    p = guild.cmd_util.add_parser(
+    p = guild.cmd_support.add_parser(
         subparsers,
         "prepare", "prepare model for training",
         """Prepare MODEL_OR_RESOURCE for training if specified, otherwise
@@ -16,7 +16,7 @@ def add_parser(subparsers):
         metavar="MODEL_OR_RESOURCE",
         nargs="?",
         help="model or resource to prepare")
-    guild.cmd_util.add_project_arguments(p, flag_support=True)
+    guild.cmd_support.add_project_arguments(p, flag_support=True)
     p.add_argument(
         "--preview",
         action="store_true",
@@ -31,14 +31,19 @@ def main(args):
         prepare(op)
 
 def prepare_op(args):
-    project = guild.cmd_util.project_for_args(args)
-    section = guild.cmd_util.model_or_resource_for_args(args, project)
+    project = guild.cmd_support.project_for_args(args)
+    section = guild.cmd_support.model_or_resource_for_args(args, project)
     spec = section.attr("prepare")
     return prepare_op_for_spec(spec, section)
 
 def prepare_op_for_spec(spec, section):
     if spec is not None:
-        return guild.prepare_op.from_spec(spec, section)
+        return guild.op.Op(
+            guild.op_support.python_cmd_for_spec(spec, section),
+            {},
+            "/tmp",
+            {},
+            [])
     else:
         not_preparable_error(section)
 
@@ -50,12 +55,12 @@ def not_preparable_error(section):
 
 def maybe_section_name(section):
     if section.name:
-        return " " + name
+        return " " + section
     else:
         return ""
 
 def preview(op):
-    print("TODO preview", op)
+    guild.op_support.preview(op)
 
 def prepare(op):
-    print("TODO prepare", op)
+    op.run()
