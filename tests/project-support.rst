@@ -16,7 +16,7 @@ options for specifying a project may be defined for a parser using
 
 >>> import argparse
 >>> parser = argparse.ArgumentParser()
->>> guild.cmd_support.add_project_arguments(parser)
+>>> guild.cmd_support.add_project_arguments(parser, flag_support=True)
 
 We can use these to parse command line arguments:
 
@@ -57,6 +57,10 @@ specified on the command line:
 
 >>> args = parser.parse_args(["-P", sample('mnist'),
 ...                           "-F", "foo=bar",
-...                           "-F", "bar=baz"])
->>> project = guild.cmd_support.project_from_args(args)
->>> guild.project.command_line_flags()
+...                           "-F", "bar=baz",
+...                           "--profile", "bam"])
+>>> project = guild.cmd_support.project_for_args(args)
+>>> project.command_line_flags
+[('foo', 'bar'), ('bar', 'baz')]
+>>> project.command_line_profiles
+['bam']

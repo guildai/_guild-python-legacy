@@ -1,6 +1,8 @@
 import argparse
 import os
 import re
+import string
+import sys
 import textwrap
 
 import guild
@@ -47,30 +49,46 @@ def add_project_arguments(parser, flag_support=False):
 
 def add_flag_arguments(parser):
     parser.add_argument(
-        "-p", "--profile",
+        "-p", "--profile", dest="profiles",
         help="use alternate flags profile",
+        action="append",
+        default=[],
         metavar="NAME")
     parser.add_argument(
-        "-F", "--flag",
+        "-F", "--flag", dest="flags",
         help="define a project flag; may be used multiple times",
-        nargs="*",
-        metavar="NAME[=VAL]",
-        dest="flags")
+        nargs="?",
+        action="append",
+        default=[],
+        metavar="NAME[=VAL]")
 
 def project_for_args(args, name="guild.yml"):
     try:
-        p = guild.project.from_dir(args.project_dir, name)
+        project = guild.project.from_dir(args.project_dir, name)
     except IOError:
         if os.path.isdir(args.project_dir):
             missing_project_file_error(args.project_dir, name)
         else:
             no_such_dir_error(args.project_dir)
     else:
-        apply_flags(args, apply_profile(args, p))
+        apply_profile(args, project)
+        apply_flags(args, project)
+        return project
 
 def apply_profile(args, project):
-    if args.profile:
-        pass
+    for profile in args.profiles:
+        project.command_line_profiles.append(profile)
+
+def apply_flags(args, project):
+    for flag in args.flags:
+        project.command_line_flags.append(parse_flag(flag))
+
+def parse_flag(s):
+    parts = string.split(s, "=", maxsplit=1)
+    if len(parts) == 1:
+        return (parts[0], "true")
+    else:
+        return (parts[0], parts[1])
 
 def missing_project_file_error(dir, name):
     guild.cli.error(
@@ -133,3 +151,35 @@ def no_such_model_or_resource_error(name):
 
 def no_default_model_or_resource_error():
     guild.cli.error("There are no default models or resources in the project")
+
+def preview_op(op):
+    resolved_args = guild.util.resolve_args(op.cmd_args, op.cmd_env)
+    print_cmd(resolved_args)
+    print_env(op.cmd_env)
+
+def print_cmd(args):
+    sys.stdout.write("Command:\n\n")
+    sys.stdout.write("  %s" % args[0])
+    i = 1
+    while i < len(args):
+        cur_arg = args[i]
+        sys.stdout.write(" \\\n    %s" % maybe_quote_arg(cur_arg))
+        i = i + 1
+        next_arg = args[i] if i < len(args) else None
+        if cur_arg[0] == "-" and next_arg and next_arg[0] != "-":
+            sys.stdout.write(" %s" % maybe_quote_arg(next_arg))
+            i = i + 1
+    sys.stdout.write("\n\n")
+
+def maybe_quote_arg(arg):
+    if re.search(" ", arg):
+        return '"%s"' % arg
+    else:
+        return arg
+
+def print_env(env):
+    sys.stdout.write("Environment:\n\n")
+    names = env.keys()
+    names.sort()
+    for name in names:
+        sys.stdout.write("  %s=%s\n" % (name, env[name]))

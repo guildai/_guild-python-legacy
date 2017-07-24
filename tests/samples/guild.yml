@@ -21,6 +21,15 @@ models:
     prepare: expert --prepare
     train_requires: ./data
     evaluate: expert --test
+    flags:
+      epochs: 20
+      batch_size: 200
+
+profiles:
+  quick-train:
+    epochs: 5
+  long-train:
+    epochs: 50
 
 resources:
   samples:

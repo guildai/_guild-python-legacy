@@ -25,22 +25,22 @@ An IOError is raised if the project file doesn't exist:
 Traceback (most recent call last):
 IOError: [Errno 2] No such file or directory: 'does_not_exist'
 
-We'll use the project reference `p` for the remaining tests.
+We'll use the project reference `project` for the remaining tests.
 
->>> p = p_from_file
+>>> project = p_from_file
 
 Project attributes
 ------------------
 
 Project level attributes may be read using the `attr` method:
 
->>> p.attr("name")
+>>> project.attr("name")
 'MNIST'
->>> p.attr("description")
+>>> project.attr("description")
 'Guild MNIST example'
->>> p.attr("sources")
+>>> project.attr("sources")
 ['*.py']
->>> p.attr("undefined") is None
+>>> project.attr("undefined") is None
 True
 
 Sections
@@ -49,20 +49,110 @@ Sections
 Project sections are grouped under section headings. You can return a
 list of sections for a given heading using the `sections` method:
 
->>> [s.path for s in p.sections("models")]
+>>> [section.path for section in project.sections("models")]
 [['models', 'expert'], ['models', 'intro']]
 
 You can retrieve a section using `section`:
 
->>> s = p.section("models", "intro")
->>> s.path
+>>> section = project.section("models", "intro")
+>>> section.path
 ['models', 'intro']
 
 When a section key isn't available (e.g. the user doesn't specify it)
 you can find a default section using `default_section`:
 
->>> s = p.default_section("models")
->>> s.path
+>>> section = project.default_section("models")
+>>> section.path
 ['models', 'intro']
->>> s.attr("default")
+>>> section.attr("default")
 True
+
+Flags
+-----
+
+The `flags` method can be used as a convenience function for
+`attrs("flags", {})`:
+
+>>> pprint(project.flags())
+{'batch_size': 100, 'datadir': './data', 'epochs': 10, 'rundir': '$RUNDIR'}
+
+Similarly, section flags may be read using `flags`:
+
+>>> pprint(project.section("models", "expert").flags())
+{'batch_size': 200, 'epochs': 20}
+
+All flags
+---------
+
+Flags may be explicitly defined in flag sections, but they can also be
+extended using command line arguments, either in the form of separate
+flags (key value pairs) or as profiles, which represent sets of flags.
+
+To return all flags associated with a project or section, use the
+`all_flags` methods on the applicable object.
+
+To illustrate, we'll define a list of command line profiles:
+
+>>> project.command_line_profiles = ["quick-train"]
+
+and use `all_flags` to resolve these along with the flags defined in
+the project:
+
+>>> pprint(project.all_flags())
+[('epochs', 5),
+ ('datadir', './data'),
+ ('rundir', '$RUNDIR'),
+ ('batch_size', 100)]
+
+A "long-train" profile yields this:
+
+>>> project.command_line_profiles = ["long-train"]
+>>> pprint(project.all_flags())
+[('epochs', 50),
+ ('datadir', './data'),
+ ('rundir', '$RUNDIR'),
+ ('batch_size', 100)]
+
+We can further specify command line flags, which add or redefine both
+profile and project level flags:
+
+>>> project.command_line_flags = [("epochs", "11"), ("bar", "456")]
+>>> pprint(project.all_flags())
+[('epochs', '11'),
+ ('bar', '456'),
+ ('datadir', './data'),
+ ('rundir', '$RUNDIR'),
+ ('batch_size', 100)]
+
+We can do the same for sections, which may contain their own flag
+definitions. First we'll reset our command line state:
+
+>>> project.command_line_profiles = []
+>>> project.command_line_flags = []
+
+The expert section redefined the epochs used:
+
+>>> section = project.section("models", "expert")
+>>> pprint(section.all_flags())
+[('epochs', 20),
+ ('batch_size', 200),
+ ('datadir', './data'),
+ ('rundir', '$RUNDIR')]
+
+We can now further refine the flags using profiles:
+
+>>> project.command_line_profiles = ["long-train"]
+>>> pprint(section.all_flags())
+[('epochs', 50),
+ ('batch_size', 200),
+ ('datadir', './data'),
+ ('rundir', '$RUNDIR')]
+
+and then again using command line flags:
+
+>>> project.command_line_flags = [("epochs", "12")]
+>>> pprint(section.all_flags())
+[('epochs', '12'),
+ ('batch_size', 200),
+ ('datadir', './data'),
+ ('rundir', '$RUNDIR')]

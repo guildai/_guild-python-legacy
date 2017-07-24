@@ -6,7 +6,7 @@ install:
 	python setup.py develop
 
 check:
-	scripts/test
+	scripts/test $(TESTS)
 
 lint:
 	pylint guild

@@ -1,3 +1,5 @@
+import sys
+
 import guild
 
 def add_parser(subparsers):
@@ -60,7 +62,8 @@ def maybe_section_name(section):
         return ""
 
 def preview(op):
-    guild.op_support.preview(op)
+    sys.stdout.write("This command will use the settings below.\n\n")
+    guild.cmd_support.preview_op(op)
 
 def prepare(op):
     op.run()

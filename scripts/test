@@ -9,7 +9,9 @@ import sys
 ALL_TESTS = [
     "cmd-support",
     "hello",
-    "project"
+    "op-support",
+    "project",
+    "project-support"
 ]
 
 def main():
