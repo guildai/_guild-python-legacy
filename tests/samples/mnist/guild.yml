@@ -4,7 +4,13 @@ flags:
   datadir: ./data
   rundir: $RUNDIR
   batch_size: 100
-  epochs: 10
+  epochs: 100
+
+profiles:
+  quick-train:
+    epochs: 10
+  long-train:
+    epochs: 200
 
 models:
   intro:
@@ -13,6 +19,5 @@ models:
     prepare: intro --prepare
     train_requires: ./data
     evaluate: intro --test
-
   test:
     prepare: temp foo bar

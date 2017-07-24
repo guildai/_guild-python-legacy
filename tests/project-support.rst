@@ -1,13 +1,14 @@
-Command utils
-=============
+Project support
+===============
 
 The `cmd_support` module provides a number of functions to support
-commands.
+commands, including a number of functions to help with project related
+tasks.
 
 >>> import guild
 
-Project support
----------------
+Project related command arguments
+---------------------------------
 
 Numerous commands require a valid Guild project. The command line
 options for specifying a project may be defined for a parser using
@@ -22,6 +23,9 @@ We can use these to parse command line arguments:
 >>> args = parser.parse_args(["-P", sample("mnist")])
 >>> args.project_dir
 'tests/samples/mnist'
+
+Loading a project from command line args
+----------------------------------------
 
 We can use `project_for_args` to load a valid project:
 
@@ -44,3 +48,15 @@ we get a different Exit error:
 Traceback (most recent call last):
 Exit: (1) Directory 'tests/samples/..' does not contain a guild.yml file
 Try 'guild init tests/samples/..' to initialize a project or specify a different project directory
+
+Project flags from the command line
+-----------------------------------
+
+The function `project_for_arg` extends the project with flags
+specified on the command line:
+
+>>> args = parser.parse_args(["-P", sample('mnist'),
+...                           "-F", "foo=bar",
+...                           "-F", "bar=baz"])
+>>> project = guild.cmd_support.project_from_args(args)
+>>> guild.project.command_line_flags()

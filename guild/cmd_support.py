@@ -59,12 +59,18 @@ def add_flag_arguments(parser):
 
 def project_for_args(args, name="guild.yml"):
     try:
-        return guild.project.from_dir(args.project_dir, name)
+        p = guild.project.from_dir(args.project_dir, name)
     except IOError:
         if os.path.isdir(args.project_dir):
             missing_project_file_error(args.project_dir, name)
         else:
             no_such_dir_error(args.project_dir)
+    else:
+        apply_flags(args, apply_profile(args, p))
+
+def apply_profile(args, project):
+    if args.profile:
+        pass
 
 def missing_project_file_error(dir, name):
     guild.cli.error(
