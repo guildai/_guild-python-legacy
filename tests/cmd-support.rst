@@ -31,6 +31,7 @@ Command:
     --epochs 100 \
     --foo "this is foo" \
     -F this_if_F
+<BLANKLINE>
 Environment:
 <BLANKLINE>
   RUNDIR=/tmp

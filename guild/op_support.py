@@ -31,3 +31,9 @@ def flag_args(flags):
         args.append("--" + name)
         args.append(str(val))
     return args
+
+def base_env():
+    return {
+        "PKGHOME": guild.app.pkg_home(),
+        "GPU_COUNT": str(guild.system.gpu_count())
+    }

@@ -6,3 +6,9 @@ def home():
 
 def script(name):
     return os.path.join(home(), "scripts", name)
+
+def pkg_home():
+    return user_dir("pkg")
+
+def user_dir(name):
+    return os.path.join(os.getenv("HOME"), ".guild", name)

@@ -183,3 +183,4 @@ def print_env(env):
     names.sort()
     for name in names:
         sys.stdout.write("  %s=%s\n" % (name, env[name]))
+    sys.stdout.write("\n")

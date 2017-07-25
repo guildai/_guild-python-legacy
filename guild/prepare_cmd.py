@@ -41,11 +41,11 @@ def prepare_op(args):
 def prepare_op_for_spec(spec, section):
     if spec is not None:
         return guild.op.Op(
-            guild.op_support.python_cmd_for_spec(spec, section),
-            {},
-            "/tmp",
-            {},
-            [])
+            cmd_args=guild.op_support.python_cmd_for_spec(spec, section),
+            cmd_env=guild.op_support.base_env(),
+            opdir=section.project.dir,
+            meta={},
+            tasks=[])
     else:
         not_preparable_error(section)
 
