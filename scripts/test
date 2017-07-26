@@ -13,7 +13,8 @@ ALL_TESTS = [
     "op-support",
     "opdir-meta",
     "project",
-    "project-support"
+    "project-support",
+    "util"
 ]
 
 def main():

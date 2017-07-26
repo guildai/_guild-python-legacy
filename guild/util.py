@@ -15,7 +15,7 @@ def resolve_args(args, env):
 
 def _resolve_arg_env_refs(arg, env):
     for name, val in env.items():
-        arg = re.sub("$" + name, val, arg)
+        arg = re.sub("\$" + name, val, arg)
     return arg
 
 def ensure_dir(d):
