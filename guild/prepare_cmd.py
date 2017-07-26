@@ -1,5 +1,3 @@
-import sys
-
 import guild
 
 def add_parser(subparsers):
@@ -22,7 +20,7 @@ def add_parser(subparsers):
     p.add_argument(
         "--preview",
         action="store_true",
-        help="print training details but do not train")
+        help="print prepare details but do not prepare")
     p.set_defaults(func=main)
 
 def main(args):
@@ -43,7 +41,8 @@ def _prepare_op_for_spec(spec, section):
         return guild.op.Op(
             cmd_args=guild.op_support.python_cmd_for_spec(spec, section),
             cmd_env=guild.op_support.base_env(),
-            opdir=section.project.dir,
+            cmd_cwd=section.project.dir,
+            opdir_pattern=None,
             meta={},
             tasks=[])
     else:
@@ -62,7 +61,6 @@ def _maybe_section_name(section):
         return ""
 
 def _preview(op):
-    sys.stdout.write("This command will use the settings below.\n\n")
     guild.cmd_support.preview_op(op)
 
 def _prepare(op):

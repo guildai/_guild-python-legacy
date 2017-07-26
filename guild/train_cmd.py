@@ -1,4 +1,4 @@
-import sys
+import os
 
 import guild
 
@@ -12,6 +12,11 @@ def add_parser(subparsers):
         metavar="MODEL",
         nargs="?",
         help="model to train")
+    guild.cmd_support.add_project_arguments(p, flag_support=True)
+    p.add_argument(
+        "--preview",
+        action="store_true",
+        help="print train details but do not train")
     p.set_defaults(func=main)
 
 def main(args):
@@ -31,12 +36,25 @@ def _train_op_for_spec(spec, model):
     if spec is not None:
         return guild.op.Op(
             cmd_args=guild.op_support.python_cmd_for_spec(spec, model),
-            cmd_env=guild.op_support.base_env(),
-            opdir=model.project.dir,
+            cmd_env=_cmd_env(),
+            cmd_cwd=model.project.dir,
+            opdir_pattern=_rundir_pattern(model),
             meta={},
             tasks=[])
     else:
         _not_trainable_error(model)
+
+def _rundir_pattern(model):
+    runs_dir = guild.project_util.runs_dir_for_section(model)
+    return os.path.join(runs_dir, "%(started)s-" + model.path[1])
+
+def _cmd_env():
+    env = {}
+    env.update(guild.op_support.base_env())
+    env.update({
+        "RUNDIR": "%(opdir)s"
+    })
+    return env
 
 def _not_trainable_error(model):
     guild.cli.error(
@@ -51,10 +69,6 @@ def _maybe_model_name(model):
         return ""
 
 def _preview(op):
-    sys.stdout.write(
-        "This command will use the settings below. Note that RUNDIR is "
-        "created dynamically for new runs and will be used wherever '$RUNDIR' "
-        "appears below.\n\n")
     guild.cmd_support.preview_op(op)
 
 def _train(op):

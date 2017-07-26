@@ -19,11 +19,19 @@ environment:
 >>> env = {
 ...     "RUNDIR": "/tmp"
 ... }
->>> op = guild.op.Op(args, env, ".", {}, [])
+>>> op = guild.op.Op(
+...          cmd_args=args,
+...          cmd_env=env,
+...          cmd_cwd=".",
+...          opdir_pattern=None,
+...          meta={},
+...          tasks=[])
 
 And use `preview_op` to preview it:
 
 >>> guild.cmd_support.preview_op(op)
+This command will use the settings below.
+<BLANKLINE>
 Command:
 <BLANKLINE>
   python \

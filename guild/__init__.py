@@ -10,6 +10,7 @@ import guild.op_support
 import guild.opdir
 import guild.prepare_cmd
 import guild.project
+import guild.project_util
 import guild.system
 import guild.train_cmd
 import guild.util

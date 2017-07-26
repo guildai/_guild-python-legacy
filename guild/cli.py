@@ -1,8 +1,9 @@
 import argparse
-import os
 import sys
 
 import guild
+
+STOPPED_BY_USER_EXIT = 2
 
 class Exit(Exception):
 
@@ -19,14 +20,18 @@ def main():
     args = p.parse_args()
     try:
         _handle_args(args)
+    except KeyboardInterrupt as e:
+        _handle_keyboard_interrupt()
     except Exit as e:
         _print_error_and_exit(e.msg, e.exit_status)
+
+def _handle_keyboard_interrupt():
+    sys.exit(1)
 
 def _print_error_and_exit(msg, exit_status):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
-    # pylint: disable=protected-access
-    os._exit(exit_status)
+    sys.exit(exit_status)
 
 def parser():
     p = argparse.ArgumentParser(

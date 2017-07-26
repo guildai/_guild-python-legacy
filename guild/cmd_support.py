@@ -173,8 +173,11 @@ def _no_default_model_or_resource_error():
 
 def preview_op(op):
     resolved_args = guild.util.resolve_args(op.cmd_args, op.cmd_env)
+    sys.stdout.write("This command will use the settings below.\n\n")
     _print_cmd(resolved_args)
+    sys.stdout.write("\n")
     _print_env(op.cmd_env)
+    sys.stdout.write("\n")
 
 def _print_cmd(args):
     sys.stdout.write("Command:\n\n")
@@ -188,7 +191,7 @@ def _print_cmd(args):
         if cur_arg[0] == "-" and next_arg and next_arg[0] != "-":
             sys.stdout.write(" %s" % _maybe_quote_arg(next_arg))
             i = i + 1
-    sys.stdout.write("\n\n")
+    sys.stdout.write("\n")
 
 def _maybe_quote_arg(arg):
     if re.search(" ", arg):
@@ -202,4 +205,3 @@ def _print_env(env):
     names.sort()
     for name in names:
         sys.stdout.write("  %s=%s\n" % (name, env[name]))
-    sys.stdout.write("\n")

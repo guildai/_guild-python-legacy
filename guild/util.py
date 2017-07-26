@@ -1,6 +1,7 @@
 import errno
 import os
 import re
+import time
 
 def find_apply(funs, *args):
     for f in funs:
@@ -23,3 +24,10 @@ def ensure_dir(d):
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
+
+def timestamp():
+    return time.time()
+
+def format_dir_timestamp(ts):
+    struct_time = time.gmtime(ts)
+    return time.strftime("%Y%m%dT%H%M%SZ", struct_time)
