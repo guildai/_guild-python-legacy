@@ -23,7 +23,7 @@ First let's load a project:
 >>> pprint(cmd)
 ['python',
  '-u',
- 'tests/samples/mnist/intro.py',
+ '/.../tests/samples/mnist/intro.py',
  '--prepare',
  '--epochs',
  '100',
@@ -33,3 +33,8 @@ First let's load a project:
  '$RUNDIR',
  '--batch_size',
  '100']
+
+Note that the path to the Python script is absolute. This is because
+the project directory is not the current working directory. This
+ensures that the python script can be run when the cwd is changed to
+the project directory.

@@ -115,6 +115,31 @@ def _project_dir_opt(d):
 def _escape_path(path):
     return re.sub(" ", "\\\\ ", path)
 
+def model_for_args(args, project):
+    if args.model:
+        model = _model(args.model, project)
+        if model:
+            return model
+        _no_such_model_error(args.model)
+    model = _default_model(project)
+    if model:
+        return model
+    _no_default_model_error()
+
+def _model(name, project):
+    return project.section("models", name)
+
+def _no_such_model_error(name):
+    guild.cli.error(
+        "There are no models with the name '%s' in the project"
+        % name)
+
+def _default_model(project):
+    return project.default_section("models")
+
+def _no_default_model_error():
+    guild.cli.error("There are no default models in the project")
+
 def model_or_resource_for_args(args, project):
     if args.model_or_resource:
         section = _model_or_resource(args.model_or_resource, project)
@@ -134,9 +159,6 @@ def _model_or_resource(name, project):
     if model:
         return model
     return project.section("resources", name)
-
-def _default_model(project):
-    return project.default_section("models")
 
 def _default_resource(project):
     return project.default_section("resources")
