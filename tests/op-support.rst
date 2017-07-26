@@ -23,7 +23,7 @@ First let's load a project:
 >>> pprint(cmd)
 ['python',
  '-u',
- 'intro',
+ 'tests/samples/mnist/intro.py',
  '--prepare',
  '--epochs',
  '100',

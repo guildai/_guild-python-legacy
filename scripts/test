@@ -38,6 +38,7 @@ def test(name):
             doctest.ELLIPSIS |
             doctest.IGNORE_EXCEPTION_DETAIL))
     if not failures:
+        sys.stdout.write(" " * (20 - len(name)))
         sys.stdout.write(" ok\n")
     return failures == 0
 
