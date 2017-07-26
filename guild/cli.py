@@ -18,11 +18,11 @@ def main():
     p = parser()
     args = p.parse_args()
     try:
-        handle_args(args)
+        _handle_args(args)
     except Exit as e:
-        print_error_and_exit(e.msg, e.exit_status)
+        _print_error_and_exit(e.msg, e.exit_status)
 
-def print_error_and_exit(msg, exit_status):
+def _print_error_and_exit(msg, exit_status):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
     # pylint: disable=protected-access
@@ -31,20 +31,28 @@ def print_error_and_exit(msg, exit_status):
 def parser():
     p = argparse.ArgumentParser(
         description="Guild AI command line interface.")
+    p.add_argument(
+        "--version",
+        action="version",
+        version=_version_pattern(),
+        help="print version information and exit")
     cmds = p.add_subparsers(
         title="commands",
         dest="command",
         metavar="")
-    add_command(guild.check_cmd, cmds)
-    add_command(guild.prepare_cmd, cmds)
-    add_command(guild.train_cmd, cmds)
-    add_command(guild.evaluate_cmd, cmds)
+    _add_command(guild.check_cmd, cmds)
+    _add_command(guild.prepare_cmd, cmds)
+    _add_command(guild.train_cmd, cmds)
+    _add_command(guild.evaluate_cmd, cmds)
     return p
 
-def add_command(module, subparsers):
+def _version_pattern():
+    return "%(prog)s " + guild.version()
+
+def _add_command(module, subparsers):
     module.add_parser(subparsers)
 
-def handle_args(args):
+def _handle_args(args):
     args.func(args)
 
 def error(msg, exit_status=1):

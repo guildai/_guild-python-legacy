@@ -1,5 +1,7 @@
 import subprocess
 
+import guild
+
 class Op(object):
 
     def __init__(self, cmd_args, cmd_env, opdir, meta, tasks):
@@ -23,10 +25,10 @@ class Op(object):
 
     def write_meta(self):
         if self.opdir and self.meta:
-            guild.opdir.write_meta(self.opdir, self.meta)
+            guild.opdir.write_all_meta(self.opdir, self.meta)
 
     def start_proc(self):
-        if self._proc is None:
+        if self._proc is not None:
             raise AssertionError("proc already started")
         self._proc = subprocess.Popen(
             self.cmd_args,

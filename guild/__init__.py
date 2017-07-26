@@ -15,3 +15,12 @@ import guild.train_cmd
 import guild.util
 
 VERSION = None
+GIT_COMMIT = None
+
+def version():
+    if VERSION:
+        return VERSION
+    elif GIT_COMMIT:
+        return "GIT (%s)" % GIT_COMMIT
+    else:
+        return "UNKNOWN"

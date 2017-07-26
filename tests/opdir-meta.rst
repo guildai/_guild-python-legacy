@@ -15,7 +15,7 @@ string values not ending with a line feed.
 
 >>> import guild
 >>> opdir = mkdtemp()
->>> guild.opdir.write_meta(opdir, {
+>>> guild.opdir.write_all_meta(opdir, {
 ...    "foo": 123,
 ...    "bar": "hello bar",
 ...    "baz": 1.1234})
