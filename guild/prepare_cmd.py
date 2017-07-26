@@ -26,19 +26,19 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    op = prepare_op(args)
+    op = _prepare_op(args)
     if args.preview:
-        preview(op)
+        _preview(op)
     else:
-        prepare(op)
+        _prepare(op)
 
-def prepare_op(args):
+def _prepare_op(args):
     project = guild.cmd_support.project_for_args(args)
     section = guild.cmd_support.model_or_resource_for_args(args, project)
     spec = section.attr("prepare")
-    return prepare_op_for_spec(spec, section)
+    return _prepare_op_for_spec(spec, section)
 
-def prepare_op_for_spec(spec, section):
+def _prepare_op_for_spec(spec, section):
     if spec is not None:
         return guild.op.Op(
             cmd_args=guild.op_support.python_cmd_for_spec(spec, section),
@@ -47,23 +47,23 @@ def prepare_op_for_spec(spec, section):
             meta={},
             tasks=[])
     else:
-        not_preparable_error(section)
+        _not_preparable_error(section)
 
-def not_preparable_error(section):
+def _not_preparable_error(section):
     guild.cli.error(
         "section%s does not support a prepare operation\n"
         "Try 'guild prepare --help' for more information."
-        % maybe_section_name(section))
+        % _maybe_section_name(section))
 
-def maybe_section_name(section):
+def _maybe_section_name(section):
     if section.name:
         return " " + section
     else:
         return ""
 
-def preview(op):
+def _preview(op):
     sys.stdout.write("This command will use the settings below.\n\n")
     guild.cmd_support.preview_op(op)
 
-def prepare(op):
+def _prepare(op):
     op.run()

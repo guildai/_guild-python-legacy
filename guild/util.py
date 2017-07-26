@@ -10,9 +10,9 @@ def find_apply(funs, *args):
     return None
 
 def resolve_args(args, env):
-    return [resolve_arg_env_refs(arg, env) for arg in args]
+    return [_resolve_arg_env_refs(arg, env) for arg in args]
 
-def resolve_arg_env_refs(arg, env):
+def _resolve_arg_env_refs(arg, env):
     for name, val in env.items():
         arg = re.sub("$" + name, val, arg)
     return arg

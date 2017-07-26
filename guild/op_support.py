@@ -5,28 +5,28 @@ import guild
 
 def python_cmd_for_spec(spec, section):
     spec_parts = shlex.split(spec)
-    script = resolve_script_path(spec_parts[0], section.project.dir)
+    script = _resolve_script_path(spec_parts[0], section.project.dir)
     spec_args = spec_parts[1:]
     flags = section.all_flags()
-    return ["python", "-u", script] + spec_args + flag_args(flags)
+    return ["python", "-u", script] + spec_args + _flag_args(flags)
 
-def resolve_script_path(script, project_dir):
+def _resolve_script_path(script, project_dir):
     path = os.path.join(project_dir, script)
     return guild.util.find_apply(
-        [explicit_path,
-         path_missing_py_ext,
-         unmodified_path], path)
+        [_explicit_path,
+         _path_missing_py_ext,
+         _unmodified_path], path)
 
-def explicit_path(path):
+def _explicit_path(path):
     return path if os.path.isfile(path) else None
 
-def path_missing_py_ext(part_path):
-    return explicit_path(part_path + ".py")
+def _path_missing_py_ext(part_path):
+    return _explicit_path(part_path + ".py")
 
-def unmodified_path(val):
+def _unmodified_path(val):
     return val
 
-def flag_args(flags):
+def _flag_args(flags):
     args = []
     for name, val in flags:
         args.append("--" + name)
