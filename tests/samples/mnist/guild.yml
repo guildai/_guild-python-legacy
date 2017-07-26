@@ -19,5 +19,10 @@ models:
     prepare: intro --prepare
     train_requires: ./data
     evaluate: intro --test
+
   test:
-    prepare: temp foo bar
+    train: test --train
+    prepare: test --prepare
+    evaluate: test --evaluate
+    flags:
+      train_time: 20

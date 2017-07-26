@@ -12,6 +12,7 @@ import guild.prepare_cmd
 import guild.project
 import guild.project_util
 import guild.system
+import guild.tasks
 import guild.train_cmd
 import guild.util
 

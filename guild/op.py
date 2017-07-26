@@ -97,22 +97,32 @@ class Op(object):
         return val % attrs
 
     def _start_core_tasks(self):
-        pass
+        for task in self._core_tasks():
+            task()
+
+    def _core_tasks(self):
+        tasks = []
+        if self._opdir:
+            tasks.append(guild.tasks.run_status.init(self._proc))
+            tasks.append(guild.tasks.run_db.init())
+        return tasks
 
     def _start_op_tasks(self):
-        pass
+        for task in self.tasks:
+            task()
 
     def _wait(self):
         self._exit_status = self._proc.wait()
 
     def _finalize(self):
-        self._running = False
-        self._stopped = guild.util.timestamp()
-        final_meta = {
-            "exit_status": self._exit_status,
-            "stopped": self._stopped_meta()
-        }
-        guild.opdir.write_all_meta(self._opdir, final_meta)
+        if self._opdir:
+            self._running = False
+            self._stopped = guild.util.timestamp()
+            final_meta = {
+                "exit_status": self._exit_status,
+                "stopped": self._stopped_meta()
+            }
+            guild.opdir.write_all_meta(self._opdir, final_meta)
 
     def _stopped_meta(self):
         return str(int(self._started * 1000))
