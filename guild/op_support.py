@@ -11,11 +11,18 @@ def python_cmd_for_spec(spec, section):
     return ["python", "-u", script] + spec_args + _flag_args(flags)
 
 def _resolve_script_path(script, project_dir):
-    path = os.path.join(project_dir, script)
+    script_path = _script_path_for_project_dir(script, project_dir)
     return guild.util.find_apply(
         [_explicit_path,
          _path_missing_py_ext,
-         _unmodified_path], path)
+         _unmodified_path], script_path)
+
+def _script_path_for_project_dir(script, project_dir):
+    rel_path = os.path.join(project_dir, script)
+    if project_dir == ".":
+        return rel_path
+    else:
+        return os.path.abspath(rel_path)
 
 def _explicit_path(path):
     return path if os.path.isfile(path) else None

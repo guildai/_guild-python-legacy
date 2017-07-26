@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import guild
@@ -32,7 +33,7 @@ class Op(object):
             raise AssertionError("proc already started")
         self._proc = subprocess.Popen(
             self.cmd_args,
-            env=self.cmd_env,
+            env=_merge_os_environ(self.cmd_env),
             cwd=self.opdir)
 
     def _start_core_tasks(self):
@@ -43,3 +44,9 @@ class Op(object):
 
     def _wait(self):
         self._proc.wait()
+
+def _merge_os_environ(env):
+    merged = {}
+    merged.update(os.environ)
+    merged.update(env)
+    return merged
