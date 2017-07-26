@@ -1,5 +1,2 @@
-def init():
-    return _start_run_db
-
-def _start_run_db():
-    print("TODO: start run db")
+def start(op):
+    print("TODO: start run db for opdir %s" % op.opdir)

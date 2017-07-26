@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 import shlex
 
@@ -45,3 +46,8 @@ def base_env():
         "PKG_HOME": "%(pkg_home)s",
         "GPU_COUNT": str(guild.system.gpu_count())
     }
+
+def start_task(target, args, op):
+    p_args = [op] + args
+    p = multiprocessing.Process(target=target, args=p_args)
+    p.start()

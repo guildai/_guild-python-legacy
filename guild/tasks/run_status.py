@@ -1,4 +1,4 @@
-def init(proc):
-    def start():
-        print("TODO: start run status task for %s" % proc.pid)
-    return start
+import multiprocessing
+
+def start(op, proc):
+    print("TODO: update run status for %s" % proc.pid)

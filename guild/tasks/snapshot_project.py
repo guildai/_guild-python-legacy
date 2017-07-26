@@ -1,5 +1,2 @@
-def init():
-    return _snapshot_project
-
-def _snapshot_project():
+def start(op):
     print("TODO: snapshot project")

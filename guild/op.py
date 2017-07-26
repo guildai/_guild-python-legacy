@@ -19,6 +19,10 @@ class Op(object):
         self._exit_status = None
         self._stopped = None
 
+    @property
+    def opdir(self):
+        return self._opdir
+
     def run(self):
         if self._running:
             raise AssertionError("op already running")
@@ -97,19 +101,21 @@ class Op(object):
         return val % attrs
 
     def _start_core_tasks(self):
-        for task in self._core_tasks():
-            task()
+        for target, args in self._core_tasks():
+            guild.op_support.start_task(target, args, self)
 
     def _core_tasks(self):
-        tasks = []
         if self._opdir:
-            tasks.append(guild.tasks.run_status.init(self._proc))
-            tasks.append(guild.tasks.run_db.init())
-        return tasks
+            return [
+                (guild.tasks.run_status.start, [self._proc]),
+                (guild.tasks.run_db.start, [])
+            ]
+        else:
+            return []
 
     def _start_op_tasks(self):
-        for task in self.tasks:
-            task()
+        for target, args in self.tasks:
+            guild.op_support.start_task(target, args, self)
 
     def _wait(self):
         self._exit_status = self._proc.wait()

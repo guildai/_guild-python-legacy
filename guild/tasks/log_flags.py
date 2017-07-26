@@ -1,5 +1,2 @@
-def init():
-    return _log_flags
-
-def _log_flags():
+def start(op):
     print "TODO: log flags"

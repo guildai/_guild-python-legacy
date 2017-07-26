@@ -63,13 +63,14 @@ def _meta(model):
 
 def _tasks():
     return [
-        guild.tasks.log_flags.init(),
-        guild.tasks.log_system_attrs.init(),
-        guild.tasks.snapshot_project.init(),
-        guild.tasks.collector.init("tensorflow-collector"),
-        guild.tasks.collector.init("op-stats"),
-        guild.tasks.collector.init("sys-stats"),
-        guild.tasks.collector.init("gpu-stats")]
+        (guild.tasks.log_flags.start, []),
+        (guild.tasks.log_system_attrs.start, []),
+        (guild.tasks.snapshot_project.start, []),
+        (guild.tasks.collector.start, ["tensorflow-collector"]),
+        (guild.tasks.collector.start, ["op-stats"]),
+        (guild.tasks.collector.start, ["sys-stats"]),
+        (guild.tasks.collector.start, ["gpu-stats"])
+    ]
 
 def _not_trainable_error(model):
     guild.cli.error(

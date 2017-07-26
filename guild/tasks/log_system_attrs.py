@@ -1,5 +1,2 @@
-def init():
-    return _log_system_attrs
-
-def _log_system_attrs():
+def start(op):
     print("TODO: log system attrs")
