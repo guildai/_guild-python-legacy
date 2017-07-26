@@ -74,18 +74,22 @@ class Op(object):
     def _start_proc(self):
         if self._proc is not None:
             raise AssertionError("proc already started")
+        resolved_env = self._resolve_cmd_env()
         self._proc = subprocess.Popen(
-            self.cmd_args,
-            env=_merge_os_environ(self._resolve_cmd_env()),
+            self._resolve_cmd_args(resolved_env),
+            env=_merge_os_environ(resolved_env),
             cwd=self.cmd_cwd)
+
+    def _resolve_cmd_args(self, env):
+        return guild.util.resolve_args(self.cmd_args, env)
 
     def _resolve_cmd_env(self):
         resolved = {}
         for key, val in self.cmd_env.items():
-            resolved[key] = self._resolve_env_val(val)
+            resolved[key] = self._resolve_val(val)
         return resolved
 
-    def _resolve_env_val(self, val):
+    def _resolve_val(self, val):
         attrs = {
             "opdir": self._opdir,
             "pkg_home": guild.app.pkg_home()
