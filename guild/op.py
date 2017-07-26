@@ -12,7 +12,6 @@ class Op(object):
 
     def run(self):
         self.init_opdir()
-        self.init_error_log()
         self.write_meta()
         self.start_proc()
         self.start_core_tasks()
@@ -20,15 +19,15 @@ class Op(object):
         self.wait()
 
     def init_opdir(self):
-        pass
-
-    def init_error_log(self):
-        pass
+        guild.util.ensure_dir(self.opdir)
 
     def write_meta(self):
-        pass
+        if self.opdir and self.meta:
+            guild.opdir.write_meta(self.opdir, self.meta)
 
     def start_proc(self):
+        if self._proc is None:
+            raise AssertionError("proc already started")
         self._proc = subprocess.Popen(
             self.cmd_args,
             env=self.cmd_env,

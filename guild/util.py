@@ -1,3 +1,4 @@
+import os
 import re
 
 def find_apply(funs, *args):
@@ -14,3 +15,10 @@ def resolve_arg_env_refs(arg, env):
     for name, val in env.items():
         arg = re.sub("$" + name, val, arg)
     return arg
+
+def ensure_dir(d):
+    try:
+        os.makedirs(d)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise

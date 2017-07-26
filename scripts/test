@@ -5,11 +5,13 @@ import doctest
 import os
 import pprint
 import sys
+import tempfile
 
 ALL_TESTS = [
     "cmd-support",
     "hello",
     "op-support",
+    "opdir-meta",
     "project",
     "project-support"
 ]
@@ -41,6 +43,9 @@ def test(name):
 
 def test_globals():
     return {
+        "cat": cat,
+        "find": find,
+        "mkdtemp": mkdtemp,
         "pprint": pprint.pprint,
         "sample": sample,
         "samples_dir": samples_dir
@@ -51,6 +56,22 @@ def sample(name):
 
 def samples_dir():
     return os.path.join("tests", "samples")
+
+def mkdtemp():
+    return tempfile.mkdtemp(prefix="guildtest-")
+
+def find(root):
+    all = []
+    for path, subdir, files in os.walk(root):
+        for name in files:
+            full_path = os.path.join(path, name)
+            rel_path = os.path.relpath(full_path, root)
+            all.append(rel_path)
+    return all
+
+def cat(file_path):
+    with open(file_path, "r") as f:
+        return f.read()
 
 def testfile_path(name):
     return os.path.join("../tests", name + ".rst")

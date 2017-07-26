@@ -16,7 +16,7 @@ def _ensure_gpu_attrs():
 def _read_gpu_attrs():
     try:
         raw = subprocess.check_output(guild.app.script("gpu-attrs"))
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         guild.log.error(e)
         return []
     else:

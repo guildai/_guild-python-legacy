@@ -5,16 +5,17 @@ import guild
 
 def python_cmd_for_spec(spec, section):
     spec_parts = shlex.split(spec)
-    script = resolve_script_path(spec_parts[0])
+    script = resolve_script_path(spec_parts[0], section.project.dir)
     spec_args = spec_parts[1:]
     flags = section.all_flags()
     return ["python", "-u", script] + spec_args + flag_args(flags)
 
-def resolve_script_path(script):
+def resolve_script_path(script, project_dir):
+    path = os.path.join(project_dir, script)
     return guild.util.find_apply(
         [explicit_path,
          path_missing_py_ext,
-         unmodified_path], script)
+         unmodified_path], path)
 
 def explicit_path(path):
     return path if os.path.isfile(path) else None
