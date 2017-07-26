@@ -39,14 +39,10 @@ def _train_op_for_spec(spec, model):
             cmd_env=_cmd_env(),
             cmd_cwd=model.project.dir,
             opdir_pattern=_rundir_pattern(model),
-            meta={},
+            meta=_meta(model),
             tasks=[])
     else:
         _not_trainable_error(model)
-
-def _rundir_pattern(model):
-    runs_dir = guild.project_util.runs_dir_for_section(model)
-    return os.path.join(runs_dir, "%(started)s-" + model.path[1])
 
 def _cmd_env():
     env = {}
@@ -55,6 +51,15 @@ def _cmd_env():
         "RUNDIR": "%(opdir)s"
     })
     return env
+
+def _rundir_pattern(model):
+    runs_dir = guild.project_util.runs_dir_for_section(model)
+    return os.path.join(runs_dir, "%(started)s-" + model.path[1])
+
+def _meta(model):
+    return {
+        "model": model.path[1]
+    }
 
 def _not_trainable_error(model):
     guild.cli.error(

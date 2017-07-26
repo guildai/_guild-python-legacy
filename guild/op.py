@@ -16,6 +16,8 @@ class Op(object):
         self._started = None
         self._opdir = None
         self._proc = None
+        self._exit_status = None
+        self._stopped = None
 
     def run(self):
         if self._running:
@@ -28,6 +30,7 @@ class Op(object):
         self._start_core_tasks()
         self._start_op_tasks()
         self._wait()
+        self._finalize()
 
     def _init_opdir(self):
         if self.opdir_pattern:
@@ -41,8 +44,32 @@ class Op(object):
         return self.opdir_pattern % attrs
 
     def _write_meta(self):
-        if self._opdir and self.meta:
-            guild.opdir.write_all_meta(self._opdir, self.meta)
+        if self._opdir:
+            meta = self._base_meta()
+            if self.meta:
+                meta.update(self.meta)
+            guild.opdir.write_all_meta(self._opdir, meta)
+
+    def _base_meta(self):
+        return {
+            "cmd": self._cmd_args_meta(),
+            "env": self._cmd_env_meta(),
+            "started": self._started_meta()
+        }
+
+    def _cmd_args_meta(self):
+        return guild.util.format_cmd_args(self.cmd_args)
+
+    def _cmd_env_meta(self):
+        keys = self.cmd_env.keys()
+        keys.sort()
+        lines = []
+        for key in keys:
+            lines.append("%s=%s" % (key, self.cmd_env[key]))
+        return "\n".join(lines)
+
+    def _started_meta(self):
+        return str(int(self._started * 1000))
 
     def _start_proc(self):
         if self._proc is not None:
@@ -60,7 +87,8 @@ class Op(object):
 
     def _resolve_env_val(self, val):
         attrs = {
-            "opdir": self._opdir
+            "opdir": self._opdir,
+            "pkg_home": guild.app.pkg_home()
         }
         return val % attrs
 
@@ -71,7 +99,19 @@ class Op(object):
         pass
 
     def _wait(self):
-        self._proc.wait()
+        self._exit_status = self._proc.wait()
+
+    def _finalize(self):
+        self._running = False
+        self._stopped = guild.util.timestamp()
+        final_meta = {
+            "exit_status": self._exit_status,
+            "stopped": self._stopped_meta()
+        }
+        guild.opdir.write_all_meta(self._opdir, final_meta)
+
+    def _stopped_meta(self):
+        return str(int(self._started * 1000))
 
 def _merge_os_environ(env):
     merged = {}

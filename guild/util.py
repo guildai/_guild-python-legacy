@@ -31,3 +31,12 @@ def timestamp():
 def format_dir_timestamp(ts):
     struct_time = time.gmtime(ts)
     return time.strftime("%Y%m%dT%H%M%SZ", struct_time)
+
+def format_cmd_args(args):
+    return " ".join([maybe_quote_arg(arg) for arg in args])
+
+def maybe_quote_arg(arg):
+    if re.search(" ", arg):
+        return '"%s"' % arg
+    else:
+        return arg

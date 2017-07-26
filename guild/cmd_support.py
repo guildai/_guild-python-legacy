@@ -185,19 +185,13 @@ def _print_cmd(args):
     i = 1
     while i < len(args):
         cur_arg = args[i]
-        sys.stdout.write(" \\\n    %s" % _maybe_quote_arg(cur_arg))
+        sys.stdout.write(" \\\n    %s" % guild.util.maybe_quote_arg(cur_arg))
         i = i + 1
         next_arg = args[i] if i < len(args) else None
         if cur_arg[0] == "-" and next_arg and next_arg[0] != "-":
-            sys.stdout.write(" %s" % _maybe_quote_arg(next_arg))
+            sys.stdout.write(" %s" % guild.util.maybe_quote_arg(next_arg))
             i = i + 1
     sys.stdout.write("\n")
-
-def _maybe_quote_arg(arg):
-    if re.search(" ", arg):
-        return '"%s"' % arg
-    else:
-        return arg
 
 def _print_env(env):
     sys.stdout.write("Environment:\n\n")

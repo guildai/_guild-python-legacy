@@ -8,6 +8,9 @@ def write_all_meta(opdir, attrs):
     for key, val in attrs.items():
         _write_attr(dir, key, val)
 
+def write_meta(opdir, key, val):
+    write_all_meta(opdir, {key: val})
+
 def meta_dir(opdir):
     return os.path.join(guild_dir(opdir), "meta")
 
