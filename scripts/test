@@ -9,7 +9,7 @@ import tempfile
 
 ALL_TESTS = [
     "cmd-support",
-    "hello",
+    "db",
     "op-support",
     "opdir-meta",
     "project",

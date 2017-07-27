@@ -2,6 +2,7 @@ import guild.app
 import guild.check_cmd
 import guild.cli
 import guild.cmd_support
+import guild.db
 import guild.devmode
 import guild.evaluate_cmd
 import guild.log

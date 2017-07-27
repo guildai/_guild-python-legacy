@@ -17,6 +17,9 @@ def meta_dir(opdir):
 def guild_dir(opdir):
     return os.path.join(opdir, "guild.d")
 
+def guild_file(opdir, name):
+    return os.path.join(guild_dir(opdir), name)
+
 def _write_attr(dir, key, val):
     path = os.path.join(dir, key)
     with open(path, "w") as f:

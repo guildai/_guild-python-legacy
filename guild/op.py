@@ -15,6 +15,7 @@ class Op(object):
         self._running = False
         self._started = None
         self._opdir = None
+        self._db = None
         self._proc = None
         self._exit_status = None
         self._stopped = None
@@ -23,18 +24,22 @@ class Op(object):
     def opdir(self):
         return self._opdir
 
+    @property
+    def db(self):
+        return self._db
+
     def run(self):
         if self._running:
             raise AssertionError("op already running")
         self._running = True
         self._started = guild.util.timestamp()
         self._init_opdir()
-        self._write_meta()
+        self._init_meta()
+        self._init_db()
         self._start_proc()
-        self._start_core_tasks()
         self._start_op_tasks()
-        self._wait()
-        self._finalize()
+        self._wait_for_proc()
+        self._finalize_meta()
 
     def _init_opdir(self):
         if self.opdir_pattern:
@@ -47,7 +52,7 @@ class Op(object):
         }
         return self.opdir_pattern % attrs
 
-    def _write_meta(self):
+    def _init_meta(self):
         if self._opdir:
             meta = self._base_meta()
             if self.meta:
@@ -75,6 +80,10 @@ class Op(object):
     def _started_meta(self):
         return str(int(self._started * 1000))
 
+    def _init_db(self):
+        if self._opdir:
+            self._db = guild.db.init_for_opdir(self._opdir)
+
     def _start_proc(self):
         if self._proc is not None:
             raise AssertionError("proc already started")
@@ -100,27 +109,14 @@ class Op(object):
         }
         return val % attrs
 
-    def _start_core_tasks(self):
-        for target, args in self._core_tasks():
-            guild.op_support.start_task(target, args, self)
-
-    def _core_tasks(self):
-        if self._opdir:
-            return [
-                (guild.tasks.run_status.start, [self._proc]),
-                (guild.tasks.run_db.start, [])
-            ]
-        else:
-            return []
-
     def _start_op_tasks(self):
         for target, args in self.tasks:
             guild.op_support.start_task(target, args, self)
 
-    def _wait(self):
+    def _wait_for_proc(self):
         self._exit_status = self._proc.wait()
 
-    def _finalize(self):
+    def _finalize_meta(self):
         if self._opdir:
             self._running = False
             self._stopped = guild.util.timestamp()

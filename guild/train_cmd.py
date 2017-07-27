@@ -40,7 +40,7 @@ def _train_op_for_spec(spec, model):
             cmd_cwd=model.project.dir,
             opdir_pattern=_rundir_pattern(model),
             meta=_meta(model),
-            tasks=_tasks())
+            tasks=_tasks(model))
     else:
         _not_trainable_error(model)
 
@@ -61,9 +61,9 @@ def _meta(model):
         "model": model.path[1]
     }
 
-def _tasks():
+def _tasks(model):
     return [
-        (guild.tasks.log_flags.start, []),
+        (guild.tasks.log_flags.start, [model.all_flags()]),
         (guild.tasks.log_system_attrs.start, []),
         (guild.tasks.snapshot_project.start, []),
         (guild.tasks.collector.start, ["tensorflow-collector"]),

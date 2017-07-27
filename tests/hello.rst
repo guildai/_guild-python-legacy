@@ -1,4 +1,0 @@
-Hello Guild
-===========
-
->>> import guild
