@@ -14,6 +14,7 @@ import guild.project
 import guild.project_util
 import guild.system
 import guild.tasks
+import guild.tensorflow_support
 import guild.train_cmd
 import guild.util
 

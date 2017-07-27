@@ -40,6 +40,7 @@ class Op(object):
         self._start_op_tasks()
         self._wait_for_proc()
         self._finalize_meta()
+        self._finalize_db()
 
     def _init_opdir(self):
         if self.opdir_pattern:
@@ -128,6 +129,9 @@ class Op(object):
 
     def _stopped_meta(self):
         return str(int(self._started * 1000))
+
+    def _finalize_db(self):
+        self._db.close()
 
 def _merge_os_environ(env):
     merged = {}

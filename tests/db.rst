@@ -18,11 +18,16 @@ which stores the database as a Guild file named `db`:
 Flags
 -----
 
-Log flags as follows:
-
 >>> db.log_flags([("foo", "FOO"), ("bar", 123)])
 >>> pprint(db.flags())
 [(u'foo', u'FOO'), (u'bar', u'123')]
+
+Attrs
+-----
+
+>>> db.log_attrs([("foo", 123), ("bar", "BAR")])
+>>> pprint(db.attrs())
+[(u'foo', u'123'), (u'bar', u'BAR')]
 
 Helper functions
 ----------------

@@ -2,7 +2,38 @@ import subprocess
 
 import guild
 
+_sys_attrs = None
 _gpu_attrs = None
+
+def sys_attrs():
+    _ensure_sys_attrs()
+    return _sys_attrs
+
+def _ensure_sys_attrs():
+    global _sys_attrs
+    if _sys_attrs is None:
+        _sys_attrs = _read_sys_attrs()
+
+def _read_sys_attrs():
+    try:
+        raw = subprocess.check_output(guild.app.script("sys-attrs"))
+    except subprocess.CalledProcessError as e:
+        guild.log.error(e)
+        return []
+    else:
+        return _parse_sys_attrs(raw)
+
+def _parse_sys_attrs(line):
+    parts = line.split("\t")
+    return {
+        "cpu_model": parts[0],
+        "cpu_cores": parts[1],
+        "mem_total": parts[2]
+    }
+
+def gpu_attrs():
+    _ensure_gpu_attrs()
+    return _gpu_attrs
 
 def gpu_count():
     _ensure_gpu_attrs()
