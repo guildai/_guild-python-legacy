@@ -48,6 +48,18 @@ def base_env():
     }
 
 def start_task(target, args, op):
-    p_args = [op] + args
-    p = multiprocessing.Process(target=target, args=p_args)
-    p.start()
+    task_stop_conn, parent_stop_conn = multiprocessing.Pipe()
+    p_args = [op, task_stop_conn] + args
+    task = multiprocessing.Process(target=target, args=p_args)
+    task.start()
+    return (task, parent_stop_conn)
+
+def stop_task((task, stop_conn), grace_period):
+    if task.is_alive():
+        stop_conn.send("stop")
+        stop_conn.poll(grace_period)
+        if task.is_alive():
+            task.terminate()
+
+def task_pipe():
+    return multiprocessing.Pipe()

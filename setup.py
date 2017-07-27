@@ -4,6 +4,7 @@ setup(name="guild",
       packages=["guild"],
       version="0.2.dev0",
       install_requires=[
+          "psutil",
           "pyyaml",
           "werkzeug",
       ],

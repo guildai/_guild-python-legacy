@@ -2,7 +2,7 @@ import subprocess
 
 import guild
 
-def start(op, section):
+def start(op, _stop, section):
     sources = _sources_for_section(section)
     if sources:
         script = guild.app.script("snapshot-project")

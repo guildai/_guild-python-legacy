@@ -3,6 +3,8 @@ import subprocess
 
 import guild
 
+TASK_STOP_TIMEOUT = 5 # seconds
+
 class Op(object):
 
     def __init__(self, cmd_args, cmd_env, cmd_cwd, opdir_pattern, meta, tasks):
@@ -19,6 +21,7 @@ class Op(object):
         self._proc = None
         self._exit_status = None
         self._stopped = None
+        self._started_tasks = []
 
     @property
     def opdir(self):
@@ -37,10 +40,16 @@ class Op(object):
         self._init_meta()
         self._init_db()
         self._start_proc()
-        self._start_op_tasks()
+        self._start_tasks()
         self._wait_for_proc()
         self._finalize_meta()
+        self._stop_tasks()
         self._finalize_db()
+
+    def task_stop_pipe(self):
+        task_connection, op_connection = guild.op_support.task_pipe()
+        self._task_stop_pipes.append(op_connection)
+        return task_connection
 
     def _init_opdir(self):
         if self.opdir_pattern:
@@ -110,9 +119,10 @@ class Op(object):
         }
         return val % attrs
 
-    def _start_op_tasks(self):
+    def _start_tasks(self):
         for target, args in self.tasks:
-            guild.op_support.start_task(target, args, self)
+            started_task = guild.op_support.start_task(target, args, self)
+            self._started_tasks.append(started_task)
 
     def _wait_for_proc(self):
         self._exit_status = self._proc.wait()
@@ -129,6 +139,10 @@ class Op(object):
 
     def _stopped_meta(self):
         return str(int(self._started * 1000))
+
+    def _stop_tasks(self):
+        for task in self._started_tasks:
+            guild.op_support.stop_task(task, TASK_STOP_TIMEOUT)
 
     def _finalize_db(self):
         self._db.close()

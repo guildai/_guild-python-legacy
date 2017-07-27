@@ -1,6 +1,6 @@
 import guild
 
-def start(op):
+def start(op, _stop):
     attrs = (
         _sys_attrs() +
         _gpu_attrs() +

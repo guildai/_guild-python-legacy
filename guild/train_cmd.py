@@ -66,10 +66,10 @@ def _tasks(model):
         (guild.tasks.log_flags.start, [model.all_flags()]),
         (guild.tasks.log_system_attrs.start, []),
         (guild.tasks.snapshot_project.start, [model]),
-        (guild.tasks.collector.start, ["tensorflow-collector"]),
-        (guild.tasks.collector.start, ["op-stats"]),
-        (guild.tasks.collector.start, ["sys-stats"]),
-        (guild.tasks.collector.start, ["gpu-stats"])
+        (guild.tasks.tensorflow_events.start, []),
+        (guild.tasks.op_stats.start, []),
+        (guild.tasks.sys_stats.start, []),
+        (guild.tasks.gpu_stats.start, [])
     ]
 
 def _not_trainable_error(model):
