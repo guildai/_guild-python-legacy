@@ -26,7 +26,6 @@ def main():
         _print_error_and_exit(e.msg, e.exit_status)
 
 def _handle_keyboard_interrupt():
-    sys.stdout.write("\n")
     sys.exit(1)
 
 def _print_error_and_exit(msg, exit_status):

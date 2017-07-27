@@ -1,4 +1,5 @@
 name: MNIST
+sources: '*.py'
 
 flags:
   datadir: ./data

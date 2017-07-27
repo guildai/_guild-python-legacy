@@ -65,7 +65,7 @@ def _tasks(model):
     return [
         (guild.tasks.log_flags.start, [model.all_flags()]),
         (guild.tasks.log_system_attrs.start, []),
-        (guild.tasks.snapshot_project.start, []),
+        (guild.tasks.snapshot_project.start, [model]),
         (guild.tasks.collector.start, ["tensorflow-collector"]),
         (guild.tasks.collector.start, ["op-stats"]),
         (guild.tasks.collector.start, ["sys-stats"]),
