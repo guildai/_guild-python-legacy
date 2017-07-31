@@ -19,7 +19,7 @@ string values not ending with a line feed.
 ...    "foo": 123,
 ...    "bar": "hello bar",
 ...    "baz": 1.1234})
->>> pprint(find(opdir))
+>>> find(opdir)
 ['guild.d/meta/bar', 'guild.d/meta/baz', 'guild.d/meta/foo']
 
 We can read the attributes back:

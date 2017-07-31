@@ -4,8 +4,6 @@ import re
 import shutil
 import sys
 
-import prompt
-
 import guild
 
 def add_parser(subparsers):
@@ -76,7 +74,7 @@ def _delete_runs(args, project):
 def _expand_rundirs(specs, runs_dir, runs):
     rundirs = []
     for spec in _expand_specs(specs, runs):
-        if type(spec) is int:
+        if isinstance(spec, int):
             if spec >= 0 and spec < len(runs):
                 rundirs.append(runs[spec])
         else:
@@ -135,10 +133,7 @@ def _confirm_purge(deleted_runs):
         "This will permanently delete %i run(s).\n"
         "Do you wish to continue? [y/N] "
         % len(deleted_runs))
-    if answer.upper() == "Y":
-        return True
-    else:
-        return False
+    return answer.upper() == "Y"
 
 def _permanently_delete(paths):
     for path in paths:

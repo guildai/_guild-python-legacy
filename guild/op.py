@@ -48,11 +48,6 @@ class Op(object):
         self._finalize_db()
         return self._exit_status
 
-    def task_stop_pipe(self):
-        task_connection, op_connection = guild.op_support.task_pipe()
-        self._task_stop_pipes.append(op_connection)
-        return task_connection
-
     def _init_opdir(self):
         if self.opdir_pattern:
             self._opdir = self._resolve_opdir()

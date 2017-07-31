@@ -4,7 +4,12 @@ import json
 import sys
 import time
 
-DEFAULT_INTERVAL = 1
+import psutil
+
+DEFAULT_INTERVAL = 1 # seconds
+
+cpu_percent_init = False
+last_disk = None
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
     _try_import_psutil()
@@ -26,35 +31,13 @@ def _try_import_psutil():
             "(see https://github.com/giampaolo/psutil)\n")
 
 def _log_sys_stats():
-    print("########## TODO: read and log sys stats")
+    _log_cpu_stats()
 
+def _log_cpu_stats():
+    stats = _cpu_stats()
+    print("****", stats)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-cpu_percent_init = False
-last_disk = None
-
-###################################################################
-# CPU stats
-###################################################################
-
-def print_cpu_stats():
-    print_kv(cpu_stats())
-
-def cpu_stats():
+def _cpu_stats():
     global cpu_percent_init
     percents = psutil.cpu_percent(None, True)
     stats = {}
