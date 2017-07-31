@@ -13,14 +13,14 @@ last_disk = None
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
     _try_import_psutil()
-    _loop(interval, stop)
+    _loop(interval, op, stop)
 
-def _loop(interval, stop):
+def _loop(interval, op, stop):
     while True:
         if stop.poll(interval):
             stop.send("ack")
             break
-        _log_sys_stats()
+        _log_sys_stats(op)
 
 def _try_import_psutil():
     try:
@@ -30,12 +30,14 @@ def _try_import_psutil():
             "WARNING: psutil not installed, cannot collect system stats "
             "(see https://github.com/giampaolo/psutil)\n")
 
-def _log_sys_stats():
-    _log_cpu_stats()
+def _log_sys_stats(op):
+    _log_cpu_stats(op)
 
-def _log_cpu_stats():
-    stats = _cpu_stats()
-    print("****", stats)
+def _log_cpu_stats(op):
+    vals = []
+    for key, val in _cpu_stats().items():
+        vals.append((key, [[timestamp, 0, val]]))
+    op.db.log_series_values(vals)
 
 def _cpu_stats():
     global cpu_percent_init

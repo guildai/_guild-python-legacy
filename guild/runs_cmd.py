@@ -26,6 +26,10 @@ def add_parser(subparsers):
         metavar="RUN",
         nargs="*")
     p.add_argument(
+        "--all",
+        help="",
+        action="store_true")
+    p.add_argument(
         "--yes",
         help="Answer 'Y' to any prompts",
         action="store_true")
@@ -62,7 +66,7 @@ def _delete_runs(args, project):
     runs = _runs_for_project(project)
     runs_dir = guild.project_util.runs_dir_for_project(project)
     deleted_dir = os.path.join(runs_dir, ".deleted")
-    rundirs_to_delete = _expand_rundirs(args.runs, runs_dir, runs)
+    rundirs_to_delete = _rundirs_for_args(args, runs_dir, runs)
     if rundirs_to_delete:
         for rundir in rundirs_to_delete:
             _move_run(rundir, deleted_dir)
@@ -70,6 +74,18 @@ def _delete_runs(args, project):
         guild.cli.error(
             "Specify one or more runs to delete.\n"
             "Try 'guild runs --help' for more information.")
+
+def _rundirs_for_args(args, runs_dir, runs):
+    if args.all:
+        if args.runs:
+            guild.cli.error(
+                "You cannot specify both --all and RUN arguments.")
+        if not runs:
+            guild.cli.error(
+                "There are no runs to delete.")
+        return runs
+    else:
+        return _expand_rundirs(args.runs, runs_dir, runs)
 
 def _expand_rundirs(specs, runs_dir, runs):
     rundirs = []
