@@ -88,4 +88,5 @@ def _preview(op):
     guild.cmd_support.preview_op(op)
 
 def _train(op):
-    op.run()
+    exit_status = op.run()
+    raise guild.cli.Exit("", exit_status)

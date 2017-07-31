@@ -1,4 +1,5 @@
 import argparse
+import sys
 import time
 
 def init_flags():
@@ -8,17 +9,24 @@ def init_flags():
     parser.add_argument("--prepare", action="store_true")
     parser.add_argument("--train", action="store_true")
     parser.add_argument("--evaluate", action="store_true")
-    parser.add_argument("--train_time", type=int, default=0)
+    parser.add_argument("--train-time", type=int, default=5)
+    parser.add_argument("--simulate-error", type=int, default=None)
     FLAGS, _ = parser.parse_known_args()
 
 def main():
-    if FLAGS.prepare:
+    if FLAGS.simulate_error:
+        error()
+    elif FLAGS.prepare:
         prepare()
     elif FLAGS.train:
         train()
 
+def error():
+    sys.stderr.write("ERROR!\n")
+    sys.exit(FLAGS.simulate_error)
+
 def prepare():
-    print("TODO: prepare")
+    print("Preparing")
 
 def train():
     stop = time.time() + FLAGS.train_time
@@ -28,7 +36,7 @@ def train():
     print("Done")
 
 def evaluate():
-    print("TODO: evaluate")
+    print("Evaluating")
 
 if __name__ == "__main__":
     init_flags()

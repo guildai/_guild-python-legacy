@@ -4,6 +4,7 @@ import subprocess
 import guild
 
 TASK_STOP_TIMEOUT = 5 # seconds
+PROC_LOCK_NAME = "LOCK"
 
 class Op(object):
 
@@ -45,6 +46,7 @@ class Op(object):
         self._finalize_meta()
         self._stop_tasks()
         self._finalize_db()
+        return self._exit_status
 
     def task_stop_pipe(self):
         task_connection, op_connection = guild.op_support.task_pipe()
@@ -102,6 +104,8 @@ class Op(object):
             self._resolve_cmd_args(resolved_env),
             env=_merge_os_environ(resolved_env),
             cwd=self.cmd_cwd)
+        if self._opdir:
+            _write_proc_lock(self._opdir, self._proc.pid)
 
     def _resolve_cmd_args(self, env):
         return guild.util.resolve_args(self.cmd_args, env)
@@ -126,6 +130,8 @@ class Op(object):
 
     def _wait_for_proc(self):
         self._exit_status = self._proc.wait()
+        if self._opdir:
+            _delete_proc_lock(self._opdir)
 
     def _finalize_meta(self):
         if self._opdir:
@@ -145,10 +151,23 @@ class Op(object):
             guild.op_support.stop_task(task, TASK_STOP_TIMEOUT)
 
     def _finalize_db(self):
-        self._db.close()
+        if self._db:
+            self._db.close()
 
 def _merge_os_environ(env):
     merged = {}
     merged.update(os.environ)
     merged.update(env)
     return merged
+
+def _write_proc_lock(opdir, pid):
+    path = guild.opdir.guild_file(opdir, PROC_LOCK_NAME)
+    with open(path, "w") as f:
+        f.write(str(pid))
+
+def _delete_proc_lock(opdir):
+    path = guild.opdir.guild_file(opdir, PROC_LOCK_NAME)
+    try:
+        os.remove(path)
+    except OSError:
+        pass

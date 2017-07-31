@@ -29,8 +29,9 @@ def _handle_keyboard_interrupt():
     sys.exit(1)
 
 def _print_error_and_exit(msg, exit_status):
-    sys.stderr.write(msg)
-    sys.stderr.write("\n")
+    if msg:
+        sys.stderr.write(msg)
+        sys.stderr.write("\n")
     sys.exit(exit_status)
 
 def parser():
@@ -49,6 +50,7 @@ def parser():
     _add_command(guild.prepare_cmd, cmds)
     _add_command(guild.train_cmd, cmds)
     _add_command(guild.evaluate_cmd, cmds)
+    _add_command(guild.runs_cmd, cmds)
     return p
 
 def _version_pattern():

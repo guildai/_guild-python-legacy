@@ -1,0 +1,153 @@
+import glob
+import os
+import re
+import shutil
+import sys
+
+import prompt
+
+import guild
+
+def add_parser(subparsers):
+    p = guild.cmd_support.add_parser(
+        subparsers,
+        "runs", "manage project runs",
+        """With no arguments, shows the list of runs for a project.
+
+        Use the 'remove' (or 'rm') command to delete runs. Specify either
+        run names or index values returned by the 'runs' command.
+        """)
+    p.add_argument(
+        "command",
+        help="Optional command. Valid options: remove (or rm), purge",
+        metavar="COMMAND",
+        nargs="?")
+    p.add_argument(
+        "runs",
+        help="Run names or indexes applied to the command",
+        metavar="RUN",
+        nargs="*")
+    p.add_argument(
+        "--yes",
+        help="Answer 'Y' to any prompts",
+        action="store_true")
+    guild.cmd_support.add_project_arguments(p)
+    p.set_defaults(func=main)
+
+def main(args):
+    project = guild.cmd_support.project_for_args(args)
+    if args.command is None:
+        _list_runs(args, project)
+    elif args.command == "remove" or args.command == "rm":
+        _delete_runs(args, project)
+    elif args.command == "purge":
+        _purge_deleted_runs(project, args)
+
+def _list_runs(_args, project):
+    runs = _runs_for_project(project)
+    index = 0
+    for rundir in runs:
+        run_name = os.path.basename(rundir)
+        status = guild.op_util.extended_op_status(rundir)
+        print("[%i] %s\t%s" % (index, run_name, status))
+        index = index + 1
+
+def _runs_for_project(project):
+    runs_dir = guild.project_util.runs_dir_for_project(project)
+    pattern = os.path.join(runs_dir, "**", "guild.d")
+    run_paths = [os.path.dirname(guild_dir)
+                 for guild_dir in glob.glob(pattern)]
+    run_paths.sort()
+    return run_paths
+
+def _delete_runs(args, project):
+    runs = _runs_for_project(project)
+    runs_dir = guild.project_util.runs_dir_for_project(project)
+    deleted_dir = os.path.join(runs_dir, ".deleted")
+    rundirs_to_delete = _expand_rundirs(args.runs, runs_dir, runs)
+    if rundirs_to_delete:
+        for rundir in rundirs_to_delete:
+            _move_run(rundir, deleted_dir)
+    else:
+        guild.cli.error(
+            "Specify one or more runs to delete.\n"
+            "Try 'guild runs --help' for more information.")
+
+def _expand_rundirs(specs, runs_dir, runs):
+    rundirs = []
+    for spec in _expand_specs(specs, runs):
+        if type(spec) is int:
+            if spec >= 0 and spec < len(runs):
+                rundirs.append(runs[spec])
+        else:
+            rundirs.append(os.path.join(runs_dir, spec))
+    return rundirs
+
+def _expand_specs(specs, runs):
+    expanded = []
+    for spec in specs:
+        m = re.match("([0-9]+)-([0-9]+)?", spec)
+        if m:
+            start = int(m.groups()[0])
+            if m.groups()[1] is not None:
+                end = int(m.groups()[1])
+            else:
+                end = len(runs) - 1
+            expanded.extend(range(start, end + 1))
+        else:
+            try:
+                expanded.append(int(spec))
+            except ValueError:
+                expanded.append(spec)
+    return expanded
+
+def _move_run(rundir, dest, ):
+    if os.path.isdir(rundir):
+        sys.stdout.write("Deleting %s\n" % os.path.basename(rundir))
+        shutil.move(rundir, dest)
+    else:
+        sys.stdout.write("WARNING: %s is not a run, skipping\n" % rundir)
+
+def _purge_deleted_runs(project, args):
+    runs_dir = guild.project_util.runs_dir_for_project(project)
+    deleted_runs = _deleted_runs(runs_dir)
+    if deleted_runs:
+        _confirm_and_purge(deleted_runs, args)
+    else:
+        sys.stdout.write("Nothing to purge\n")
+
+def _deleted_runs(runs_dir):
+    deleted_dir = os.path.join(runs_dir, ".deleted")
+    if os.path.isdir(deleted_dir):
+        return [os.path.join(deleted_dir, name)
+                for name in os.listdir(deleted_dir)]
+    else:
+        return []
+
+def _confirm_and_purge(deleted_runs, args):
+    if args.yes or _confirm_purge(deleted_runs):
+        _permanently_delete(deleted_runs)
+    else:
+        sys.stdout.write("Canceled\n")
+
+def _confirm_purge(deleted_runs):
+    answer = raw_input(
+        "This will permanently delete %i run(s).\n"
+        "Do you wish to continue? [y/N] "
+        % len(deleted_runs))
+    if answer.upper() == "Y":
+        return True
+    else:
+        return False
+
+def _permanently_delete(paths):
+    for path in paths:
+        _assert_deleted_path(path)
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        else:
+            os.remove(path)
+
+def _assert_deleted_path(path):
+    if os.path.basename(os.path.dirname(path)) != ".deleted":
+        raise AssertionError(path)

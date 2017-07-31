@@ -12,10 +12,10 @@ def start(op, stop, interval=DEFAULT_INTERVAL):
 
 def _loop(interval, stop):
     while True:
-        _log_sys_stats()
         if stop.poll(interval):
             stop.send("ack")
             break
+        _log_sys_stats()
 
 def _try_import_psutil():
     try:

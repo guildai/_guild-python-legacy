@@ -71,16 +71,18 @@ def project_for_args(args, name="guild.yml"):
         else:
             _no_such_dir_error(args.project_dir)
     else:
-        _apply_profile(args, project)
-        _apply_flags(args, project)
+        _maybe_apply_profile(args, project)
+        _maybe_apply_flags(args, project)
         return project
 
-def _apply_profile(args, project):
-    for profile in args.profiles:
+def _maybe_apply_profile(args, project):
+    profiles = getattr(args, "profiles", [])
+    for profile in profiles:
         project.command_line_profiles.append(profile)
 
-def _apply_flags(args, project):
-    for flag in args.flags:
+def _maybe_apply_flags(args, project):
+    flags = getattr(args, "flags", [])
+    for flag in flags:
         project.command_line_flags.append(parse_flag(flag))
 
 def parse_flag(s):

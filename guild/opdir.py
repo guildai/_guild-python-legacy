@@ -33,6 +33,13 @@ def read_all_meta(opdir):
         meta[name] = _read_meta_file(path)
     return meta
 
+def read_meta(opdir, name, default=None):
+    path = os.path.join(meta_dir(opdir), name)
+    try:
+        return _read_meta_file(path)
+    except IOError:
+        return default
+
 def _read_meta_file(path):
     with open(path, "r") as f:
         return f.read()
