@@ -8,7 +8,7 @@ import guild
 
 event_loaders = {}
 
-DEFAULT_INTERVAL = 1 # seconds
+DEFAULT_INTERVAL = 5 # seconds
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
     guild.task_support.loop((_log_events, [op]), interval, stop)

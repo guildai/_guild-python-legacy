@@ -21,7 +21,7 @@ STATS = [
 SMI_PATH = None
 GPU_STATS_CMD = None
 
-DEFAULT_INTERVAL = 1 # seconds
+DEFAULT_INTERVAL = 5 # seconds
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
     if _init():

@@ -6,7 +6,7 @@ import psutil
 
 import guild
 
-DEFAULT_INTERVAL = 1 # seconds
+DEFAULT_INTERVAL = 5 # seconds
 
 cpu_percent_init = False
 last_disk = None
