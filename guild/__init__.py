@@ -11,7 +11,6 @@ import guild.op_support
 import guild.op_util
 import guild.opdir
 import guild.prepare_cmd
-import guild.psutil_proxy
 import guild.project
 import guild.project_util
 import guild.runs_cmd

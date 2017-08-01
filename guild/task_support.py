@@ -2,6 +2,9 @@ from __future__ import division
 
 import time
 
+class Stop(Exception):
+    pass
+
 def series_timestamp():
     return int(time.time() * 1000)
 
@@ -12,7 +15,10 @@ def loop((cb_fun, cb_args), interval, stop):
         if stop.poll(sleep):
             stop.send("ack")
             break
-        apply(cb_fun, cb_args)
+        try:
+            apply(cb_fun, cb_args)
+        except Stop:
+            break
 
 def _sleep_interval(interval, start):
     now_ms = int(time.time() * 1000)

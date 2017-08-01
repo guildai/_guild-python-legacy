@@ -2,15 +2,9 @@ from __future__ import division
 
 import time
 
-import guild
+import psutil
 
-try:
-    import psutil # pylint: disable=wrong-import-order
-except ImportError:
-    guild.log.warn(
-        "WARNING: psutil not installed, cannot collect system stats "
-        "(see https://github.com/giampaolo/psutil)\n")
-    psutil = guild.psutil_proxy
+import guild
 
 DEFAULT_INTERVAL = 1 # seconds
 

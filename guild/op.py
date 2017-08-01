@@ -32,6 +32,10 @@ class Op(object):
     def db(self):
         return self._db
 
+    @property
+    def proc(self):
+        return self._proc
+
     def run(self):
         if self._running:
             raise AssertionError("op already running")
