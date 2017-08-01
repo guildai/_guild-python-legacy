@@ -48,3 +48,6 @@ def pid_exists(pid):
         return False
     else:
         return True
+
+def timestamp_ms():
+    return int(time.time() * 1000)

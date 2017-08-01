@@ -65,6 +65,14 @@ against the whole series key:
  (u'baz', [(123, 1, 3.0), (124, 2, 3.1), (125, 3, 3.2)]),
  (u'foo', [(123, 1, 1.0), (124, 2, 1.1), (125, 3, 1.2)])]
 
+Edge cases:
+
+>>> db.log_series_values([])
+
+>>> db.log_series_values([("bam", [])])
+>>> db.series_values("bam")
+[]
+
 Helper functions
 ----------------
 

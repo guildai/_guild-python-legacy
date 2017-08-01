@@ -1,10 +1,16 @@
 from __future__ import division
 
-import json
-import sys
 import time
 
-import psutil
+import guild
+
+try:
+    import psutil # pylint: disable=wrong-import-order
+except ImportError:
+    guild.log.warn(
+        "WARNING: psutil not installed, cannot collect system stats "
+        "(see https://github.com/giampaolo/psutil)\n")
+    psutil = guild.psutil_proxy
 
 DEFAULT_INTERVAL = 1 # seconds
 
@@ -12,32 +18,14 @@ cpu_percent_init = False
 last_disk = None
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
-    _try_import_psutil()
-    _loop(interval, op, stop)
-
-def _loop(interval, op, stop):
-    while True:
-        if stop.poll(interval):
-            stop.send("ack")
-            break
-        _log_sys_stats(op)
-
-def _try_import_psutil():
-    try:
-        import psutil
-    except ImportError:
-        guild.log.warn(
-            "WARNING: psutil not installed, cannot collect system stats "
-            "(see https://github.com/giampaolo/psutil)\n")
+    guild.task_support.loop((_log_sys_stats, [op]), interval, stop)
 
 def _log_sys_stats(op):
     _log_cpu_stats(op)
+    _log_disk_stats(op)
 
 def _log_cpu_stats(op):
-    vals = []
-    for key, val in _cpu_stats().items():
-        vals.append((key, [[timestamp, 0, val]]))
-    op.db.log_series_values(vals)
+    guild.task_support.log_kv_as_series(_cpu_stats(), op.db)
 
 def _cpu_stats():
     global cpu_percent_init
@@ -48,29 +36,27 @@ def _cpu_stats():
         for percent in percents:
             stats["sys/cpu%i/util" % i] = percent / 100
             i += 1
-        stats["sys/cpu/util"] = sum(percents) / len(percents) / 100
+        if percents:
+            stats["sys/cpu/util"] = sum(percents) / len(percents) / 100
     cpu_percent_init = True
     return stats
 
-###################################################################
-# Disk stats
-###################################################################
+def _log_disk_stats(op):
+    guild.task_support.log_kv_as_series(_disk_stats(), op.db)
 
-def print_disk_stats():
-    print_kv(disk_stats())
-
-def disk_stats():
+def _disk_stats():
     global last_disk
-    cur_disk = timed_disk_io_counters()
+    cur_disk = _timed_disk_io_counters()
     stats = {}
     if last_disk:
-        for dev_name, last, cur in zip_physical_disk_stats(last_disk, cur_disk):
-            for stat_name, val in calc_disk_stats(last, cur).items():
-                stats[dev_stat_key(dev_name, stat_name)] = val
+        for dev_name, last, cur in _zip_physical_disk_stats(
+                last_disk, cur_disk):
+            for stat_name, val in _calc_disk_stats(last, cur).items():
+                stats[_dev_stat_key(dev_name, stat_name)] = val
     last_disk = cur_disk
     return stats
 
-def timed_disk_io_counters():
+def _timed_disk_io_counters():
     now = time.time()
     counters = psutil.disk_io_counters(True)
     for key, counts in counters.items():
@@ -79,7 +65,7 @@ def timed_disk_io_counters():
         counters[key] = counts_dict
     return counters
 
-def zip_physical_disk_stats(all_last, all_cur):
+def _zip_physical_disk_stats(all_last, all_cur):
     for device in psutil.disk_partitions():
         full_name = device.device
         if not full_name.startswith('/dev/'):
@@ -90,7 +76,7 @@ def zip_physical_disk_stats(all_last, all_cur):
         if dev_last and dev_cur:
             yield name, dev_last, dev_cur
 
-def calc_disk_stats(last, cur):
+def _calc_disk_stats(last, cur):
     stats = {}
     seconds = cur["timestamp"] - last["timestamp"]
     writes = cur["write_count"] - last["write_count"]
@@ -109,17 +95,13 @@ def calc_disk_stats(last, cur):
         stats["util"] = busy_time_ms / (seconds * 1000)
     return stats
 
-def dev_stat_key(dev_name, stat_name):
+def _dev_stat_key(dev_name, stat_name):
     return "sys/dev%s/%s" % (dev_name, stat_name)
 
-###################################################################
-# Memory stats
-###################################################################
+def _log_mem_stats(op):
+    guild.task_support.log_kv_as_series(_mem_stats(), op.db)
 
-def print_mem_stats():
-    print_kv(mem_stats())
-
-def mem_stats():
+def _mem_stats():
     mem = psutil.virtual_memory()
     swap = psutil.swap_memory()
     return {
@@ -132,29 +114,3 @@ def mem_stats():
         "sys/swap/used": swap.used,
         "sys/swap/util": swap.percent / 100
     }
-
-###################################################################
-# Print
-###################################################################
-
-def print_kv(vals):
-    json.dump({"kv": vals}, sys.stdout)
-    print_eof()
-
-def print_eof():
-    sys.stdout.write("\n\n")
-    sys.stdout.flush()
-
-###################################################################
-# Main
-###################################################################
-
-def main():
-    while sys.stdin.readline():
-        print_cpu_stats()
-        print_disk_stats()
-        print_mem_stats()
-        print_eof()
-
-def read_uptime():
-    return float(open("/proc/uptime", "r").read().split()[0])

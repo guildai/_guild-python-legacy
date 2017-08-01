@@ -36,8 +36,9 @@ class DB(object):
         return self._select(SQL)
 
     def log_series_values(self, vals):
-        self._update_series_key_hashes(vals)
-        self._insert_series_values(vals)
+        if vals:
+            self._update_series_key_hashes(vals)
+            self._insert_series_values(vals)
 
     def _update_series_key_hashes(self, series_vals):
         vals = [(key, _key_hash(key)) for key, _ in series_vals]
@@ -48,10 +49,11 @@ class DB(object):
 
     def _insert_series_values(self, raw_vals):
         encoded_vals = _encode_series_values(raw_vals)
-        arg_placeholders = _sql_arg_placeholders(encoded_vals)
-        SQL = "insert or ignore into series values %s" % arg_placeholders
-        params = _sql_arg_vals(encoded_vals, (int, int, int, buffer))
-        self._exec(SQL, params)
+        if encoded_vals:
+            arg_placeholders = _sql_arg_placeholders(encoded_vals)
+            SQL = "insert or ignore into series values %s" % arg_placeholders
+            params = _sql_arg_vals(encoded_vals, (int, int, int, buffer))
+            self._exec(SQL, params)
 
     def series_values(self, pattern):
         key_hashes = self._key_hashes_for_pattern(pattern)
@@ -122,12 +124,13 @@ def _key_hash(key):
 def _encode_series_values(raw_values):
     encoded = []
     for key, series in raw_values:
-        t0 = series[0][0]
-        encoded.append(
-            (_key_hash(key),
-             t0,
-             DEFAULT_SERIES_ENCODING,
-             _default_series_encode(series)))
+        if series:
+            t0 = series[0][0]
+            encoded.append(
+                (_key_hash(key),
+                 t0,
+                 DEFAULT_SERIES_ENCODING,
+                 _default_series_encode(series)))
     return encoded
 
 def _default_series_encode(vals):
