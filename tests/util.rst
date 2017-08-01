@@ -15,3 +15,13 @@ arguments.
 >>> args = ["--rundir", "$RUNDIR", "--train-dir", "$RUNDIR/train"]
 >>> guild.util.resolve_args(args, env)
 ['--rundir', 'foo', '--train-dir', 'foo/train']
+
+Finding executables
+-------------------
+
+>>> import os
+>>> if os.name == "posix":
+...    guild.util.find_executable("ls") == "/bin/ls"
+... else:
+...    True
+True

@@ -51,3 +51,11 @@ def pid_exists(pid):
 
 def timestamp_ms():
     return int(time.time() * 1000)
+
+def find_executable(name):
+    PATH = os.getenv("PATH")
+    for path in PATH.split(os.path.pathsep):
+        exe = os.path.join(path, name)
+        if os.path.exists(exe) and os.access(exe, os.X_OK):
+            return exe
+    return None
