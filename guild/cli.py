@@ -50,6 +50,7 @@ def parser():
     _add_command(guild.prepare_cmd, cmds)
     _add_command(guild.train_cmd, cmds)
     _add_command(guild.evaluate_cmd, cmds)
+    _add_command(guild.view_cmd, cmds)
     _add_command(guild.runs_cmd, cmds)
     return p
 

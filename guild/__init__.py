@@ -20,6 +20,7 @@ import guild.tasks
 import guild.tensorflow_support
 import guild.train_cmd
 import guild.util
+import guild.view_cmd
 
 VERSION = None
 GIT_COMMIT = None
