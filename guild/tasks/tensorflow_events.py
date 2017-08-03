@@ -1,16 +1,20 @@
 import os
 import subprocess
 
-from tensorflow.tensorboard.backend.event_processing import event_multiplexer
-from tensorflow.tensorboard.backend.event_processing import event_accumulator
-
 import guild
+
+# Defer time consuming imports until 'start'
+event_multiplexer = None
+event_accumulator = None
 
 event_loaders = {}
 
 DEFAULT_INTERVAL = 5 # seconds
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
+    # pylint: disable=redefined-outer-name
+    from tensorflow.tensorboard.backend.event_processing import event_multiplexer
+    from tensorflow.tensorboard.backend.event_processing import event_accumulator
     guild.task_support.loop((_log_events, [op]), interval, stop)
 
 def _log_events(op):
