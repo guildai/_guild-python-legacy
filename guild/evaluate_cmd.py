@@ -11,4 +11,4 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    print("TODO: train", args)
+    print("TODO: evaluate", args)
