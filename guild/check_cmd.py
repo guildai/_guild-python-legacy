@@ -18,10 +18,10 @@ def main(_args):
     _print_nvidia_tools_info()
 
 def _print_guild_info():
-    print("guild_version:          %s" % guild.version())
+    sys.stdout.write("guild_version:          %s\n" % guild.version())
 
 def _print_python_info():
-    print("python_version:         %s" % _python_version())
+    sys.stdout.write("python_version:         %s\n" % _python_version())
 
 def _python_version():
     return sys.version.replace("\n", "")

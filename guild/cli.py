@@ -16,6 +16,7 @@ class Exit(Exception):
         return "(%i) %s" % (self.exit_status, self.msg)
 
 def main():
+    global __prog_name
     p = parser()
     args = p.parse_args()
     try:
@@ -23,13 +24,15 @@ def main():
     except KeyboardInterrupt as e:
         _handle_keyboard_interrupt()
     except Exit as e:
-        _print_error_and_exit(e.msg, e.exit_status)
+        _print_error_and_exit(p.prog, e.msg, e.exit_status)
 
 def _handle_keyboard_interrupt():
     sys.exit(1)
 
-def _print_error_and_exit(msg, exit_status):
+def _print_error_and_exit(prog, msg, exit_status):
     if msg:
+        sys.stderr.write(prog)
+        sys.stderr.write(": ")
         sys.stderr.write(msg)
         sys.stderr.write("\n")
     sys.exit(exit_status)

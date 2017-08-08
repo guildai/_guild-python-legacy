@@ -1,3 +1,7 @@
+import argparse
+import socket
+import sys
+
 import guild
 
 DEFAULT_PORT = 6333
@@ -19,6 +23,10 @@ def add_parser(subparsers):
         don't need to be refreshed often.
         """ % (DEFAULT_PORT, DEFAULT_PORT, DEFAULT_REFRESH_INTERVAL))
     p.add_argument(
+        "-H", "--host",
+        help="HTTP server host (default is to listen on all interfaces)",
+        default="")
+    p.add_argument(
         "-p", "--port",
         help="HTTP server port (default is %i)" % DEFAULT_PORT,
         metavar="PORT",
@@ -29,14 +37,23 @@ def add_parser(subparsers):
         help=("refresh interval in seconds (default is %i)"
               % DEFAULT_REFRESH_INTERVAL),
         metavar="SECONDS",
+        dest="refresh_interval",
         type=int,
         default=DEFAULT_REFRESH_INTERVAL)
     p.add_argument(
-        "-l", "--logging",
-        help="enable logging",
+        "--debug",
+        help=argparse.SUPPRESS,
         action="store_true")
     guild.cmd_support.add_project_arguments(p)
     p.set_defaults(func=main)
 
 def main(args):
-    print("TODO: view", args)
+    try:
+        guild.view_http.start(args.host, args.port, args)
+    except socket.error:
+        guild.cli.error(
+            "port %i is being used by another application\n"
+            "Try 'guild view --port PORT' with a different port."
+            % args.port)
+    finally:
+        sys.stdout.write("\n")

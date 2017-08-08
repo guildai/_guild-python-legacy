@@ -51,7 +51,7 @@ def _list_runs(_args, project):
     for rundir in runs:
         run_name = os.path.basename(rundir)
         status = guild.op_util.extended_op_status(rundir)
-        print("[%i] %s\t%s" % (index, run_name, status))
+        sys.stdout.write("[%i] %s\t%s\n" % (index, run_name, status))
         index = index + 1
 
 def _runs_for_project(project):

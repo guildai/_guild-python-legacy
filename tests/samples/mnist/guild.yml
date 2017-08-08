@@ -8,6 +8,8 @@ flags:
   epochs: 100
 
 profiles:
+  check:
+    epochs: 1
   quick-train:
     epochs: 10
   long-train:
