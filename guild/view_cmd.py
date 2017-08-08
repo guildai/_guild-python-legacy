@@ -55,5 +55,5 @@ def main(args):
             "port %i is being used by another application\n"
             "Try 'guild view --port PORT' with a different port."
             % args.port)
-    finally:
+    else:
         sys.stdout.write("\n")
