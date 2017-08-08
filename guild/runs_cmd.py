@@ -55,12 +55,7 @@ def _list_runs(_args, project):
         index = index + 1
 
 def _runs_for_project(project):
-    runs_dir = guild.project_util.runs_dir_for_project(project)
-    pattern = os.path.join(runs_dir, "**", "guild.d")
-    run_paths = [os.path.dirname(guild_dir)
-                 for guild_dir in glob.glob(pattern)]
-    run_paths.sort()
-    return run_paths
+    return [run.opdir for run in guild.run.runs_for_project(project)]
 
 def _delete_runs(args, project):
     runs = _runs_for_project(project)

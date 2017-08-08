@@ -1,0 +1,1 @@
+python -u ./intro.py --epochs 1 --datadir ./data --rundir $RUNDIR --batch_size 100

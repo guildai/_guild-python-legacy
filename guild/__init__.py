@@ -13,6 +13,7 @@ import guild.opdir
 import guild.prepare_cmd
 import guild.project
 import guild.project_util
+import guild.run
 import guild.runs_cmd
 import guild.system
 import guild.task_support
