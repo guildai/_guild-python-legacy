@@ -53,7 +53,7 @@ def _cmd_env():
     return env
 
 def _rundir_pattern(model):
-    runs_dir = guild.project_util.runs_dir_for_section(model)
+    runs_dir = guild.project_util.runs_dir_for_project(model.project)
     return os.path.join(runs_dir, "%(started)s-" + model.path[1])
 
 def _meta(model):
