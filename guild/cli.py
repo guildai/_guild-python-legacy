@@ -16,7 +16,6 @@ class Exit(Exception):
         return "(%i) %s" % (self.exit_status, self.msg)
 
 def main():
-    global __prog_name
     p = parser()
     args = p.parse_args()
     try:

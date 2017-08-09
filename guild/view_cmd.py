@@ -48,8 +48,11 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
+    project = guild.cmd_support.project_for_args(args)
+    settings = _view_settings_for_args(args)
+    view = guild.view.ProjectView(project, settings)
     try:
-        guild.view_http.start(args.host, args.port, args)
+        guild.view_http.start(args.host, args.port, view)
     except socket.error:
         guild.cli.error(
             "port %i is being used by another application\n"
@@ -57,3 +60,6 @@ def main(args):
             % args.port)
     else:
         sys.stdout.write("\n")
+
+def _view_settings_for_args(_args):
+    return {}

@@ -21,6 +21,7 @@ import guild.tasks
 import guild.tensorflow_support
 import guild.train_cmd
 import guild.util
+import guild.view
 import guild.view_cmd
 import guild.view_http
 
