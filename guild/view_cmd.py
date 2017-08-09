@@ -60,6 +60,8 @@ def main(args):
             % args.port)
     else:
         sys.stdout.write("\n")
+    finally:
+        view.close()
 
 def _view_settings_for_args(_args):
     return {}

@@ -30,11 +30,17 @@ the location of the project runs. Our sample runs are located under
 change before calling any of the view methods.
 
 >>> view._runs_dir = sample("runs")
+>>> runs = view.runs()
+>>> len(runs)
+1
+
+Formatted runs
+--------------
 
 We can use the `runs` method to return a list of formatted runs (each
 represented by a dict, which can easily be converted to JSON):
 
->>> pprint(view.runs())
+>>> pprint(view.formatted_runs())
 [{'cmd': '...',
   'dir': 'tests/samples/runs/2017-08-08T13-21-53Z-intro',
   'exit_status': 0,
@@ -45,7 +51,30 @@ represented by a dict, which can easily be converted to JSON):
   'status': 'stopped',
   'stopped': 1502198513402}]
 
- View settings are provided unmodified:
+Settings
+--------
+
+View settings are provided unmodified:
 
 >>> view.settings()
 {'refreshInterval': 5}
+
+Flags
+-----
+
+Flags are provided on a per run basis. A run is specified by its run
+ID:
+
+>>> pprint(view.flags(runs[0].id))
+[(u'epochs', u'1'),
+ (u'datadir', u'./data'),
+ (u'rundir', u'$RUNDIR'),
+ (u'batch_size', u'100')]
+
+We can alternatively use `None` to represent the latest run.
+
+>>> pprint(view.flags(None))
+[(u'epochs', u'1'),
+ (u'datadir', u'./data'),
+ (u'rundir', u'$RUNDIR'),
+ (u'batch_size', u'100')]

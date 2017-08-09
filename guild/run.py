@@ -35,7 +35,7 @@ def runs_for_runs_dir(runs_dir):
     pattern = os.path.join(runs_dir, "**", "guild.d")
     run_paths = [os.path.dirname(guild_dir)
                  for guild_dir in glob.glob(pattern)]
-    run_paths.sort()
+    run_paths.sort(reverse=True)
     return [run_for_opdir(path) for path in run_paths]
 
 def runs_for_project(project):

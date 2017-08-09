@@ -9,6 +9,23 @@ import guild
 DEFAULT_SERIES_ENCODING = 1
 SERIES_STRUCT_FMT = ">QQd"
 
+class Pool(object):
+
+    def __init__(self):
+        self._dbs = {}
+
+    def for_run(self, run):
+        db = self._dbs.get(run.id)
+        if db is None:
+            db = init_for_opdir(run.opdir)
+            self._dbs[run.id] = db
+        return db
+
+    def close(self):
+        for db in self._dbs.values():
+            db.close
+        self._dbs.clear()
+
 class DB(object):
 
     def __init__(self, path):

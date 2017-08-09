@@ -82,8 +82,24 @@ def _apply_static(app):
     return werkzeug.wsgi.SharedDataMiddleware(app, routes)
 
 ####################################################################
-# Response
+# Helpers
 ####################################################################
+
+def _run_id(req):
+    run_id = req.args.get("run")
+    if run_id:
+        try:
+            return int(run_id)
+        except ValueError:
+            _raise_bad_request("run must be a valid run ID")
+    else:
+        return None
+
+def _raise_bad_request(msg):
+    raise werkzeug.exceptions.BadRequest(msg)
+
+def _raise_not_found(msg):
+    raise werkzeug.exceptions.NotFound()
 
 def _json_resp(val):
     return werkzeug.wrappers.Response(json.dumps(val))
@@ -96,13 +112,18 @@ def _handle_app_page(_view, _req, path):
     return werkzeug.wrappers.Response("TODO: handle app page '%s'\n" % path)
 
 def _handle_runs(view, _req):
-    return _json_resp(view.runs())
+    return _json_resp(view.formatted_runs())
 
 def _handle_series(_view, _req, path):
     return werkzeug.wrappers.Response("TODO: handle series %s\n" % path)
 
-def _handle_flags(_view, _req):
-    return werkzeug.wrappers.Response("TODO: handle flags\n")
+def _handle_flags(view, req):
+    try:
+        flags = view.flags(_run_id(req))
+    except LookupError:
+        _raise_not_found()
+    else:
+        return _json_resp(flags)
 
 def _handle_attrs(_view, _req):
     return werkzeug.wrappers.Response("TODO: handle attrs\n")
