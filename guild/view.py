@@ -8,6 +8,9 @@ class ProjectView(object):
         self._runs_dir = guild.project_util.runs_dir_for_project(project)
         self._dbs = guild.db.Pool()
 
+    def close(self):
+        self._dbs.close()
+
     def settings(self):
         return self._settings
 

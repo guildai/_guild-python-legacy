@@ -23,7 +23,7 @@ class Pool(object):
 
     def close(self):
         for db in self._dbs.values():
-            db.close
+            db.close()
         self._dbs.clear()
 
 class DB(object):
