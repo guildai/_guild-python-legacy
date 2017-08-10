@@ -10,6 +10,8 @@ werkzeug.serving = serving
 
 import guild # pylint: disable=wrong-import-position
 
+DEFAULT_MAX_EPOCHS = 400
+
 ####################################################################
 # Server
 ####################################################################
@@ -98,11 +100,19 @@ def _run_id(req):
 def _raise_bad_request(msg):
     raise werkzeug.exceptions.BadRequest(msg)
 
-def _raise_not_found(msg):
-    raise werkzeug.exceptions.NotFound()
+def _raise_not_found(msg=""):
+    raise werkzeug.exceptions.NotFound(msg)
 
 def _json_resp(val):
     return werkzeug.wrappers.Response(json.dumps(val))
+
+def _view_lookup(fun, *args):
+    try:
+        result = fun(*args)
+    except LookupError:
+        _raise_not_found()
+    else:
+        return _json_resp(result)
 
 ####################################################################
 # Handlers
@@ -114,19 +124,31 @@ def _handle_app_page(_view, _req, path):
 def _handle_runs(view, _req):
     return _json_resp(view.formatted_runs())
 
-def _handle_series(_view, _req, path):
-    return werkzeug.wrappers.Response("TODO: handle series %s\n" % path)
+def _handle_series(view, req, path):
+    series_pattern = _series_pattern_for_path(path)
+    max_epochs = _max_epochs_for_params(req.args)
+    return _view_lookup(view.series, _run_id(req), series_pattern, max_epochs)
+
+def _series_pattern_for_path(path):
+    return path
+
+def _max_epochs_for_params(params):
+    max_str = params.get("max_epochs")
+    if not max_str:
+        return DEFAULT_MAX_EPOCHS
+    elif max_str == "all":
+        return None
+    else:
+        try:
+            return int(max_str)
+        except ValueError:
+            _raise_bad_request("max_epochs must be 'all' or an integer")
 
 def _handle_flags(view, req):
-    try:
-        flags = view.flags(_run_id(req))
-    except LookupError:
-        _raise_not_found()
-    else:
-        return _json_resp(flags)
+    return _view_lookup(view.flags, _run_id(req))
 
-def _handle_attrs(_view, _req):
-    return werkzeug.wrappers.Response("TODO: handle attrs\n")
+def _handle_attrs(view, req):
+    return _view_lookup(view.attrs, _run_id(req))
 
 def _handle_output(_view, _req):
     return werkzeug.wrappers.Response("TODO: handle output\n")

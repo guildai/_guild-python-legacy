@@ -26,12 +26,23 @@ class ProjectView(object):
                 return run
         raise LookupError()
 
+    def _run_db_for_id(self, run_id):
+        run = self._run_for_id(run_id)
+        return self._dbs.for_run(run)
+
     def formatted_runs(self):
         return [_format_run(run) for run in self.runs()]
 
     def flags(self, run_id):
-        run = self._run_for_id(run_id)
-        return self._dbs.for_run(run).flags()
+        return self._run_db_for_id(run_id).flags()
+
+    def attrs(self, run_id):
+        return self._run_db_for_id(run_id).attrs()
+
+    def series(self, run_id, series_pattern, max_epochs=None):
+        db = self._run_db_for_id(run_id)
+        series = db.series_values(series_pattern)
+        return _reduce_series(series, max_epochs)
 
 def _format_run(run):
     attrs = {
@@ -52,3 +63,10 @@ def _meta_val(name, val):
         return int(val)
     else:
         return val
+
+def _reduce_series(series, max_epochs):
+    if max_epochs is None:
+        return series
+    else:
+        # TODO: reduce
+        return series

@@ -40,6 +40,11 @@ three-tuple of timestamp, global step, and float value.
 ...         ("baz", [[123, 1, 3.0], [124, 2, 3.1], [125, 3, 3.2]])]
 >>> db.log_series_values(vals)
 
+We can read the list of keys using `series_keys`:
+
+>>> db.series_keys()
+[u'bar', u'baz', u'foo']
+
 To read back series, we provide a key pattern, which is used to match
 against the whole series key:
 

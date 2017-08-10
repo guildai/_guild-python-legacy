@@ -14,7 +14,9 @@ ALL_TESTS = [
     "opdir-meta",
     "project",
     "project-support",
-    "util"
+    "runs",
+    "util",
+    "view"
 ]
 
 def main():
