@@ -7,7 +7,7 @@ import struct
 import guild
 
 DEFAULT_SERIES_ENCODING = 1
-SERIES_STRUCT_FMT = ">QQd"
+NULL_ENC = "\xff\xff\xff\xff\xff\xff\xff\xff"
 
 class Pool(object):
 
@@ -157,8 +157,16 @@ def _encode_series_values(raw_values):
 def _default_series_encode(vals):
     parts = []
     for time, step, val in vals:
-        parts.append(struct.pack(SERIES_STRUCT_FMT, time, step, val))
+        parts.append(_encode_time_step_val(time, step, val))
     return "".join(parts)
+
+def _encode_time_step_val(time, step, val):
+    time_step_enc = struct.pack(">QQ", time, step)
+    if val is None:
+        val_enc = NULL_ENC
+    else:
+        val_enc = struct.pack(">d", val)
+    return time_step_enc + val_enc
 
 def _filter_hashes(hashes, pattern):
     cre = re.compile(r"^%s$" % pattern)
@@ -193,12 +201,22 @@ def _series_decode(encoding, data):
 
 def _default_series_decode(data):
     vals = []
-    val_size = struct.calcsize(SERIES_STRUCT_FMT)
     offset = 0
     while offset < len(data):
-        vals.append(struct.unpack_from(SERIES_STRUCT_FMT, data, offset))
-        offset = offset + val_size
+        next_offset, tsv = _default_decode_time_step_val_from(data, offset)
+        vals.append(tsv)
+        offset = next_offset
     return vals
+
+def _default_decode_time_step_val_from(data, offset):
+    time_step_enc = data[offset:offset+16]
+    time, step = struct.unpack(">QQ", time_step_enc)
+    val_enc = data[offset+16:offset+24]
+    if val_enc == NULL_ENC:
+        val = None
+    else:
+        val, = struct.unpack(">d", val_enc)
+    return offset + 24, (time, step, val)
 
 def _sql_arg_placeholders(vals):
     return ",".join([_sql_arg_group(val) for val in vals])
