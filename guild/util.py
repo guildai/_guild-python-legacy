@@ -59,3 +59,16 @@ def find_executable(name):
         if os.path.exists(exe) and os.access(exe, os.X_OK):
             return exe
     return None
+
+def reduce_to(l, max_count):
+    reduced = []
+    len_l = len(l)
+    if len_l <= max_count:
+        return l
+    keep_every = len_l // max_count + 1
+    # Use offset to ensure that the last item is always included
+    index_offset = (len_l - 1) % keep_every
+    for index, val in enumerate(l):
+        if (index - index_offset) % keep_every == 0:
+            reduced.append(val)
+    return reduced

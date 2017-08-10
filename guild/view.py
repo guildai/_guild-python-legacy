@@ -68,5 +68,4 @@ def _reduce_series(series, max_epochs):
     if max_epochs is None:
         return series
     else:
-        # TODO: reduce
-        return series
+        return guild.util.reduce_to(series, max_epochs)
