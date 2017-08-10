@@ -13,3 +13,6 @@ def _project_runs_dir(project):
 
 def _default_runs_dir():
     return "runs"
+
+def project_to_json(_project):
+    return "[]"

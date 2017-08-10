@@ -3,16 +3,13 @@ import guild
 class ProjectView(object):
 
     def __init__(self, project, settings):
-        self._project = project
-        self._settings = settings
+        self.project = project
+        self.settings = settings
         self._runs_dir = guild.project_util.runs_dir_for_project(project)
         self._dbs = guild.db.Pool()
 
     def close(self):
         self._dbs.close()
-
-    def settings(self):
-        return self._settings
 
     def runs(self):
         return guild.run.runs_for_runs_dir(self._runs_dir)

@@ -48,7 +48,7 @@ def _routes():
         _handler("/data/project", _handle_project),
         _handler("/data/tf/<path:path>", _handle_tf_data),
         _redirect("/", "/train"),
-        _handler("/<path:path>", _handle_app_page)
+        _handler("/<path:_path>", _handle_app_page)
     ])
 
 def _base_app_for_routes(routes, view):
@@ -103,8 +103,10 @@ def _raise_bad_request(msg):
 def _raise_not_found(msg=""):
     raise werkzeug.exceptions.NotFound(msg)
 
-def _json_resp(val):
-    return werkzeug.wrappers.Response(json.dumps(val))
+def _json_resp(encoded_json):
+    resp = werkzeug.wrappers.Response(encoded_json)
+    resp.content_type = "application/json"
+    return resp
 
 def _view_lookup(fun, *args):
     try:
@@ -112,14 +114,23 @@ def _view_lookup(fun, *args):
     except LookupError:
         _raise_not_found()
     else:
-        return _json_resp(result)
+        return _json_resp(json.dumps(result))
 
 ####################################################################
 # Handlers
 ####################################################################
 
-def _handle_app_page(_view, _req, path):
-    return werkzeug.wrappers.Response("TODO: handle app page '%s'\n" % path)
+def _handle_app_page(_view, _req, _path):
+    return werkzeug.wrappers.Response(
+        _index_page(),
+        content_type="text/html")
+
+def _index_page():
+    with open(_index_page_path(), "r") as f:
+        return f.read()
+
+def _index_page_path():
+    return os.path.join(guild.app.home(), "assets", "view-index.html")
 
 def _handle_runs(view, _req):
     return _json_resp(view.formatted_runs())
@@ -162,8 +173,8 @@ def _handle_sources(_view, _req):
 def _handle_settings(_view, _req):
     return werkzeug.wrappers.Response("TODO: handle settings\n")
 
-def _handle_project(_view, _req):
-    return werkzeug.wrappers.Response("TODO: handle project\n")
+def _handle_project(view, _req):
+    return _json_resp(guild.project_util.project_to_json(view.project))
 
 def _handle_tf_data(_view, _req, path):
     return werkzeug.wrappers.Response("TODO: handle tf data '%s'\n" % path)
