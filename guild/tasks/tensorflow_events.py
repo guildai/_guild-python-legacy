@@ -12,6 +12,8 @@ event_loaders = {}
 DEFAULT_INTERVAL = 5 # seconds
 
 def start(op, stop, interval=DEFAULT_INTERVAL):
+    global event_multiplexer
+    global event_accumulator
     # pylint: disable=redefined-outer-name
     from tensorflow.tensorboard.backend.event_processing import event_multiplexer
     from tensorflow.tensorboard.backend.event_processing import event_accumulator
