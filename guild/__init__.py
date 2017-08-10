@@ -15,6 +15,7 @@ import guild.project
 import guild.project_util
 import guild.run
 import guild.runs_cmd
+import guild.series_cmd
 import guild.system
 import guild.task_support
 import guild.tasks

@@ -54,6 +54,7 @@ def parser():
     _add_command(guild.evaluate_cmd, cmds)
     _add_command(guild.view_cmd, cmds)
     _add_command(guild.runs_cmd, cmds)
+    _add_command(guild.series_cmd, cmds)
     return p
 
 def _version_pattern():

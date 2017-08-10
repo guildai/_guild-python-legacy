@@ -72,6 +72,10 @@ class DB(object):
             params = _sql_arg_vals(encoded_vals, (int, int, int, buffer))
             self._exec(SQL, params)
 
+    def series_keys(self):
+        SQL = "select key from series_key order by key"
+        return [key for key, in self._select(SQL)]
+
     def series_values(self, pattern):
         key_hashes = self._key_hashes_for_pattern(pattern)
         encoded_series = self._encoded_series_for_hashes(key_hashes)

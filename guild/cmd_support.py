@@ -201,3 +201,37 @@ def _print_env(env):
     names.sort()
     for name in names:
         sys.stdout.write("  %s=%s\n" % (name, env[name]))
+
+def run_for_args(args):
+    project = project_for_args(args)
+    runs = guild.run.runs_for_project(project)
+    return _run_for_spec(args.run, runs)
+
+def _run_for_spec(spec, runs):
+    try:
+        index = int(spec)
+    except ValueError:
+        return _run_for_name(spec, runs)
+    else:
+        return _run_for_index(index, runs)
+
+def _run_for_name(name, runs):
+    for run in runs:
+        if os.path.basename(run.opdir) == name:
+            return run
+    _no_such_run_error(name)
+
+def _no_such_run_error(name):
+    guild.cli.error(
+        "Run '%s' does not exist\n"
+        "Try 'guild runs' for a list of runs." % name)
+
+def _run_for_index(index, runs):
+    if index >= 0 and index < len(runs):
+        return runs[0]
+    _bad_run_index_error(index)
+
+def _bad_run_index_error(index):
+    guild.cli.error(
+        "Run index '%i' is out of range\n"
+        "Try 'guild runs' for a list of runs." % index)
