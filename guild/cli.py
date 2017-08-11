@@ -38,7 +38,8 @@ def _print_error_and_exit(prog, msg, exit_status):
 
 def parser():
     p = argparse.ArgumentParser(
-        description="Guild AI command line interface.")
+        description="Guild AI command line interface.",
+        epilog="For details on a command, use 'guild COMMAND --help'")
     p.add_argument(
         "--version",
         action="version",
