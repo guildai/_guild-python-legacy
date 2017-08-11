@@ -32,8 +32,17 @@ models:
 
 train-fields:
 
-  - type: accuracy-field
+  - id: validation-accuracy
+    extends: accuracy-field
     label: Validation Accuracy
     source: series/tf/validation/accuracy
 
-  - extends: template
+  - id: train-accuracy
+    extends: accuracy-field
+    label: Training Accuracy
+    source: series/tf/train/accuracy
+
+compare-fields:
+
+  - extends: validation-accuracy
+  - extends: train-accuracy
