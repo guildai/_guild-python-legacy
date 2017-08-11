@@ -51,14 +51,6 @@ represented by a dict, which can easily be converted to JSON):
   'status': 'stopped',
   'stopped': 1502198513402}]
 
-Project
--------
-
-The view project is available as an attribute:
-
->>> view.project == project
-True
-
 Settings
 --------
 
@@ -66,6 +58,14 @@ View settings are available as an attribute as well:
 
 >>> view.settings
 {'refreshInterval': 5}
+
+Resolved project
+----------------
+
+View supports a *resolved project*, which is a project that includes
+data from `include/project-base.yml` as well as resolved attributes
+for items containing the `type` attribute. Attributes are resolved by
+merging attributes from the `template` item indicated by the type.
 
 Flags
 -----

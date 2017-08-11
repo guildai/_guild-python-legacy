@@ -29,3 +29,11 @@ models:
     evaluate: test --evaluate
     flags:
       train_time: 20
+
+train-fields:
+
+  - type: accuracy-field
+    label: Validation Accuracy
+    source: series/tf/validation/accuracy
+
+  - extends: template

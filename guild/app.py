@@ -7,6 +7,9 @@ def home():
 def script(name):
     return os.path.join(home(), "scripts", name)
 
+def include_src(name):
+    return os.path.join(home(), "include", name)
+
 def pkg_home():
     return user_dir("pkg")
 

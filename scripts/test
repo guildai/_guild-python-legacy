@@ -14,6 +14,7 @@ ALL_TESTS = [
     "opdir-meta",
     "project",
     "project-support",
+    "project-util",
     "runs",
     "util",
     "view"

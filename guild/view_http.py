@@ -133,7 +133,7 @@ def _index_page_path():
     return os.path.join(guild.app.home(), "assets", "view-index.html")
 
 def _handle_runs(view, _req):
-    return _json_resp(view.formatted_runs())
+    return _json_resp(json.dumps(view.formatted_runs()))
 
 def _handle_series(view, req, path):
     series_pattern = _series_pattern_for_path(path)
@@ -170,11 +170,12 @@ def _handle_compare(_view, _req):
 def _handle_sources(_view, _req):
     return werkzeug.wrappers.Response("TODO: handle sources\n")
 
-def _handle_settings(_view, _req):
-    return werkzeug.wrappers.Response("TODO: handle settings\n")
+def _handle_settings(view, _req):
+    return _json_resp(json.dumps(view.settings))
 
 def _handle_project(view, _req):
-    return _json_resp(guild.project_util.project_to_json(view.project))
+    project = view.resolved_project()
+    return _json_resp(guild.project_util.project_to_json(project))
 
 def _handle_tf_data(_view, _req, path):
     return werkzeug.wrappers.Response("TODO: handle tf data '%s'\n" % path)

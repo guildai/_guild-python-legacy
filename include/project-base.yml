@@ -1,0 +1,129 @@
+views:
+
+  train:
+    scope: run
+    content:
+      - fields
+      - series
+      - output
+    sidebar:
+      - flags
+      - attrs
+
+  eval:
+    scope: eval
+    content:
+      - fields
+    sidebar:
+      - flags
+
+components:
+
+  fields:
+    element: guild-fields
+
+  series:
+    element: guild-series
+    extra_series_templates:
+      - op-cpu-percent-series
+      - op-memory-series
+      - gpu-percent-series
+      - gpu-memory-series
+
+  output:
+    element: guild-output
+
+  flags:
+    element: guild-flags
+
+  attrs:
+    element: guild-attrs
+
+  artifacts:
+    element: guild-artifacts
+
+templates:
+
+  accuracy-field:
+    label: Accuracy
+    color: green-700
+    icon: accuracy
+    reduce: last
+    format: 0.00%
+
+  train-accuracy-field:
+    type: accuracy-field
+    color: teal-600
+    label: Train Accuracy
+
+  validation-accuracy-field:
+    type: accuracy-field
+    label: Validation Accuracy
+
+  loss-field:
+    label: Loss
+    icon: loss
+    color: red-700
+    reduct: last
+    format: 0.0000
+
+  learning-rate-field:
+    label: Learning Rate
+    icon: learning-rate
+    color: green-500
+    reduce: last
+    format: 0.0000
+
+  steps-field:
+    label: Steps
+    icon: steps
+    color: blue-700
+    reduce: steps
+    format: 0,0
+
+  time-field:
+    label: Time
+    icon: time
+    color: yellow-700
+    reduce: duration
+    format: 00:00:00
+
+  loss-series:
+    title: Loss
+    format: 0.000
+
+  accuracy-series:
+    title: Accuracy
+    format: 0.00%
+
+  learning-rate-series:
+    title: Learning Rate
+    format: 0.0000
+
+  percent-util-series:
+    title: Percent Util
+    format: "%"
+
+  memory-series:
+    title: Memory
+    format: 0.0 b
+
+  op-cpu-percent-series:
+    type: percent-util-series
+    title: Process CPU %
+    source: series/op/cpu/util
+
+  op-memory-series:
+    type: memory-series
+    title: Process Memory
+    source: series/op/mem/rss
+
+  gpu-percent-series:
+    type: percent-util-series
+    title: GPU %
+    source: series/sys/gpu.*/gpu/util
+
+  gpu-memory-series:
+    type: memory-series
+    title: GPU Memory
+    source: series/sys/gpu.*/mem/used

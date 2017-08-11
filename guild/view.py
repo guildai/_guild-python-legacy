@@ -3,7 +3,7 @@ import guild
 class ProjectView(object):
 
     def __init__(self, project, settings):
-        self.project = project
+        self._project_path = project.path
         self.settings = settings
         self._runs_dir = guild.project_util.runs_dir_for_project(project)
         self._dbs = guild.db.Pool()
@@ -26,6 +26,13 @@ class ProjectView(object):
     def _run_db_for_id(self, run_id):
         run = self._run_for_id(run_id)
         return self._dbs.for_run(run)
+
+    def resolved_project(self):
+        project = guild.project.from_file(self._project_path)
+        include_path = guild.app.include_src("project-base.yml")
+        include = guild.project.from_file(include_path)
+        merged = guild.project_util.apply_project_include(include, project)
+        return guild.project_util.resolve_typerefs(merged)
 
     def formatted_runs(self):
         return [_format_run(run) for run in self.runs()]
