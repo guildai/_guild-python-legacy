@@ -170,6 +170,26 @@ They may also redefine attributes:
 {'item1': {'attr1': 1, 'attr2': 2},
  'item2': {'attr1': 1.2, 'attr2': 2, 'attr3': 3}}
 
+Extends may be used by list items:
+
+>>> p_str = """
+... item1:
+...   attr1: 1
+...   attr2: 2
+... item2:
+...   - extends: item1
+...     attr1: 1.2
+...     attr3: 3
+...   - extends: item1
+...     attr2: 2.2
+...     attr4: 4
+... """
+>>> resolved = resolve_from_string(p_str)
+>>> pprint(resolved.data)
+{'item1': {'attr1': 1, 'attr2': 2},
+ 'item2': [{'attr1': 1.2, 'attr2': 2, 'attr3': 3},
+           {'attr1': 1, 'attr2': 2.2, 'attr4': 4}]}
+
 Extends applies to extended items -- i.e. extends supports multiple
 levels:
 
@@ -226,3 +246,16 @@ Here's an example that uses full item paths.
 >>> pprint(resolved.data)
 {'item1': {'item2': {'attr1': 1, 'attr2': 2}},
  'item3': {'attr1': 1, 'attr2': 2.1, 'attr3': 3}}
+
+If an extended item is empty or doesn't exist, the extending item is
+not modified:
+
+>>> p_str = """
+... item1:
+...   extends: doesnt_exist
+...   attr1: 1
+...   attr2: 2
+... """
+>>> resolved = resolve_from_string(p_str)
+>>> pprint(resolved.data)
+{'item1': {'attr1': 1, 'attr2': 2}}
