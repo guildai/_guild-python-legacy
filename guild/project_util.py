@@ -97,5 +97,5 @@ def _apply_extends_item(item, templates):
 
 def _apply_extended_attrs(attrs, target):
     for key, val in attrs.items():
-        if not key in target:
+        if key not in target:
             target[key] = val
