@@ -209,3 +209,20 @@ non-deterministic.
 >>> pprint(resolved.data)
 {'item1': {'attr1': ..., 'attr2': 2, 'attr3': 3},
  'item2': {'attr1': ..., 'attr2': 2, 'attr3': 3}}
+
+Here's an example that uses full item paths.
+
+>>> p_str = """
+... item1:
+...   item2:
+...     attr1: 1
+...     attr2: 2
+... item3:
+...   extends: item1/item2
+...   attr2: 2.1
+...   attr3: 3
+... """
+>>> resolved = resolve_from_string(p_str)
+>>> pprint(resolved.data)
+{'item1': {'item2': {'attr1': 1, 'attr2': 2}},
+ 'item3': {'attr1': 1, 'attr2': 2.1, 'attr3': 3}}
