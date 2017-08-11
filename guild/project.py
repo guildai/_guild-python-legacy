@@ -96,3 +96,6 @@ def from_file(path):
     with open(path, "r") as f:
         parsed = yaml.load(f)
     return Project(parsed, path)
+
+def from_string(s, path="__str__"):
+    return Project(yaml.load(s), path)
