@@ -32,7 +32,7 @@ class ProjectView(object):
         include_path = guild.app.include_src("project-base.yml")
         include = guild.project.from_file(include_path)
         merged = guild.project_util.apply_project_include(include, project)
-        return guild.project_util.resolve_typerefs(merged)
+        return guild.project_util.resolve_extends(merged)
 
     def formatted_runs(self):
         return [_format_run(run) for run in self.runs()]
