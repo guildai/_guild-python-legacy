@@ -3,9 +3,9 @@
 import argparse
 import doctest
 import os
-import pprint
 import sys
-import tempfile
+
+import guild
 
 ALL_TESTS = [
     "cmd-support",
@@ -34,50 +34,11 @@ def main():
 
 def test(name):
     sys.stdout.write(name + ":")
-    failures, tests = doctest.testfile(
-        testfile_path(name),
-        globs=test_globals(),
-        optionflags=(
-            doctest.REPORT_ONLY_FIRST_FAILURE |
-            doctest.ELLIPSIS |
-            doctest.IGNORE_EXCEPTION_DETAIL))
+    failures, tests = guild.test.testfile(testfile_path(name))
     if not failures:
         sys.stdout.write(" " * (20 - len(name)))
         sys.stdout.write(" ok\n")
     return failures == 0
-
-def test_globals():
-    return {
-        "cat": cat,
-        "find": find,
-        "mkdtemp": mkdtemp,
-        "pprint": pprint.pprint,
-        "sample": sample,
-        "samples_dir": samples_dir
-    }
-
-def sample(name):
-    return os.path.join(samples_dir(), name)
-
-def samples_dir():
-    return os.path.join("tests", "samples")
-
-def mkdtemp():
-    return tempfile.mkdtemp(prefix="guildtest-")
-
-def find(root):
-    all = []
-    for path, subdir, files in os.walk(root):
-        for name in files:
-            full_path = os.path.join(path, name)
-            rel_path = os.path.relpath(full_path, root)
-            all.append(rel_path)
-    all.sort()
-    return all
-
-def cat(file_path):
-    with open(file_path, "r") as f:
-        return f.read()
 
 def testfile_path(name):
     return os.path.join("../tests", name + ".rst")

@@ -5,6 +5,9 @@ build:
 install:
 	python setup.py develop
 
+install3:
+	python3 setup.py develop
+
 component-deps: components/.deps-resolved
 
 components/.deps-resolved:
@@ -13,7 +16,13 @@ components/.deps-resolved:
 	touch components/.deps-resolved
 
 check:
-	scripts/test $(TESTS)
+	python2 scripts/test $(TESTS)
+
+check3:
+	python3 scripts/test $(TESTS)
 
 lint:
 	pylint guild
+
+lint3:
+	pylint3 guild

@@ -1,6 +1,7 @@
 import errno
 import os
 import re
+import sys
 import time
 
 def find_apply(funs, *args):
@@ -72,3 +73,11 @@ def reduce_to(l, max_count):
         if (index - index_offset) % keep_every == 0:
             reduced.append(val)
     return reduced
+
+def input(prompt):
+    """Wrapper for Python 2/3 input."""
+    # pylint: disable=undefined-variable
+    if sys.version_info > (3,):
+        return input(prompt)
+    else:
+        return raw_input(prompt)

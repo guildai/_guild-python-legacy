@@ -1,4 +1,3 @@
-import string
 import subprocess
 
 import guild
@@ -27,6 +26,6 @@ def _parse_tf_attrs(out):
     attrs = {}
     for line in out.split("\n"):
         if line:
-            key, val = string.split(line, "=", maxsplit=1)
+            key, val = str.split(line, "=", 1)
             attrs[key] = val
     return attrs

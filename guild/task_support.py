@@ -8,7 +8,8 @@ class Stop(Exception):
 def series_timestamp():
     return int(time.time() * 1000)
 
-def loop((cb_fun, cb_args), interval, stop):
+def loop(cb, interval, stop):
+    cb_fun, cb_args = cb
     start = time.time()
     while True:
         sleep = _sleep_interval(interval, start)
@@ -16,7 +17,7 @@ def loop((cb_fun, cb_args), interval, stop):
             stop.send("ack")
             break
         try:
-            apply(cb_fun, cb_args)
+            cb_fun(*cb_args)
         except Stop:
             break
 

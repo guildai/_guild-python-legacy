@@ -139,7 +139,7 @@ def _confirm_and_purge(deleted_runs, args):
         sys.stdout.write("Canceled\n")
 
 def _confirm_purge(deleted_runs):
-    answer = raw_input(
+    answer = guild.util.input(
         "This will permanently delete %i run(s).\n"
         "Do you wish to continue? [y/N] "
         % len(deleted_runs))

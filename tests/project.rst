@@ -19,11 +19,15 @@ They can also be loaded from a directory, provided the project name is
 >>> p_from_dir.path
 'tests/samples/guild.yml'
 
-An IOError is raised if the project file doesn't exist:
+An Error is raised if the project file doesn't exist (note there are
+differences between Python2 and Python3 so we just check the error
+message here).
 
->>> guild.project.from_file("does_not_exist")
-Traceback (most recent call last):
-IOError: [Errno 2] No such file or directory: 'does_not_exist'
+>>> try:
+...     guild.project.from_file("does_not_exist")
+... except Exception as e:
+...     print(str(e))
+[Errno 2] No such file or directory: 'does_not_exist'
 
 We'll use the project reference `project` for the remaining tests.
 
@@ -98,31 +102,31 @@ To illustrate, we'll define a list of command line profiles:
 and use `all_flags` to resolve these along with the flags defined in
 the project:
 
->>> pprint(project.all_flags())
-[('epochs', 5),
+>>> pprint(sorted(project.all_flags()))
+[('batch_size', 100),
  ('datadir', './data'),
- ('rundir', '$RUNDIR'),
- ('batch_size', 100)]
+ ('epochs', 5),
+ ('rundir', '$RUNDIR')]
 
 A "long-train" profile yields this:
 
 >>> project.command_line_profiles = ["long-train"]
->>> pprint(project.all_flags())
-[('epochs', 50),
+>>> pprint(sorted(project.all_flags()))
+[('batch_size', 100),
  ('datadir', './data'),
- ('rundir', '$RUNDIR'),
- ('batch_size', 100)]
+ ('epochs', 50),
+ ('rundir', '$RUNDIR')]
 
 We can further specify command line flags, which add or redefine both
 profile and project level flags:
 
 >>> project.command_line_flags = [("epochs", "11"), ("bar", "456")]
->>> pprint(project.all_flags())
-[('epochs', '11'),
- ('bar', '456'),
+>>> pprint(sorted(project.all_flags()))
+[('bar', '456'),
+ ('batch_size', 100),
  ('datadir', './data'),
- ('rundir', '$RUNDIR'),
- ('batch_size', 100)]
+ ('epochs', '11'),
+ ('rundir', '$RUNDIR')]
 
 We can do the same for sections, which may contain their own flag
 definitions. First we'll reset our command line state:
@@ -133,26 +137,26 @@ definitions. First we'll reset our command line state:
 The expert section redefined the epochs used:
 
 >>> section = project.section("models", "expert")
->>> pprint(section.all_flags())
-[('epochs', 20),
- ('batch_size', 200),
+>>> pprint(sorted(section.all_flags()))
+[('batch_size', 200),
  ('datadir', './data'),
+ ('epochs', 20),
  ('rundir', '$RUNDIR')]
 
 We can now further refine the flags using profiles:
 
 >>> project.command_line_profiles = ["long-train"]
->>> pprint(section.all_flags())
-[('epochs', 50),
- ('batch_size', 200),
+>>> pprint(sorted(section.all_flags()))
+[('batch_size', 200),
  ('datadir', './data'),
+ ('epochs', 50),
  ('rundir', '$RUNDIR')]
 
 and then again using command line flags:
 
 >>> project.command_line_flags = [("epochs", "12")]
->>> pprint(section.all_flags())
-[('epochs', '12'),
- ('batch_size', 200),
+>>> pprint(sorted(section.all_flags()))
+[('batch_size', 200),
  ('datadir', './data'),
+ ('epochs', '12'),
  ('rundir', '$RUNDIR')]

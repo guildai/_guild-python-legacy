@@ -9,6 +9,7 @@ def python_cmd_for_spec(spec, section):
     script = _resolve_script_path(spec_parts[0], section.project.dir)
     spec_args = spec_parts[1:]
     flags = section.all_flags()
+    flags.sort()
     return ["python", "-u", script] + spec_args + _flag_args(flags)
 
 def _resolve_script_path(script, project_dir):

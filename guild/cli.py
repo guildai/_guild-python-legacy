@@ -45,18 +45,19 @@ def parser():
         action="version",
         version=_version_pattern(),
         help="print version information and exit")
-    cmds = p.add_subparsers(
+    cmd = p.add_subparsers(
         title="commands",
         dest="command",
         metavar="")
-    _add_command(guild.check_cmd, cmds)
-    _add_command(guild.prepare_cmd, cmds)
-    _add_command(guild.train_cmd, cmds)
-    _add_command(guild.evaluate_cmd, cmds)
-    _add_command(guild.view_cmd, cmds)
-    _add_command(guild.runs_cmd, cmds)
-    _add_command(guild.project_cmd, cmds)
-    _add_command(guild.series_cmd, cmds)
+    cmd.required = True
+    _add_command(guild.check_cmd, cmd)
+    _add_command(guild.prepare_cmd, cmd)
+    _add_command(guild.train_cmd, cmd)
+    _add_command(guild.evaluate_cmd, cmd)
+    _add_command(guild.view_cmd, cmd)
+    _add_command(guild.runs_cmd, cmd)
+    _add_command(guild.project_cmd, cmd)
+    _add_command(guild.series_cmd, cmd)
     return p
 
 def _version_pattern():

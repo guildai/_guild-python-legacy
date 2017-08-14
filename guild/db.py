@@ -3,11 +3,12 @@ import os
 import re
 import sqlite3
 import struct
+import sys
 
 import guild
 
 DEFAULT_SERIES_ENCODING = 1
-NULL_ENC = "\xff\xff\xff\xff\xff\xff\xff\xff"
+NULL_ENC = b"\xff\xff\xff\xff\xff\xff\xff\xff"
 
 class Pool(object):
 
@@ -69,7 +70,8 @@ class DB(object):
         if encoded_vals:
             arg_placeholders = _sql_arg_placeholders(encoded_vals)
             SQL = "insert or ignore into series values %s" % arg_placeholders
-            params = _sql_arg_vals(encoded_vals, (int, int, int, buffer))
+            params = _sql_arg_vals(encoded_vals, (int, int, int,
+                                                  _buffer_type()))
             self._exec(SQL, params)
 
     def series_keys(self):
@@ -140,7 +142,7 @@ def init_for_opdir(opdir):
     return DB(db_path)
 
 def _key_hash(key):
-    return binascii.crc32(key) & 0xffffffff
+    return binascii.crc32(key.encode("UTF-8")) & 0xffffffff
 
 def _encode_series_values(raw_values):
     encoded = []
@@ -158,7 +160,7 @@ def _default_series_encode(vals):
     parts = []
     for time, step, val in vals:
         parts.append(_encode_time_step_val(time, step, val))
-    return "".join(parts)
+    return b"".join(parts)
 
 def _encode_time_step_val(time, step, val):
     time_step_enc = struct.pack(">QQ", time, step)
@@ -231,3 +233,10 @@ def _sql_arg_vals(vals, types):
         for x, t in zip(val, types):
             flattened.append(t(x))
     return flattened
+
+def _buffer_type():
+    # Handles buffer type for Python3
+    if sys.version_info > (3,):
+        return memoryview
+    else:
+        return buffer # pylint: disable=undefined-variable

@@ -14,7 +14,7 @@ DEFAULT_INTERVAL = 5 # seconds
 def start(op, stop, interval=DEFAULT_INTERVAL):
     global event_multiplexer
     global event_accumulator
-    # pylint: disable=redefined-outer-name
+    # pylint: disable=redefined-outer-name,import-error
     from tensorflow.tensorboard.backend.event_processing import event_multiplexer
     from tensorflow.tensorboard.backend.event_processing import event_accumulator
     guild.task_support.loop((_log_events, [op]), interval, stop)

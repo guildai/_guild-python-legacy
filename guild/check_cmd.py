@@ -36,4 +36,4 @@ def _print_check_results(script_name):
     script_path = guild.app.script(script_name)
     devnull = open(os.devnull, 'w')
     out = subprocess.check_output(script_path, stderr=devnull)
-    sys.stdout.write(out)
+    sys.stdout.write(out.decode(sys.stdout.encoding))

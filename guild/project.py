@@ -15,7 +15,7 @@ class Project(object):
 
     def sections(self, heading):
         sections = self.data.get(heading)
-        keys = sections.keys()
+        keys = list(sections.keys())
         keys.sort()
         return [Section([heading, key], sections[key], self) for key in keys]
 

@@ -23,16 +23,16 @@ First let's load a project:
 >>> pprint(cmd)
 ['python',
  '-u',
- '/.../tests/samples/mnist/intro.py',
+ '/home/garrett/SCM/guild-python/tests/samples/mnist/intro.py',
  '--prepare',
- '--epochs',
+ '--batch_size',
  '100',
  '--datadir',
  './data',
+ '--epochs',
+ '100',
  '--rundir',
- '$RUNDIR',
- '--batch_size',
- '100']
+ '$RUNDIR']
 
 Note that the path to the Python script is absolute. This is because
 the project directory is not the current working directory. This

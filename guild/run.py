@@ -17,7 +17,7 @@ class Run(object):
         return self.attrs.get(name)
 
 def run_id_for_dir(opdir):
-    return binascii.crc32(opdir) & 0xffffffff
+    return binascii.crc32(opdir.encode("UTF-8")) & 0xffffffff
 
 def is_run(dir):
     return os.path.isdir(run_marker(dir))

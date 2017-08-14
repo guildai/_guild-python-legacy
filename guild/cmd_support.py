@@ -1,7 +1,6 @@
 import argparse
 import os
 import re
-import string
 import sys
 import textwrap
 
@@ -86,7 +85,7 @@ def _maybe_apply_flags(args, project):
         project.command_line_flags.append(parse_flag(flag))
 
 def parse_flag(s):
-    parts = string.split(s, "=", maxsplit=1)
+    parts = str.split(s, "=", 1)
     if len(parts) == 1:
         return (parts[0], "true")
     else:
@@ -197,7 +196,7 @@ def _print_cmd(args):
 
 def _print_env(env):
     sys.stdout.write("Environment:\n\n")
-    names = env.keys()
+    names = list(env.keys())
     names.sort()
     for name in names:
         sys.stdout.write("  %s=%s\n" % (name, env[name]))
