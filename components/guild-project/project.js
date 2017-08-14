@@ -17,35 +17,12 @@ var Guild = Guild || {};
 
 Guild.Project = new function() {
 
-    this.namedSection = function(project, type, name) {
-        return project[type + "\t" + name];
-    };
-
-    this.namedSectionOrDefault = function(project, type, name) {
-        return project[type + "\t" + name] || project[type];
-    };
-
-    this.orderedSections = function(project, type) {
-        var sections = [];
-        project.__meta__.sectionOrder.forEach(function(key) {
-            var keyParts = key.split("\t");
-            if (keyParts[0] == type) {
-                sections.push(project[key]);
-            }
-        });
-        return sections;
-    };
-
-    this.orderedNamedSections = function(project, type, name) {
-        var sections = [];
-        project.__meta__.sectionOrder.forEach(function(key) {
-            var keyParts = key.split("\t");
-            if (keyParts[0] == type
-                && (keyParts.length == 2
-                    || keyParts[1] == name)) {
-                sections.push(project[key]);
-            }
-        });
-        return sections;
+    this.section = function(project, type, name) {
+        var sections = project[type];
+        if (name) {
+            return sections && sections[name] || undefined;
+        } else {
+            return sections;
+        }
     };
 };

@@ -249,14 +249,11 @@ limitations under the License.
        util: new function() {
 
            this.viewForRun = function(project, run, scope) {
-               return Guild.Project.namedSectionOrDefault(
-                   project,
-                   scope + "-view",
-                   run.model);
+               return Guild.Project.section(project, "views", scope);
            };
 
            this.resolveContent = function(name, project) {
-               return Guild.Project.namedSection(project, "component", name);
+               return Guild.Project.section(project, "component", name);
            };
        }
    });
