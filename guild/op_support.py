@@ -54,7 +54,8 @@ def start_task(target, args, op):
     task.start()
     return (task, parent_stop_conn)
 
-def stop_task((task, stop_conn), grace_period):
+def stop_task(task_, grace_period):
+    task, stop_conn = task_
     if task.is_alive():
         stop_conn.send("stop")
         stop_conn.poll(grace_period)
