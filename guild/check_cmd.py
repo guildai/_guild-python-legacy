@@ -27,6 +27,7 @@ def _python_version():
     return sys.version.replace("\n", "")
 
 def _print_tensorflow_info():
+    # Run externally to avoid tf logging to our stderr
     _print_check_results("tensorflow-check")
 
 def _print_nvidia_tools_info():

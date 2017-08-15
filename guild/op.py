@@ -81,7 +81,7 @@ class Op(object):
         return guild.util.format_cmd_args(self.cmd_args)
 
     def _cmd_env_meta(self):
-        keys = self.cmd_env.keys()
+        keys = list(self.cmd_env.keys())
         keys.sort()
         lines = []
         for key in keys:

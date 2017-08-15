@@ -53,7 +53,9 @@ def _gpu_stats():
     return stats
 
 def _read_raw_gpu_stats():
-    p = subprocess.Popen(GPU_STATS_CMD, stdout=subprocess.PIPE)
+    p = subprocess.Popen(
+        GPU_STATS_CMD,
+        stdout=subprocess.PIPE)
     raw = list(csv.reader(p.stdout))
     result = p.wait()
     if result != 0:

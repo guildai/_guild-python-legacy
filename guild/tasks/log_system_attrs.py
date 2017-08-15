@@ -8,7 +8,7 @@ def start(op, _stop):
     op.db.log_attrs(attrs)
 
 def _sys_attrs():
-    return guild.system.sys_attrs().items()
+    return list(guild.system.sys_attrs().items())
 
 def _gpu_attrs():
     flattened = []
@@ -18,4 +18,4 @@ def _gpu_attrs():
     return flattened
 
 def _tensorflow_attrs():
-    return guild.tensorflow_support.tf_attrs().items()
+    return list(guild.tensorflow_support.tf_attrs().items())

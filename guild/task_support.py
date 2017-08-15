@@ -13,7 +13,11 @@ def loop(cb, interval, stop):
     start = time.time()
     while True:
         sleep = _sleep_interval(interval, start)
-        if stop.poll(sleep):
+        try:
+            stop_signal = stop.poll(sleep)
+        except KeyboardInterrupt:
+            break
+        if stop_signal:
             stop.send("ack")
             break
         try:
