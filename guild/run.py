@@ -42,3 +42,7 @@ def runs_for_runs_dir(runs_dir):
 def runs_for_project(project):
     runs_dir = guild.project_util.runs_dir_for_project(project)
     return runs_for_runs_dir(runs_dir)
+
+def runs_for_project_dir(project_dir):
+    runs_dir = guild.project_util.runs_dir_for_project_dir(project_dir)
+    return runs_for_runs_dir(runs_dir)

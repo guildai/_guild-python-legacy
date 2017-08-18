@@ -24,6 +24,6 @@ def _iter_core_plugins():
     import guild.plugins
     for name in guild.plugins.__core_plugins__:
         try:
-            yield importlib.import_module("guild.plugins." + name)
+            yield importlib.import_module("guild.plugins.%s_plugin" % name)
         except ImportError:
             pass

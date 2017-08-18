@@ -39,16 +39,16 @@ def main(args):
     import guild.op_util
     import guild.run
 
-    project = guild.cmd_support.project_for_args(args)
+    project = guild.cmd_support.project_for_args(args, required=False)
     if args.command is None:
-        _list_runs(args, project)
+        _list_runs(project, args)
     elif args.command == "remove" or args.command == "rm":
-        _delete_runs(args, project)
+        _delete_runs(project, args)
     elif args.command == "purge":
         _purge_deleted_runs(project, args)
 
-def _list_runs(_args, project):
-    runs = _runs_for_project(project)
+def _list_runs(project, args):
+    runs = _runs_for_project(project, args)
     index = 0
     for rundir in runs:
         run_name = os.path.basename(rundir)
@@ -56,12 +56,16 @@ def _list_runs(_args, project):
         sys.stdout.write("[%i] %s\t%s\n" % (index, run_name, status))
         index = index + 1
 
-def _runs_for_project(project):
-    return [run.opdir for run in guild.run.runs_for_project(project)]
+def _runs_for_project(project, args):
+    if project is not None:
+        runs = guild.run.runs_for_project(project)
+    else:
+        runs = guild.run.runs_for_project_dir(args.project_dir)
+    return [run.opdir for run in runs]
 
-def _delete_runs(args, project):
-    runs = _runs_for_project(project)
-    runs_dir = guild.project_util.runs_dir_for_project(project)
+def _delete_runs(project, args):
+    runs = _runs_for_project(project, args)
+    runs_dir = _runs_dir_for_project(project, args)
     deleted_dir = os.path.join(runs_dir, ".deleted")
     rundirs_to_delete = _rundirs_for_args(args, runs_dir, runs)
     if rundirs_to_delete:
@@ -71,6 +75,12 @@ def _delete_runs(args, project):
         guild.cli.error(
             "Specify one or more runs to delete.\n"
             "Try 'guild runs --help' for more information.")
+
+def _runs_dir_for_project(project, args):
+    if project is not None:
+        return guild.project_util.runs_dir_for_project(project)
+    else:
+        return guild.project_util.runs_dir_for_project_dir(args.project_dir)
 
 def _rundirs_for_args(args, runs_dir, runs):
     if args.all:
@@ -120,7 +130,7 @@ def _move_run(rundir, dest, ):
         sys.stdout.write("WARNING: %s is not a run, skipping\n" % rundir)
 
 def _purge_deleted_runs(project, args):
-    runs_dir = guild.project_util.runs_dir_for_project(project)
+    runs_dir = _runs_dir_for_project(project, args)
     deleted_runs = _deleted_runs(runs_dir)
     if deleted_runs:
         _confirm_and_purge(deleted_runs, args)
@@ -138,6 +148,8 @@ def _deleted_runs(runs_dir):
 def _confirm_and_purge(deleted_runs, args):
     if args.yes or _confirm_purge(deleted_runs):
         _permanently_delete(deleted_runs)
+        sys.stdout.write(
+            "Permanently deleted %i runs(s)\n" % len(deleted_runs))
     else:
         sys.stdout.write("Canceled\n")
 

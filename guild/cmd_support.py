@@ -63,14 +63,14 @@ def add_flag_arguments(parser):
         default=[],
         metavar="NAME[=VAL]")
 
-def project_for_args(args, name="guild.yml", use_plugins=False):
+def project_for_args(args, name="guild.yml", use_plugins=False, required=True):
     try:
         project = _project_for_args(args, name, use_plugins)
     except IOError:
-        if os.path.isdir(args.project_dir):
-            _missing_project_file_error(args.project_dir, name)
+        if required:
+            _project_ioerror(args.project_dir, name)
         else:
-            _no_such_dir_error(args.project_dir)
+            return None
     else:
         _maybe_apply_profile(args, project)
         _maybe_apply_flags(args, project)
@@ -114,6 +114,12 @@ def parse_flag(s):
         return (parts[0], "true")
     else:
         return (parts[0], parts[1])
+
+def _project_ioerror(project_dir, name):
+    if os.path.isdir(project_dir):
+        _missing_project_file_error(project_dir, name)
+    else:
+        _no_such_dir_error(project_dir)
 
 def _missing_project_file_error(dir, name):
     guild.cli.error(
