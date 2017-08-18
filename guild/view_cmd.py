@@ -52,7 +52,7 @@ def main(args):
     import guild.view
     import guild.view_http
 
-    project = guild.cmd_support.project_for_args(args)
+    project = guild.cmd_support.project_for_args(args, use_plugins=True)
     settings = _view_settings_for_args(args)
     view = guild.view.ProjectView(project, settings)
     try:
