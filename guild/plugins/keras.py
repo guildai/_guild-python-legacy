@@ -24,32 +24,29 @@ def _find_keras_script(args):
 def _keras_scripts(args):
     keras_scripts = []
     for script in _python_scripts(args):
-        debug_parts = ["[keras-plugin] testing script '%s':" % script]
+        debug_parts = ["testing script '%s':" % script]
         is_script = _is_keras_script(script, debug_parts)
-        _log_debug_parts(debug_parts)
+        guild.log.debug(" ".join(debug_parts), source="keras-plugin")
         if is_script:
             keras_scripts.append(script)
     return keras_scripts
-
-def _log_debug_parts(parts):
-    guild.log.debug(" ".join(parts))
 
 def _python_scripts(args):
     return glob.glob(os.path.join(args.project_dir, "*.py"))
 
 def _is_keras_script(script, debug_parts):
     try:
-        parsed = ast.parse(script)
-    except SyntaxError:
-        debug_parts.append("syntax error, skipping")
+        parsed = ast.parse(open(script, "r").read())
+    except SyntaxError as e:
+        debug_parts.append("%s, skipping" % e)
         return False
     else:
         return _is_keras_ast(parsed, debug_parts)
 
 def _is_keras_ast(parsed, debug_parts):
     conditions = [
-        (_imports_keras_condition, "imports keras"),
-        (_calls_fit_condition, "calls fit")
+        (_imports_keras_condition, "imports-keras"),
+        (_calls_fit_condition, "calls-fit")
     ]
     return _ast_meets_conditions(parsed, conditions, debug_parts)
 
@@ -57,21 +54,38 @@ def _ast_meets_conditions(parsed, conditions, debug_parts):
     working = list(conditions)
     for node in ast.walk(parsed):
         for condition in working:
-            condition_fun, condition_name = condition
+            condition_fun, _name = condition
             condition_met = condition_fun(node)
-            debug_parts.append("%s=%s" % (condition_name, condition_met))
             if condition_met:
                 working.remove(condition)
-        if len(conditions) == 0:
-            debug_parts.append("(assuming is keras script)")
+        if len(working) == 0:
+            debug_parts.append("appears to be a keras script")
             return True
-    debug_parts.append("(assuming is not keras script)")
+    assert len(working) > 0
+    debug_parts.append(
+        "does not appear to be a keras script (failed conditions: %s)"
+        % ", ".join([name for _, name in working]))
     return False
 
-def _imports_keras_condition(_node):
+def _imports_keras_condition(node):
+    if (isinstance(node, ast.ImportFrom)
+        and _is_keras_module_name(node.module)):
+        return True
+    elif isinstance(node, ast.Import):
+        for name in node.names:
+            if (isinstance(name, ast.alias)
+                and _is_keras_module_name(name.name)):
+                return True
     return False
 
-def _calls_fit_condition(_node):
+def _is_keras_module_name(name):
+    return name == "keras" or name.startswith("keras.")
+
+def _calls_fit_condition(node):
+    if (isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "fit"):
+        return True
     return False
 
 def _script_name(script):

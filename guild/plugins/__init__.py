@@ -1,4 +1,1 @@
-from . import keras
-
-def plugins():
-    return [keras]
+__core_plugins__ = ["keras"]

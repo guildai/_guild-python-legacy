@@ -21,6 +21,7 @@ def add_parser(subparsers):
 
 def main(args):
     import guild.op
+    import guild.project_util
     import guild.tasks.log_flags
     import guild.tasks.log_system_attrs
     import guild.tasks.snapshot_project

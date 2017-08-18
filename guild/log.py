@@ -2,21 +2,22 @@ import logging
 
 DEFAULT_SOURCE = "guild"
 
-def error(msg, source=DEFAULT_SOURCE, *args):
-    _log(logging.error, msg, args, source)
+def error(msg, *args, **kw):
+    _log(logging.error, msg, args, kw)
 
-def warning(msg, source=DEFAULT_SOURCE, *args):
-    _log(logging.warning, msg, args, source)
+def warning(msg, *args, **kw):
+    _log(logging.warning, msg, args, kw)
 
-def info(msg, source=DEFAULT_SOURCE, *args):
-    _log(logging.info, msg, args, source)
+def info(msg, *args, **kw):
+    _log(logging.info, msg, args, kw)
 
-def debug(msg, source=DEFAULT_SOURCE, *args):
-    _log(logging.debug, msg, args, source)
+def debug(msg, *args, **kw):
+    _log(logging.debug, msg, args, kw)
 
-def exception(msg, source=DEFAULT_SOURCE, *args):
-    _log(logging.debug, msg, args, source)
+def exception(msg, *args, **kw):
+    _log(logging.debug, msg, args, kw)
 
-def _log(log_fun, msg, args, source):
-    msg_with_source = ("[%s]" % source) + msg
+def _log(log_fun, msg, args, kw):
+    source = kw.get("source", DEFAULT_SOURCE)
+    msg_with_source = ("[%s] " % source) + msg
     log_fun(msg_with_source, *args)

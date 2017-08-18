@@ -4,9 +4,8 @@ import re
 import sys
 import textwrap
 
+import guild.app
 import guild.cli
-import guild.plugins
-import guild.project
 import guild.util
 
 __CONSOLE_WIDTH = None
@@ -78,6 +77,7 @@ def project_for_args(args, name="guild.yml", use_plugins=False):
         return project
 
 def _project_for_args(args, name, use_plugins):
+    import guild.project # expensive import
     try:
         return guild.project.from_dir(args.project_dir, name)
     except IOError:
@@ -88,8 +88,12 @@ def _project_for_args(args, name, use_plugins):
         raise
 
 def _try_project_for_plugins(args):
-    for plugin in guild.plugins.plugins():
+    for plugin in guild.app.plugins():
         project = plugin.try_project(args)
+        guild.log.debug(
+            "%s %s for project",
+            plugin.__name__,
+            "selected" if project is not None else "not selected")
         if project is not None:
             return project
     return None

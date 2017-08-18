@@ -15,3 +15,15 @@ def pkg_home():
 
 def user_dir(name):
     return os.path.join(os.getenv("HOME"), ".guild", name)
+
+def plugins():
+    return _iter_core_plugins()
+
+def _iter_core_plugins():
+    import importlib
+    import guild.plugins
+    for name in guild.plugins.__core_plugins__:
+        try:
+            yield importlib.import_module("guild.plugins." + name)
+        except ImportError:
+            pass
