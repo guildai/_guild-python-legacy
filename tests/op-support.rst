@@ -3,7 +3,8 @@ Op support
 
 Operations may use the `op_support` module for operation related help.
 
->>> import guild
+>>> import guild.op_support
+>>> import guild.project
 
 Python command for spec
 -----------------------

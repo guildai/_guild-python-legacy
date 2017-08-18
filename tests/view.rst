@@ -4,12 +4,13 @@ Guild View
 Guild View is primarily supported by two modules: `guild.view` and
 `guild.view_http`. These tests focus on `guild.view`.
 
->>> import guild
+>>> import guild.view
 
 The `view` module provides a `ProjectView` that is responsible for
 formatting project state for Guild View. Let's first load a sample
 project.
 
+>>> import guild.project
 >>> project = guild.project.from_dir(sample("mnist"))
 
 In addition to a project, a project view also provide 'settings' that

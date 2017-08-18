@@ -1,7 +1,7 @@
 Project
 =======
 
->>> import guild
+>>> import guild.project
 
 Loading projects
 ----------------

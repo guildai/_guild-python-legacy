@@ -3,7 +3,7 @@ Guild utils
 
 The module `guild.util` is a set of general utility functions.
 
->>> import guild
+>>> import guild.util
 
 Resolving arguments
 -------------------

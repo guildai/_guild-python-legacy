@@ -1,6 +1,7 @@
 import subprocess
 
-import guild
+import guild.app
+import guild.log
 
 _tf_attrs = None
 
@@ -17,8 +18,8 @@ def _read_tf_attrs():
     try:
         raw = subprocess.check_output(
             guild.app.script("tensorflow-attrs"))
-    except subprocess.CalledProcessError as e:
-        guild.log.error(e)
+    except subprocess.CalledProcessError:
+        guild.log.exception("reading tensorflow attrs")
         return []
     else:
         return _parse_tf_attrs(raw.encode("UTF-8"))

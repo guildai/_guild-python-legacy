@@ -2,7 +2,7 @@ from __future__ import division
 
 import psutil
 
-import guild
+import guild.task_support
 
 DEFAULT_INTERVAL = 5 # seconds
 

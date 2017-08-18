@@ -1,4 +1,5 @@
-import guild
+import guild.opdir
+import guild.util
 
 def op_status(opdir):
     pid = op_pid(opdir)

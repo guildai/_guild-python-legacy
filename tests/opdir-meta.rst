@@ -1,6 +1,8 @@
 Op Dir Meta
 ===========
 
+>>> import guild.opdir
+
 Meta attributes are stored under an op directory. These are used to
 quickly read op attributes directly from the file system.
 
@@ -13,7 +15,6 @@ Attributes are stored as follows::
 Values are stored as arbitrary file content, though are generally
 string values not ending with a line feed.
 
->>> import guild
 >>> opdir = mkdtemp()
 >>> guild.opdir.write_all_meta(opdir, {
 ...    "foo": 123,

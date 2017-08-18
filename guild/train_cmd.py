@@ -1,6 +1,13 @@
 import os
 
-import guild
+import guild.op
+import guild.tasks.log_flags
+import guild.tasks.log_system_attrs
+import guild.tasks.snapshot_project
+import guild.tasks.tensorflow_events
+import guild.tasks.op_stats
+import guild.tasks.sys_stats
+import guild.tasks.gpu_stats
 
 def add_parser(subparsers):
     p = subparsers.add_parser(
@@ -27,7 +34,7 @@ def main(args):
         _train(op)
 
 def _prepare_op(args):
-    project = guild.cmd_support.project_for_args(args)
+    project = guild.cmd_support.project_for_args(args, use_plugins=True)
     model = guild.cmd_support.model_for_args(args, project)
     spec = model.attr("train")
     return _train_op_for_spec(spec, model)

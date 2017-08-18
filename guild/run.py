@@ -2,7 +2,8 @@ import binascii
 import glob
 import os
 
-import guild
+import guild.opdir
+import guild.project_util
 
 OPDIR_MARKER = "guild.d"
 

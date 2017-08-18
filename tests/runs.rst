@@ -3,7 +3,7 @@ Runs
 
 The 'guild.run' module provides support for representing runs.
 
->>> import guild
+>>> import guild.run
 
 We'll use the sample runs directory for our data:
 

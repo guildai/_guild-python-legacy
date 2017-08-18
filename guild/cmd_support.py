@@ -4,7 +4,10 @@ import re
 import sys
 import textwrap
 
-import guild
+import guild.cli
+import guild.plugins
+import guild.project
+import guild.util
 
 __CONSOLE_WIDTH = None
 
@@ -61,9 +64,9 @@ def add_flag_arguments(parser):
         default=[],
         metavar="NAME[=VAL]")
 
-def project_for_args(args, name="guild.yml"):
+def project_for_args(args, name="guild.yml", use_plugins=False):
     try:
-        project = guild.project.from_dir(args.project_dir, name)
+        project = _project_for_args(args, name, use_plugins)
     except IOError:
         if os.path.isdir(args.project_dir):
             _missing_project_file_error(args.project_dir, name)
@@ -73,6 +76,23 @@ def project_for_args(args, name="guild.yml"):
         _maybe_apply_profile(args, project)
         _maybe_apply_flags(args, project)
         return project
+
+def _project_for_args(args, name, use_plugins):
+    try:
+        return guild.project.from_dir(args.project_dir, name)
+    except IOError:
+        if use_plugins:
+            project = _try_project_for_plugins(args)
+            if project is not None:
+                return project
+        raise
+
+def _try_project_for_plugins(args):
+    for plugin in guild.plugins.plugins():
+        project = plugin.try_project(args)
+        if project is not None:
+            return project
+    return None
 
 def _maybe_apply_profile(args, project):
     profiles = getattr(args, "profiles", [])

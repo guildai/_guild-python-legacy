@@ -2,7 +2,8 @@ import multiprocessing
 import os
 import shlex
 
-import guild
+import guild.system
+import guild.util
 
 def python_cmd_for_spec(spec, section):
     spec_parts = shlex.split(spec)

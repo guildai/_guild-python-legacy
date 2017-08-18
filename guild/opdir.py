@@ -1,6 +1,6 @@
 import os
 
-import guild
+import guild.util
 
 def write_all_meta(opdir, attrs):
     dir = meta_dir(opdir)

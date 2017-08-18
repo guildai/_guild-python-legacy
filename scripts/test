@@ -5,7 +5,7 @@ import doctest
 import os
 import sys
 
-import guild
+import guild.test
 
 ALL_TESTS = [
     "cmd-support",
@@ -34,11 +34,16 @@ def main():
 
 def test(name):
     sys.stdout.write(name + ":")
-    failures, tests = guild.test.testfile(testfile_path(name))
-    if not failures:
-        sys.stdout.write(" " * (20 - len(name)))
-        sys.stdout.write(" ok\n")
-    return failures == 0
+    try:
+        failures, tests = guild.test.testfile(testfile_path(name))
+    except IOError:
+        sys.stdout.write(" ERROR test not found\n")
+        return False
+    else:
+        if not failures:
+            sys.stdout.write(" " * (20 - len(name)))
+            sys.stdout.write(" ok\n")
+        return failures == 0
 
 def testfile_path(name):
     return os.path.join("../tests", name + ".rst")

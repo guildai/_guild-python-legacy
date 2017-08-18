@@ -4,7 +4,9 @@ import csv
 import subprocess
 import sys
 
-import guild
+import guild.log
+import guild.task_support
+import guild.util
 
 STATS = [
     "index",

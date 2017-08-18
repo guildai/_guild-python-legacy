@@ -1,7 +1,11 @@
 import os
 import subprocess
 
-import guild
+import guild.app
+import guild.db
+import guild.op_support
+import guild.opdir
+import guild.util
 
 TASK_STOP_TIMEOUT = 5 # seconds
 PROC_LOCK_NAME = "LOCK"

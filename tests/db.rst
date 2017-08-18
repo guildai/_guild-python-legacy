@@ -1,7 +1,7 @@
 Guild Db
 ========
 
->>> import guild
+>>> import guild.db
 
 Initializing
 ------------

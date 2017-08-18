@@ -1,7 +1,8 @@
 import os
 import subprocess
 
-import guild
+import guild.log
+import guild.task_support
 
 # Defer time consuming imports until 'start'
 event_multiplexer = None
@@ -15,8 +16,8 @@ def start(op, stop, interval=DEFAULT_INTERVAL):
     global event_multiplexer
     global event_accumulator
     # pylint: disable=redefined-outer-name,import-error
-    from tensorflow.tensorboard.backend.event_processing import event_multiplexer
-    from tensorflow.tensorboard.backend.event_processing import event_accumulator
+    from tensorboard.backend.event_processing import event_multiplexer
+    from tensorboard.backend.event_processing import event_accumulator
     guild.task_support.loop((_log_events, [op]), interval, stop)
 
 def _log_events(op):
@@ -79,5 +80,5 @@ def _sync_file_system(opdir):
         # Fall back on older version of sync without args
         try:
             subprocess.check_call(["sync"])
-        except subprocess.CalledProcessError as e:
-            guild.log.warn("error syncing file system (%s)" % e)
+        except subprocess.CalledProcessError:
+            guild.log.exception("syncing file system")

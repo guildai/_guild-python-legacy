@@ -5,7 +5,8 @@ import sqlite3
 import struct
 import sys
 
-import guild
+import guild.opdir
+import guild.util
 
 DEFAULT_SERIES_ENCODING = 1
 NULL_ENC = b"\xff\xff\xff\xff\xff\xff\xff\xff"

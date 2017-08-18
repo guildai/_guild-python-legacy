@@ -1,9 +1,8 @@
 import json
 import sys
 
-import yaml
-
-import guild
+import guild.cmd_support
+import guild.view
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
@@ -61,6 +60,7 @@ def _print_project_json(project):
             separators=(',', ': ')))
 
 def _print_project_yaml(project):
+    import yaml
     sys.stdout.write(
         yaml.dump(
             project.data,

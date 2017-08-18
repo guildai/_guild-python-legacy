@@ -2,7 +2,7 @@ import copy
 import json
 import os
 
-import guild
+import guild.util
 
 def runs_dir_for_project(project):
     runs_dir = guild.util.find_apply(

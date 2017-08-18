@@ -1,4 +1,7 @@
-import guild
+import guild.db
+import guild.op_util
+import guild.project_util
+import guild.run
 
 class ProjectView(object):
 

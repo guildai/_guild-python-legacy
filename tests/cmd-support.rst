@@ -1,7 +1,8 @@
 Command support
 ===============
 
->>> import guild
+>>> import guild.cmd_support
+>>> import guild.op
 
 Op preview
 ----------

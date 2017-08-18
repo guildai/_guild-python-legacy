@@ -1,7 +1,8 @@
 import subprocess
 import sys
 
-import guild
+import guild.app
+import guild.log
 
 _sys_attrs = None
 _gpu_attrs = None
@@ -18,8 +19,8 @@ def _ensure_sys_attrs():
 def _read_sys_attrs():
     try:
         raw = subprocess.check_output(guild.app.script("sys-attrs"))
-    except subprocess.CalledProcessError as e:
-        guild.log.error(e)
+    except subprocess.CalledProcessError:
+        guild.log.exception("sys-attrs")
         return []
     else:
         return _parse_sys_attrs(raw.decode(sys.stdout.encoding))
@@ -48,8 +49,8 @@ def _ensure_gpu_attrs():
 def _read_gpu_attrs():
     try:
         raw = subprocess.check_output(guild.app.script("gpu-attrs"))
-    except subprocess.CalledProcessError as e:
-        guild.log.error(e)
+    except subprocess.CalledProcessError:
+        guild.log.exception("reading gpu attrs")
         return []
     else:
         return _parse_gpu_attrs(raw.decode(sys.stdout.encoding))

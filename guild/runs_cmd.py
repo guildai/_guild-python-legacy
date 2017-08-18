@@ -3,7 +3,9 @@ import re
 import shutil
 import sys
 
-import guild
+import guild.cmd_support
+import guild.op_util
+import guild.run
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(

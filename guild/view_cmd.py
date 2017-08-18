@@ -2,7 +2,10 @@ import argparse
 import socket
 import sys
 
-import guild
+import guild.cli
+import guild.cmd_support
+import guild.view
+import guild.view_http
 
 DEFAULT_PORT = 6333
 DEFAULT_REFRESH_INTERVAL = 5

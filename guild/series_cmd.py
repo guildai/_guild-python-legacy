@@ -1,6 +1,7 @@
 import sys
 
-import guild
+import guild.cmd_support
+import guild.db
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(

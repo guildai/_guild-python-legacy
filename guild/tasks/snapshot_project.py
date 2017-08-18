@@ -1,6 +1,8 @@
 import subprocess
 
-import guild
+import guild.app
+import guild.log
+import guild.opdir
 
 def start(op, _stop, section):
     sources = _sources_for_section(section)
@@ -11,8 +13,8 @@ def start(op, _stop, section):
         args = [script, project_dir, guild_dir, sources]
         try:
             subprocess.check_output(args)
-        except subprocess.CalledProcessError as e:
-            guild.log.error(e)
+        except subprocess.CalledProcessError:
+            guild.log.exception("snapshoting project")
 
 def _sources_for_section(section):
     return section.attr("sources") or section.project.attr("sources")

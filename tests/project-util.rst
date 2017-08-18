@@ -4,7 +4,8 @@ Project Util
 The module `guild.project_util` provides a variety of utility
 functions related to projects.
 
->>> import guild
+>>> import guild.project
+>>> import guild.project_util
 
 Resolving extends
 -----------------

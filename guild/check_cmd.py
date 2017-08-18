@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 import guild
+import guild.app
 
 def add_parser(subparsers):
     p = subparsers.add_parser(

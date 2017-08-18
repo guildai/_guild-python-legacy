@@ -5,7 +5,7 @@ The `cmd_support` module provides a number of functions to support
 commands, including a number of functions to help with project related
 tasks.
 
->>> import guild
+>>> import guild.cmd_support
 
 Project related command arguments
 ---------------------------------
