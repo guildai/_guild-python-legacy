@@ -1,7 +1,6 @@
 import sys
 
 import guild.cmd_support
-import guild.db
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
@@ -16,6 +15,8 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
+    import guild.db
+
     run = guild.cmd_support.run_for_args(args)
     db = guild.db.init_for_opdir(run.opdir)
     for key in db.series_keys():

@@ -3,7 +3,6 @@ import subprocess
 import sys
 
 import guild
-import guild.app
 
 def add_parser(subparsers):
     p = subparsers.add_parser(
@@ -13,6 +12,8 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(_args):
+    import guild.app
+
     _print_guild_info()
     _print_python_info()
     _print_tensorflow_info()

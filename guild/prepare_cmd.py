@@ -1,7 +1,4 @@
-import guild.cli
 import guild.cmd_support
-import guild.op
-import guild.op_support
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
@@ -27,6 +24,10 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
+    import guild.cli
+    import guild.op
+    import guild.op_support
+
     op = _prepare_op(args)
     if args.preview:
         _preview(op)

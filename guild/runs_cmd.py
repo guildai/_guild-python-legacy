@@ -4,8 +4,6 @@ import shutil
 import sys
 
 import guild.cmd_support
-import guild.op_util
-import guild.run
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
@@ -38,6 +36,9 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
+    import guild.op_util
+    import guild.run
+
     project = guild.cmd_support.project_for_args(args)
     if args.command is None:
         _list_runs(args, project)

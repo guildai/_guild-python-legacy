@@ -2,10 +2,7 @@ import argparse
 import socket
 import sys
 
-import guild.cli
 import guild.cmd_support
-import guild.view
-import guild.view_http
 
 DEFAULT_PORT = 6333
 DEFAULT_REFRESH_INTERVAL = 5
@@ -51,6 +48,10 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
+    import guild.cli
+    import guild.view
+    import guild.view_http
+
     project = guild.cmd_support.project_for_args(args)
     settings = _view_settings_for_args(args)
     view = guild.view.ProjectView(project, settings)

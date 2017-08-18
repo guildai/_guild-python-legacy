@@ -1,13 +1,6 @@
 import os
 
-import guild.op
-import guild.tasks.log_flags
-import guild.tasks.log_system_attrs
-import guild.tasks.snapshot_project
-import guild.tasks.tensorflow_events
-import guild.tasks.op_stats
-import guild.tasks.sys_stats
-import guild.tasks.gpu_stats
+import guild.cmd_support
 
 def add_parser(subparsers):
     p = subparsers.add_parser(
@@ -27,6 +20,15 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
+    import guild.op
+    import guild.tasks.log_flags
+    import guild.tasks.log_system_attrs
+    import guild.tasks.snapshot_project
+    import guild.tasks.tensorflow_events
+    import guild.tasks.op_stats
+    import guild.tasks.sys_stats
+    import guild.tasks.gpu_stats
+
     op = _prepare_op(args)
     if args.preview:
         _preview(op)
