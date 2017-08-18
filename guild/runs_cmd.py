@@ -57,7 +57,7 @@ def _list_runs(project, args):
         index = index + 1
 
 def _runs_for_project(project, args):
-    if project is not None:
+    if project:
         runs = guild.run.runs_for_project(project)
     else:
         runs = guild.run.runs_for_project_dir(args.project_dir)
@@ -77,7 +77,7 @@ def _delete_runs(project, args):
             "Try 'guild runs --help' for more information.")
 
 def _runs_dir_for_project(project, args):
-    if project is not None:
+    if project:
         return guild.project_util.runs_dir_for_project(project)
     else:
         return guild.project_util.runs_dir_for_project_dir(args.project_dir)

@@ -4,11 +4,20 @@ import types
 
 import keras
 
+RUNDIR = None
+
 def main():
+    _init_rundir()
     script = _script_from_argv()
     _shift_argv()
     _patch_keras()
     _exec_script(script)
+
+def _init_rundir():
+    global RUNDIR
+    RUNDIR = os.getenv("RUNDIR")
+    if not RUNDIR:
+        raise AssertionError("RUNDIR env not set")
 
 def _script_from_argv():
     return sys.argv[1]
@@ -50,10 +59,9 @@ def _fit_wrapper(fit0):
 
 def _ensure_tensorboard_cb(kw):
     callbacks = kw.setdefault("callbacks", [])
-    log_dir = "/tmp/keras-run" # TODO provide RUNDIR as arg to script
     tensorboard_cb = _find_tensorboard_cb(callbacks)
     if tensorboard_cb is not None:
-        tensorboard_cb.log_dir = log_dir
+        tensorboard_cb.log_dir = RUNDIR
     else:
         tensorboard_cb = keras.callbacks.TensorBoard(
             log_dir,

@@ -6,6 +6,7 @@ import textwrap
 
 import guild.app
 import guild.cli
+import guild.run
 import guild.util
 
 __CONSOLE_WIDTH = None
@@ -83,7 +84,7 @@ def _project_for_args(args, name, use_plugins):
     except IOError:
         if use_plugins:
             project = _try_project_for_plugins(args)
-            if project is not None:
+            if project:
                 return project
         raise
 
@@ -93,8 +94,8 @@ def _try_project_for_plugins(args):
         guild.log.debug(
             "%s %s for project",
             plugin.__name__,
-            "selected" if project is not None else "not selected")
-        if project is not None:
+            "selected" if project else "not selected")
+        if project:
             return project
     return None
 
@@ -232,8 +233,11 @@ def _print_env(env):
         sys.stdout.write("  %s=%s\n" % (name, env[name]))
 
 def run_for_args(args):
-    project = project_for_args(args)
-    runs = guild.run.runs_for_project(project)
+    project = project_for_args(args, required=False)
+    if project:
+        runs = guild.run.runs_for_project(project)
+    else:
+        runs = guild.run.runs_for_project_dir(args.project_dir)
     return _run_for_spec(args.run, runs)
 
 def _run_for_spec(spec, runs):
