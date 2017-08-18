@@ -35,20 +35,22 @@ class DB(object):
         self._try_init_schema()
 
     def log_attrs(self, attrs):
-        arg_placeholders = _sql_arg_placeholders(attrs)
-        SQL = "insert or replace into attr values %s" % arg_placeholders
-        params = _sql_arg_vals(attrs, (str, str))
-        self._exec(SQL, params)
+        if attrs:
+            arg_placeholders = _sql_arg_placeholders(attrs)
+            SQL = "insert or replace into attr values %s" % arg_placeholders
+            params = _sql_arg_vals(attrs, (str, str))
+            self._exec(SQL, params)
 
     def attrs(self):
         SQL = "select * from attr"
         return self._select(SQL)
 
     def log_flags(self, flags):
-        arg_placeholders = _sql_arg_placeholders(flags)
-        SQL = "insert or replace into flag values %s" % arg_placeholders
-        params = _sql_arg_vals(flags, (str, str))
-        self._exec(SQL, params)
+        if flags:
+            arg_placeholders = _sql_arg_placeholders(flags)
+            SQL = "insert or replace into flag values %s" % arg_placeholders
+            params = _sql_arg_vals(flags, (str, str))
+            self._exec(SQL, params)
 
     def flags(self):
         SQL = "select * from flag"

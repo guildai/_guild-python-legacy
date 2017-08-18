@@ -30,13 +30,13 @@ def main(args):
     import guild.tasks.sys_stats
     import guild.tasks.gpu_stats
 
-    op = _prepare_op(args)
+    op = _train_op(args)
     if args.preview:
         _preview(op)
     else:
         _train(op)
 
-def _prepare_op(args):
+def _train_op(args):
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     model = guild.cmd_support.model_for_args(args, project)
     spec = model.attr("train")

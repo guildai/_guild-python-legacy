@@ -3,10 +3,11 @@ import yaml
 
 class Project(object):
 
-    def __init__(self, data, path):
+    def __init__(self, data, source=None, dir=None, annotation=None):
         self.data = data
-        self.path = path
-        self.dir = os.path.dirname(path)
+        self.source = source
+        self.dir = dir
+        self.annotation = annotation
         self.command_line_flags = []
         self.command_line_profiles = []
 
@@ -14,7 +15,7 @@ class Project(object):
         return self.data.get(name, default)
 
     def sections(self, heading):
-        sections = self.data.get(heading)
+        sections = self.data.get(heading, {})
         keys = list(sections.keys())
         keys.sort()
         return [Section([heading, key], sections[key], self) for key in keys]
@@ -27,10 +28,14 @@ class Project(object):
             return None
 
     def default_section(self, heading):
-        for s in self.sections(heading):
-            if s.attr("default") is True:
-                return s
-        return None
+        sections = self.sections(heading)
+        if len(sections) == 1:
+            return sections[0]
+        else:
+            for s in self.sections(heading):
+                if s.attr("default") is True:
+                    return s
+            return None
 
     def flags(self):
         return self.data.get("flags", {})
@@ -93,9 +98,25 @@ def from_dir(path, name="guild.yml"):
     return from_file(os.path.join(path, name))
 
 def from_file(path):
+    return Project(_load_data(path), path, os.path.dirname(path))
+
+def _load_data(path):
     with open(path, "r") as f:
-        parsed = yaml.load(f)
-    return Project(parsed, path)
+        return yaml.load(f)
 
 def from_string(s, path="__str__"):
     return Project(yaml.load(s), path)
+
+def copy_with_new_data(project, data):
+    return Project(
+        data,
+        project.source,
+        project.dir,
+        project.annotation)
+
+def reload(project):
+    if project.source:
+        new_data = _load_data(project.source)
+        return copy_with_new_data(project, new_data)
+    else:
+        return project

@@ -72,6 +72,8 @@ against the whole series key:
 
 Edge cases:
 
+>>> db.log_attrs([])
+>>> db.log_flags([])
 >>> db.log_series_values([])
 
 >>> db.log_series_values([("bam", [])])

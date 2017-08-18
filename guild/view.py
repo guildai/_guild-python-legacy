@@ -1,4 +1,5 @@
 import guild.db
+import guild.log
 import guild.op_util
 import guild.project_util
 import guild.run
@@ -6,7 +7,7 @@ import guild.run
 class ProjectView(object):
 
     def __init__(self, project, settings):
-        self._project_path = project.path
+        self._project = project
         self.settings = settings
         self._runs_dir = guild.project_util.runs_dir_for_project(project)
         self._dbs = guild.db.Pool()
@@ -31,11 +32,18 @@ class ProjectView(object):
         return self._dbs.for_run(run)
 
     def resolved_project(self):
-        project = guild.project.from_file(self._project_path)
+        project = self._reload_project()
         include_path = guild.app.include_src("project-base.yml")
         include = guild.project.from_file(include_path)
         merged = guild.project_util.apply_project_include(include, project)
         return guild.project_util.resolve_extends(merged)
+
+    def _reload_project(self):
+        try:
+            self._project.reload()
+        except Exception:
+            guild.log.exception("reloading project")
+        return self._project
 
     def formatted_runs(self):
         return [_format_run(run) for run in self.runs()]

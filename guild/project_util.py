@@ -2,6 +2,7 @@ import copy
 import json
 import os
 
+import guild.project
 import guild.util
 
 def runs_dir_for_project(project):
@@ -23,13 +24,13 @@ def apply_project_include(include_project, target_project):
     applied_data = {}
     applied_data.update(include_project.data)
     applied_data.update(target_project.data)
-    return guild.project.Project(applied_data, target_project.path)
+    return guild.project.copy_with_new_data(target_project, applied_data)
 
 def resolve_extends(project):
     templates = _project_templates(project)
     resolved_data = copy.deepcopy(project.data)
     _apply_extends(resolved_data, templates)
-    return guild.project.Project(resolved_data, project.path)
+    return guild.project.copy_with_new_data(project, resolved_data)
 
 def _project_templates(project):
     templates = {}
