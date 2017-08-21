@@ -122,17 +122,17 @@ def _project_ioerror(project_dir, name):
     else:
         _no_such_dir_error(project_dir)
 
-def _missing_project_file_error(dir, name):
+def _missing_project_file_error(dir, _name):
     guild.cli.error(
-        "%s does not contain a %s file\n"
+        "%s does not appear to be a Guild project\n"
         "Try 'guild init%s' to initialize a project or specify a different "
         "project directory"
-        % (_project_dir_desc(dir), name, _project_dir_opt(dir)))
+        % (project_dir_desc(dir), _project_dir_opt(dir)))
 
 def _no_such_dir_error(dir):
     guild.cli.error("Directory '%s' does not exist" % dir)
 
-def _project_dir_desc(d):
+def project_dir_desc(d):
     if d == ".":
         return "This directory"
     else:
@@ -170,7 +170,10 @@ def _default_model(project):
     return project.default_section("models")
 
 def _no_default_model_error():
-    guild.cli.error("There are no default models in the project")
+    guild.cli.error(
+        "There are no default models in the project\n"
+        "Try specifying a model with the command. Use 'guild project models' "
+        "to list available models.")
 
 def model_or_resource_for_args(args, project):
     if args.model_or_resource:

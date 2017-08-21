@@ -18,7 +18,6 @@ DEFAULT_MAX_EPOCHS = 400
 
 def start(host, port, view):
     server = _init_server(host, port, view)
-    sys.stdout.write("Guild View running on port %i\n" % port)
     server.serve_forever()
 
 def _init_server(host, port, view):

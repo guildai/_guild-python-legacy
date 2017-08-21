@@ -55,6 +55,8 @@ def main(args):
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     settings = _view_settings_for_args(args)
     view = guild.view.ProjectView(project, settings)
+
+    sys.stdout.write("Guild View running on port %i\n" % args.port)
     try:
         guild.view_http.start(args.host, args.port, view)
     except socket.error:
@@ -66,6 +68,7 @@ def main(args):
         sys.stdout.write("\n")
     finally:
         view.close()
+        sys.stdout.write("Guild View stopped\n")
 
 def _view_settings_for_args(_args):
     return {}
