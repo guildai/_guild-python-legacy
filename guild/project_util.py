@@ -26,9 +26,38 @@ def project_to_json(project):
 
 def apply_project_include(include_project, target_project):
     applied_data = {}
-    applied_data.update(include_project.data)
-    applied_data.update(target_project.data)
+    _apply_include_acc(include_project.data, applied_data)
+    _apply_include_acc(target_project.data, applied_data)
     return guild.project.copy_with_new_data(target_project, applied_data)
+
+def _apply_include_acc(data, acc):
+    if isinstance(data, dict) and isinstance(acc, dict):
+        _apply_dict_acc(data, acc)
+    elif isinstance(data, list) and isinstance(acc, list):
+        _apply_list_acc(data, acc)
+
+def _apply_dict_acc(data, acc):
+    for key0, val in data.items():
+        merge_key = key0.endswith("+")
+        key = key0[:-1] if merge_key else key0
+        if merge_key and key in acc:
+            _apply_include_acc(val, acc[key])
+        else:
+            acc[key] = _deep_copy_normalize_keys(val)
+
+def _deep_copy_normalize_keys(x):
+    if isinstance(x, dict):
+        x_copy = {}
+        for key, val in x.items():
+            if key.endswith("+"):
+                key = key[:-1]
+            x_copy[key] = _deep_copy_normalize_keys(val)
+        return x_copy
+    else:
+        return copy.deepcopy(x)
+
+def _apply_list_acc(data, acc):
+    acc.extend(data)
 
 def resolve_extends(project):
     templates = _project_templates(project)

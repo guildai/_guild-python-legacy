@@ -17,10 +17,11 @@ def add_parser(subparsers):
         View issues) use the --resolve option.
         """)
     p.add_argument(
-        "command",
-        help="Optional command. Valid options: resolve",
-        metavar="COMMAND",
-        nargs="?")
+        "types",
+        nargs="*",
+        metavar="TYPE",
+        help=("print the specified type (e.g. models, profiles, "
+              "resources, etc.)"))
     p.add_argument(
         "--json",
         help="print project in JSON format (default format is YAML)",
@@ -35,7 +36,7 @@ def add_parser(subparsers):
 def main(args):
     import guild.view
 
-    project = guild.cmd_support.project_for_args(args)
+    project = guild.cmd_support.project_for_args(args, use_plugins=True)
     if args.resolve:
         _print_resolved_project(project, args)
     else:
@@ -47,10 +48,19 @@ def _print_resolved_project(project, args):
     _print_project(resolved, args)
 
 def _print_project(project, args):
+    filtered = _filter_project_by_types(project, args.types)
     if args.json:
-        _print_project_json(project)
+        _print_project_json(filtered)
     else:
-        _print_project_yaml(project)
+        _print_project_yaml(filtered)
+
+def _filter_project_by_types(project, types):
+    filtered_data = {
+        key: val
+        for key, val in project.data.items()
+        if key in types
+    }
+    return guild.project.copy_with_new_data(project, filtered_data)
 
 def _print_project_json(project):
     sys.stdout.write(
