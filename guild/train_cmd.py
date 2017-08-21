@@ -3,10 +3,10 @@ import os
 import guild.cmd_support
 
 def add_parser(subparsers):
-    p = subparsers.add_parser(
-        "train",
-        help="train a model")
-    p.description = "Trains a model."
+    p = guild.cmd_support.add_parser(
+        subparsers,
+        "train", "train a model",
+        """Trains a model.""")
     p.add_argument(
         "model",
         metavar="MODEL",

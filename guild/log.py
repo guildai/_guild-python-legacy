@@ -15,7 +15,7 @@ def debug(msg, *args, **kw):
     _log(logging.debug, msg, args, kw)
 
 def exception(msg, *args, **kw):
-    _log(logging.debug, msg, args, kw)
+    _log(logging.exception, msg, args, kw)
 
 def _log(log_fun, msg, args, kw):
     source = kw.get("source", DEFAULT_SOURCE)

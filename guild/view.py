@@ -49,10 +49,10 @@ class ProjectView(object):
         return [_format_run(run) for run in self.runs()]
 
     def flags(self, run_id):
-        return self._run_db_for_id(run_id).flags()
+        return dict(self._run_db_for_id(run_id).flags())
 
     def attrs(self, run_id):
-        return self._run_db_for_id(run_id).attrs()
+        return dict(self._run_db_for_id(run_id).attrs())
 
     def series(self, run_id, series_pattern, max_epochs=None):
         db = self._run_db_for_id(run_id)
