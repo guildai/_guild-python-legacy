@@ -47,8 +47,8 @@ class Project(object):
             self.flags())
 
     def reload(self):
-        if project.source:
-            self.data = _load_data(project.source)
+        if self.source:
+            self.data = _load_data(self.source)
 
 class Section(object):
 

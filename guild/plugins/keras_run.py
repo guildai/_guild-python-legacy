@@ -64,7 +64,7 @@ def _ensure_tensorboard_cb(kw):
         tensorboard_cb.log_dir = RUNDIR
     else:
         tensorboard_cb = keras.callbacks.TensorBoard(
-            log_dir,
+            RUNDIR,
             write_graph=True)
         callbacks.append(tensorboard_cb)
 
@@ -75,6 +75,7 @@ def _find_tensorboard_cb(l):
     return None
 
 def _exec_script(script):
+    # pylint: disable=exec-used
     exec(open(script, "r").read())
 
 if __name__ == "__main__":
