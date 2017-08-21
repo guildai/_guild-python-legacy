@@ -1,3 +1,4 @@
+import numbers
 import os
 import sys
 import types
@@ -59,20 +60,42 @@ def _fit_wrapper(fit0):
 
 def _ensure_tensorboard_cb(kw):
     callbacks = kw.setdefault("callbacks", [])
-    tensorboard_cb = _find_tensorboard_cb(callbacks)
-    if tensorboard_cb is not None:
-        tensorboard_cb.log_dir = RUNDIR
-    else:
-        tensorboard_cb = keras.callbacks.TensorBoard(
-            RUNDIR,
-            write_graph=True)
-        callbacks.append(tensorboard_cb)
+    cb = _find_tensorboard_cb(callbacks)
+    if cb is None:
+        cb = keras.callbacks.TensorBoard(write_graph=True)
+        callbacks.append(cb)
+    if not hasattr(cb, "__GUILD_WRAPPED__"):
+        cb.log_dir = RUNDIR
+        _wrap_tensorboard_cb(cb)
+        cb.__GUILD_WRAPPED__ = True
 
 def _find_tensorboard_cb(l):
     for cb in l:
         if isinstance(cb, keras.callbacks.TensorBoard):
             return cb
     return None
+
+def _wrap_tensorboard_cb(cb):
+    cb.set_params = types.MethodType(_set_params_wrapper(cb), cb)
+
+def _set_params_wrapper(cb):
+    set_params0 = cb.set_params
+    def set_params(self, params):
+        print("#################", self)
+        print("*** TODO: log flags %s" % _flags_for_params(params))
+        print("*** TODO: write fields %s", _fields_for_params(params))
+        return set_params0(params)
+    return set_params
+
+def _flags_for_params(params):
+    return {
+        key: val
+        for key, val in params.items()
+        if isinstance(val, (basestring, numbers.Number, bool))
+    }
+
+def _fields_for_params(params):
+    return params.get("metrics")
 
 def _exec_script(script):
     # pylint: disable=exec-used
