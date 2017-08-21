@@ -31,7 +31,7 @@ class Pool(object):
 class DB(object):
 
     def __init__(self, path):
-        self._conn = sqlite3.connect(path)
+        self._conn = sqlite3.connect(path, check_same_thread=False)
         self._try_init_schema()
 
     def log_attrs(self, attrs):
