@@ -81,3 +81,10 @@ def input(prompt):
         return input(prompt)
     else:
         return raw_input(prompt)
+
+def try_find(funs):
+    for f in funs:
+        result = f()
+        if result is not None:
+            return result
+    return None

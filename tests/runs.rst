@@ -33,3 +33,8 @@ or by name:
 'intro'
 >>> runs[0].attr("started")
 '1502198513402'
+
+Guild files are stored in an opdir subdirectory named 'guild.d':
+
+>>> runs[0].guild_file("test")
+'tests/samples/runs/2017-08-08T13-21-53Z-intro/guild.d/test'

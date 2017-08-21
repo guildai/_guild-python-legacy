@@ -5,7 +5,7 @@ import os
 import guild.opdir
 import guild.project_util
 
-OPDIR_MARKER = "guild.d"
+GUILD_DIR = "guild.d"
 
 class Run(object):
 
@@ -17,6 +17,9 @@ class Run(object):
     def attr(self, name):
         return self.attrs.get(name)
 
+    def guild_file(self, path):
+        return os.path.join(self.opdir, GUILD_DIR, path)
+
 def run_id_for_dir(opdir):
     return binascii.crc32(opdir.encode("UTF-8")) & 0xffffffff
 
@@ -24,7 +27,7 @@ def is_run(dir):
     return os.path.isdir(run_marker(dir))
 
 def run_marker(dir):
-    return os.path.join(dir, OPDIR_MARKER)
+    return os.path.join(dir, GUILD_DIR)
 
 def run_for_opdir(opdir):
     if is_run(opdir):
@@ -33,7 +36,7 @@ def run_for_opdir(opdir):
         return None
 
 def runs_for_runs_dir(runs_dir):
-    pattern = os.path.join(runs_dir, "**", "guild.d")
+    pattern = os.path.join(runs_dir, "**", GUILD_DIR)
     run_paths = [os.path.dirname(guild_dir)
                  for guild_dir in glob.glob(pattern)]
     run_paths.sort(reverse=True)

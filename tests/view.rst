@@ -31,9 +31,6 @@ the location of the project runs. Our sample runs are located under
 change before calling any of the view methods.
 
 >>> view._runs_dir = sample("runs")
->>> runs = view.runs()
->>> len(runs)
-1
 
 Formatted runs
 --------------
@@ -41,7 +38,8 @@ Formatted runs
 We can use the `runs` method to return a list of formatted runs (each
 represented by a dict, which can easily be converted to JSON):
 
->>> pprint(view.formatted_runs())
+>>> runs = view.formatted_runs()
+>>> pprint(runs)
 [{'cmd': '...',
   'dir': 'tests/samples/runs/2017-08-08T13-21-53Z-intro',
   'exit_status': 0,
@@ -50,7 +48,8 @@ represented by a dict, which can easily be converted to JSON):
   'model': 'intro',
   'started': 1502198513402,
   'status': 'stopped',
-  'stopped': 1502198513402}]
+  'stopped': 1502198513402,
+  'view': {u'trainFields': []}}]
 
 Settings
 --------
@@ -74,19 +73,19 @@ Flags
 Flags are provided on a per run basis. A run is specified by its run
 ID:
 
->>> pprint(view.flags(runs[0].id))
-[(u'epochs', u'2'),
- (u'datadir', u'./data'),
- (u'rundir', u'$RUNDIR'),
- (u'batch_size', u'100')]
+>>> pprint(view.flags(runs[0]["id"]))
+{u'batch_size': u'100',
+ u'datadir': u'./data',
+ u'epochs': u'2',
+ u'rundir': u'$RUNDIR'}
 
 We can alternatively use `None` to represent the latest run.
 
 >>> pprint(view.flags(None))
-[(u'epochs', u'2'),
- (u'datadir', u'./data'),
- (u'rundir', u'$RUNDIR'),
- (u'batch_size', u'100')]
+{u'batch_size': u'100',
+ u'datadir': u'./data',
+ u'epochs': u'2',
+ u'rundir': u'$RUNDIR'}
 
 We get a LookupError if we specified an invalid ID:
 
@@ -99,18 +98,18 @@ Attrs
 
 The system attributes for a run (i.e. attrs) are provided similarly:
 
->>> pprint(view.attrs(runs[0].id))
-[(u'cpu_model', u'Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz'),
- (u'cpu_cores', u'8'),
- (u'mem_total', u'32040 MB'),
- (u'gpu0_name', u'GeForce 940MX'),
- (u'gpu0_memory', u'2002 MB'),
- (u'tensorflow_version', u'1.2.0')]
+>>> pprint(view.attrs(runs[0]["id"]))
+{u'cpu_cores': u'8',
+ u'cpu_model': u'Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz',
+ u'gpu0_memory': u'2002 MB',
+ u'gpu0_name': u'GeForce 940MX',
+ u'mem_total': u'32040 MB',
+ u'tensorflow_version': u'1.2.0'}
 
 Series
 ------
 
->>> pprint(view.series(runs[0].id, "op/mem/vms"))
+>>> pprint(view.series(runs[0]["id"], "op/mem/vms"))
 [(u'op/mem/vms', [(1502387773776, 0, 50723835904.0)])]
 
 Cleanup

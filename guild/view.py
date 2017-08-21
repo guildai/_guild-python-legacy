@@ -1,3 +1,6 @@
+import json
+import os
+
 import guild.db
 import guild.log
 import guild.op_util
@@ -7,7 +10,7 @@ import guild.run
 class ProjectView(object):
 
     def __init__(self, project, settings):
-        self._project = project
+        self.project = project
         self.settings = settings
         self._runs_dir = guild.project_util.runs_dir_for_project(project)
         self._dbs = guild.db.Pool()
@@ -15,11 +18,11 @@ class ProjectView(object):
     def close(self):
         self._dbs.close()
 
-    def runs(self):
+    def _runs(self):
         return guild.run.runs_for_runs_dir(self._runs_dir)
 
     def _run_for_id(self, id):
-        runs = self.runs()
+        runs = self._runs()
         if id is None and runs:
             return runs[0]
         for run in runs:
@@ -40,13 +43,13 @@ class ProjectView(object):
 
     def _reload_project(self):
         try:
-            self._project.reload()
+            self.project.reload()
         except Exception:
             guild.log.exception("reloading project")
-        return self._project
+        return self.project
 
     def formatted_runs(self):
-        return [_format_run(run) for run in self.runs()]
+        return [_format_run(run, self.project) for run in self._runs()]
 
     def flags(self, run_id):
         return dict(self._run_db_for_id(run_id).flags())
@@ -59,15 +62,45 @@ class ProjectView(object):
         series = db.series_values(series_pattern)
         return _reduce_series(series, max_epochs)
 
-def _format_run(run):
+def _format_run(run, project):
     attrs = {
         "id": run.id,
         "dir": run.opdir,
         "status": guild.op_util.op_status(run.opdir),
-        "extended_status": guild.op_util.extended_op_status(run.opdir)
+        "extended_status": guild.op_util.extended_op_status(run.opdir),
+        "view": _run_view(run, project)
     }
     attrs.update(_format_run_meta(run))
     return attrs
+
+def _run_view(run, project):
+    return guild.util.try_find([
+        lambda: _run_defined_view(run),
+        lambda: _project_defined_view(project, run.attr("model")),
+        lambda: {}])
+
+def _run_defined_view(run):
+    view_def = run.guild_file("view.json")
+    if os.path.exists(view_def):
+        return json.load(open(view_def, "r"))
+    else:
+        return None
+
+def _project_defined_view(project, model):
+    return guild.util.try_find([
+        lambda: _model_level_view(project, model),
+        lambda: _project_level_view(project)])
+
+def _model_level_view(project, model):
+    if not model:
+        return None
+    model_def = project.section("models", model)
+    if not model_def:
+        return None
+    return model_def.attr("view")
+
+def _project_level_view(project):
+    return project.attr("view")
 
 def _format_run_meta(run):
     meta = guild.opdir.read_all_meta(run.opdir)
