@@ -24,9 +24,17 @@ limitations under the License.
          background-color: #fff;
          font-size: 14px;
      }
+
+     table caption {
+         color: var(--secondary-text-color);
+         font-style: italic;
+     }
     </style>
     <div class="table-responsive">
       <table class="table table-hover">
+        <template is="dom-if" if="[[showEmptyCaption]]">
+          <caption>[[emptyCaption]]</caption>
+        </template>
         <tbody>
           <template is="dom-repeat" items="[[keyvals]]">
             <tr>
@@ -47,6 +55,13 @@ limitations under the License.
            keyvals: {
                type: Array,
                computed: 'computeKeyvals(data)'
+           },
+           emptyCaption: {
+               value: ""
+           },
+           showEmptyCaption: {
+               type: Boolean,
+               computed: 'computeShowEmptyCaption(data, emptyCaption)'
            }
        },
 
@@ -59,6 +74,10 @@ limitations under the License.
                    "value": data[key]
                }
            });
+       },
+
+       computeShowEmptyCaption: function(data, emptyCaption) {
+           return Object.keys(data).length == 0 && emptyCaption;
        }
    });
   </script>

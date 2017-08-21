@@ -28,7 +28,10 @@ limitations under the License.
         data="{{data}}">
     </guild-run-data-listener>
     <guild-component-panel heading="Attributes">
-      <vz-keyval-table data="[[data]]"></vz-keyval-table>
+      <vz-keyval-table
+          data="[[data]]"
+          empty-caption="There are no attributes for this run">
+      </vz-keyval-table>
     </guild-component-panel>
   </template>
   <script>
