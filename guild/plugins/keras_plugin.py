@@ -4,38 +4,98 @@ import os
 
 import guild.log
 
+###################################################################
+# Keras project
+###################################################################
+
+class KerasProject(guild.project.Project):
+
+    def __init__(self, scripts, project_dir):
+        if len(scripts) == 0:
+            raise RuntimeError("Keras project requires at least one script")
+        self._scripts = scripts
+        data = _project_data_for_scripts(scripts)
+        super(KerasProject, self).__init__(
+            data,
+            None,
+            project_dir,
+            "zero-config generated Keras project")
+
+    def reload(self):
+        self.data = _project_data_for_scripts(self._scripts)
+
+def _project_data_for_scripts(scripts):
+    return {
+        "models": {
+            _script_name(script): _script_model_data(script)
+            for script in scripts
+        },
+        "views": {
+            "train": {
+                "scope": "run",
+                "content": [
+                    "keras-fields"
+                ],
+                "sidebar": [
+                    "flags",
+                    "attrs"
+                ]
+            }
+        },
+        "components+": {
+            "keras-fields": {
+                "element": "guild-fields",
+                "foo-config": 123
+            }
+        }
+    }
+
+def _script_name(script):
+    name, _ext = os.path.splitext(os.path.basename(script))
+    return name
+
+def _script_model_data(script):
+    data = {
+        "train": _script_train_spec(script)
+    }
+    _apply_flags_for_script(script, data)
+    return data
+
+def _script_train_spec(script):
+    return " ".join([_keras_run_path(), script])
+
+def _keras_run_path():
+    this_dir = os.path.dirname(__file__)
+    return os.path.join(this_dir, "keras_run.py")
+
+def _apply_flags_for_script(script, data):
+    flags = _script_flags(script)
+    if flags:
+        data["flags"] = flags
+
+def _script_flags(_script):
+    # Currently not inferring flags from script
+    return {}
+
+###################################################################
+# Plugin API: try project
+###################################################################
+
 def try_project(args):
-    if args.command == "train":
-        return _try_project_for_train(args)
-    elif args.command == "view":
-        return _project_for_view(args)
-    else:
-        return None
-
-def _try_project_for_train(args):
-    script = _find_keras_script(args)
-    if script:
-        return _project_for_script(script)
-    else:
-        return None
-
-def _find_keras_script(args):
     scripts = _keras_scripts(args)
-    if args.model:
-        for script in scripts:
-            if _script_name(script) == args.model:
-                return script
-        _no_such_model_error(args.model, scripts)
+    if scripts:
+        guild.log.debug("%i Keras script(s) found", len(scripts),
+                        source="keras-plugin")
+        return KerasProject(scripts, args.project_dir)
     else:
-        if len(scripts) == 1:
-            return scripts[0]
-        else:
-            _model_required_error(scripts)
+        guild.log.debug("no Keras scripts found",
+                        source="keras-plugin")
+        return None
 
 def _keras_scripts(args):
     keras_scripts = []
     for script in _python_scripts(args):
-        debug_parts = ["testing script '%s':" % script]
+        debug_parts = ["testing script '%s' -" % script]
         is_script = _is_keras_script(script, debug_parts)
         guild.log.debug(" ".join(debug_parts), source="keras-plugin")
         if is_script:
@@ -49,6 +109,7 @@ def _is_keras_script(script, debug_parts):
     try:
         parsed = ast.parse(open(script, "r").read())
     except SyntaxError as e:
+        guild.log.exception("parsing %s" % script)
         debug_parts.append("%s, skipping" % e)
         return False
     else:
@@ -98,53 +159,3 @@ def _calls_fit_condition(node):
         and node.func.attr == "fit"):
         return True
     return False
-
-def _script_name(script):
-    name, _ext = os.path.splitext(os.path.basename(script))
-    return name
-
-def _no_such_model_error(model, scripts):
-    script_names = [_script_name(script) for script in scripts]
-    guild.cli.error(
-        "cannot find a script for model '%s'\n"
-        "Try 'guild train MODEL' where MODEL is one of: %s"
-        % (model, ", ".join(script_names)))
-
-def _model_required_error(scripts):
-    script_names = [_script_name(script) for script in scripts]
-    guild.cli.error(
-        "more than one Keras script found\n"
-        "Use 'guild train MODEL' where MODEL is one of: %s"
-        % ", ".join(script_names))
-
-def _project_for_script(script):
-    script_name = _script_name(script)
-    train_spec = _train_spec(script)
-    data = {
-        "models": {
-            script_name: {
-                "train": train_spec
-            }
-        }
-    }
-    return guild.project.Project(
-        data,
-        source=None,
-        dir=os.path.dirname(script),
-        annotation="auto-generated for train by keras plugin")
-
-def _train_spec(script):
-    return " ".join([_keras_run_path(), script])
-
-def _keras_run_path():
-    this_dir = os.path.dirname(__file__)
-    return os.path.join(this_dir, "keras_run.py")
-
-def _project_for_view(args):
-    data = {
-    }
-    return guild.project.Project(
-        data,
-        source=None,
-        dir=args.project_dir,
-        annotation="auto-generated for view by keras plugin")
