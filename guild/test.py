@@ -6,7 +6,7 @@ import sys
 import tempfile
 
 class Py23DocChecker(doctest.OutputChecker):
-    """Output checkedr that works around Python 2/3 unicode representations.
+    """Output checker that works around Python 2/3 unicode representations.
 
     https://dirkjan.ochtman.nl/writing/2014/07/06/single-source-python-23-doctests.html
     """
