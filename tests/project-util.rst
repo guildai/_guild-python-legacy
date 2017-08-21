@@ -260,3 +260,131 @@ not modified:
 >>> resolved = resolve_from_string(p_str)
 >>> pprint(resolved.data)
 {'item1': {'attr1': 1, 'attr2': 2}}
+
+Project includes
+----------------
+
+Guild provides projects with base information via the
+`include/project-base.yml`. This file contains default definitions for
+views, components, and templates. `project-base.yml` is applied to a
+user's project as a *resolve* step in Guild View. User projects may
+redefine included values, either by adding or modifying their
+attributes or by replacing values entirely.
+
+You can see the effect of the resolve step by running the following
+command from the CLI:
+
+    guild project --resolve
+
+This will print the current project (or the project referenced via
+-P/--project) in YAML format. This is useful for debugging the resolve
+step.
+
+The function `guild.project_util.apply_project_include` is used to
+apply an include to a project.
+
+Let's creat a helper function to apply an include and print the
+resulting project data:
+
+>>> def apply_include(include, target):
+...     applied = guild.project_util.apply_project_include(include, target)
+...     pprint(applied.data)
+
+Next we'll create a simple include project:
+
+>>> include_project = guild.project.from_string("""
+... foo:
+...   attr1: 1
+...   attr2: 2
+... bar:
+...   attr3: 3
+...   attr4: [4.1, 4.2]
+... """)
+
+Next we'll define a project that replaced 'foo' and modifies 'bar':
+
+>>> user_project = guild.project.from_string("""
+... foo:
+...   attr1: 1.1
+...   attr2: 2.1
+...   attr3: 3.1
+... bar+:
+...   attr3: 3.1
+...   attr5: 5
+... """)
+
+Note that 'bar' is defined using a '+' suffix. This indicates that the
+section should be merged into any included 'bar' section.
+
+When we apply the include to the user project, we see that user 'bar'
+is merged into the include 'bar':
+
+>>> apply_include(include_project, user_project)
+{'bar': {'attr3': 3.1, 'attr4': [4.1, 4.2], 'attr5': 5},
+ 'foo': {'attr1': 1.1, 'attr2': 2.1, 'attr3': 3.1}}
+
+New sections are always added:
+
+>>> user_project_2 = guild.project.from_string("""
+... baz:
+...   attr5: 5
+...   attr6: 6
+... """)
+>>> apply_include(include_project, user_project_2)
+{'bar': {'attr3': 3, 'attr4': [4.1, 4.2]},
+ 'baz': {'attr5': 5, 'attr6': 6},
+ 'foo': {'attr1': 1, 'attr2': 2}}
+
+Attempting to merge a non-existing section is equivalent to adding it:
+
+>>> user_project_3 = guild.project.from_string("""
+... baz+:
+...   attr5: 5
+...   attr6: 6
+... """)
+>>> apply_include(include_project, user_project_3)
+{'bar': {'attr3': 3, 'attr4': [4.1, 4.2]},
+ 'baz': {'attr5': 5, 'attr6': 6},
+ 'foo': {'attr1': 1, 'attr2': 2}}
+
+Lists can be replaced:
+
+>>> user_project_4 = guild.project.from_string("""
+... bar+:
+...   attr4: [4.3, 4.4]
+... """)
+>>> apply_include(include_project, user_project_4)
+{'bar': {'attr3': 3, 'attr4': [4.3, 4.4]}, 'foo': {'attr1': 1, 'attr2': 2}}
+
+Lists can also be merged, which appends the new values:
+
+>>> user_project_5 = guild.project.from_string("""
+... bar+:
+...   attr4+: [4.3, 4.4]
+... """)
+>>> apply_include(include_project, user_project_5)
+{'bar': {'attr3': 3, 'attr4': [4.1, 4.2, 4.3, 4.4]},
+ 'foo': {'attr1': 1, 'attr2': 2}}
+
+To append to a section, the section content must be of the same
+type. Type mismatches are silently ignored.
+
+>>> user_project_6 = guild.project.from_string("""
+... bar+: 6
+... """)
+>>> apply_include(include_project, user_project_6)
+{'bar': {'attr3': 3, 'attr4': [4.1, 4.2]}, 'foo': {'attr1': 1, 'attr2': 2}}
+
+>>> user_project_7 = guild.project.from_string("""
+... bar+: [1, 2]
+... """)
+>>> apply_include(include_project, user_project_7)
+{'bar': {'attr3': 3, 'attr4': [4.1, 4.2]}, 'foo': {'attr1': 1, 'attr2': 2}}
+
+However, sections may be redefined using different types:
+
+>>> user_project_7 = guild.project.from_string("""
+... bar: 6
+... """)
+>>> apply_include(include_project, user_project_7)
+{'bar': 6, 'foo': {'attr1': 1, 'attr2': 2}}
