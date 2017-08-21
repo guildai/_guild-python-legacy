@@ -9,14 +9,23 @@ def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
         subparsers,
         "runs", "manage project runs",
-        """With no arguments, shows the list of runs for a project.
+        """With no arguments, prints runs for a project.
 
         Use the 'remove' (or 'rm') command to delete runs. Specify either
         run names or index values returned by the 'runs' command.
+
+        Deleted runs may be recovered using the 'recovered' command. To
+        view the list of deleted runs use 'guild runs --deleted'.
+
+        To purge (i.e. permanantly delete) all deleted runs, use the
+        'purge' command. By default you will be prompted before the
+        runs are permanently deleted. Use the '--yes' option to purge
+        the runs without a prompt.
         """)
     p.add_argument(
         "command",
-        help="Optional command. Valid options: remove (or rm), purge",
+        help=("Optional command. Valid options: remove (or rm), purge, "
+              "recover"),
         metavar="COMMAND",
         nargs="?")
     p.add_argument(
@@ -32,6 +41,10 @@ def add_parser(subparsers):
         "--yes",
         help="Answer 'Y' to any prompts",
         action="store_true")
+    p.add_argument(
+        "--deleted",
+        help="Prints deleted runs, which may be purged or recovered",
+        action="store_true")
     guild.cmd_support.add_project_arguments(p)
     p.set_defaults(func=main)
 
@@ -44,8 +57,12 @@ def main(args):
         _list_runs(project, args)
     elif args.command == "remove" or args.command == "rm":
         _delete_runs(project, args)
+    elif args.command == "recover":
+        _recover_runs(project, args)
     elif args.command == "purge":
         _purge_deleted_runs(project, args)
+    else:
+        _unknown_command_error(args.command)
 
 def _list_runs(project, args):
     runs = _runs_for_project(project, args)
@@ -57,20 +74,20 @@ def _list_runs(project, args):
         index = index + 1
 
 def _runs_for_project(project, args):
-    if project:
-        runs = guild.run.runs_for_project(project)
-    else:
-        runs = guild.run.runs_for_project_dir(args.project_dir)
+    runs_dir = _runs_dir_for_project(project, args)
+    if args.deleted:
+        runs_dir = os.path.join(runs_dir, ".deleted")
+    runs = guild.run.runs_for_runs_dir(runs_dir)
     return [run.opdir for run in runs]
 
 def _delete_runs(project, args):
-    runs = _runs_for_project(project, args)
     runs_dir = _runs_dir_for_project(project, args)
+    runs = guild.run.runs_for_runs_dir(runs_dir)
     deleted_dir = os.path.join(runs_dir, ".deleted")
     rundirs_to_delete = _rundirs_for_args(args, runs_dir, runs)
     if rundirs_to_delete:
         for rundir in rundirs_to_delete:
-            _move_run(rundir, deleted_dir)
+            _move_run(rundir, deleted_dir, "Deleting")
     else:
         guild.cli.error(
             "Specify one or more runs to delete.\n"
@@ -90,7 +107,7 @@ def _rundirs_for_args(args, runs_dir, runs):
         if not runs:
             guild.cli.error(
                 "There are no runs to delete.")
-        return runs
+        return [run.opdir for run in runs]
     else:
         return _expand_rundirs(args.runs, runs_dir, runs)
 
@@ -99,7 +116,7 @@ def _expand_rundirs(specs, runs_dir, runs):
     for spec in _expand_specs(specs, runs):
         if isinstance(spec, int):
             if spec >= 0 and spec < len(runs):
-                rundirs.append(runs[spec])
+                rundirs.append(runs[spec].opdir)
         else:
             rundirs.append(os.path.join(runs_dir, spec))
     return rundirs
@@ -122,12 +139,25 @@ def _expand_specs(specs, runs):
                 expanded.append(spec)
     return expanded
 
-def _move_run(rundir, dest, ):
+def _move_run(rundir, dest, move_desc):
     if os.path.isdir(rundir):
-        sys.stdout.write("Deleting %s\n" % os.path.basename(rundir))
+        sys.stdout.write("%s %s\n" % (move_desc, os.path.basename(rundir)))
         shutil.move(rundir, dest)
     else:
         sys.stdout.write("WARNING: %s is not a run, skipping\n" % rundir)
+
+def _recover_runs(project, args):
+    runs_dir = _runs_dir_for_project(project, args)
+    deleted_dir = os.path.join(runs_dir, ".deleted")
+    runs = guild.run.runs_for_runs_dir(deleted_dir)
+    rundirs_to_recover = _rundirs_for_args(args, deleted_dir, runs)
+    if rundirs_to_recover:
+        for rundir in rundirs_to_recover:
+            _move_run(rundir, runs_dir, "Recovering")
+    else:
+        guild.cli.error(
+            "Specify one or more runs to recover.\n"
+            "Try 'guild runs --help' for more information.")
 
 def _purge_deleted_runs(project, args):
     runs_dir = _runs_dir_for_project(project, args)
@@ -171,3 +201,9 @@ def _permanently_delete(paths):
 def _assert_deleted_path(path):
     if os.path.basename(os.path.dirname(path)) != ".deleted":
         raise AssertionError(path)
+
+def _unknown_command_error(cmd):
+    guild.cli.error(
+        "Unknown runs command '%s'\n"
+        "Try 'guild runs --help' for a list of commands"
+        % cmd)
