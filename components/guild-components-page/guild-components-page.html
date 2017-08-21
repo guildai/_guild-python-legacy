@@ -202,7 +202,7 @@ limitations under the License.
        },
 
        viewComponents: function(view, type, project) {
-           var refs = (view[type] || "").split(/\s+/);
+           var refs = view[type] || [];
            var comps = [];
            for (var i = 0; i < refs.length; i++) {
                var cdef = this.util.resolveContent(refs[i], project);
@@ -253,7 +253,7 @@ limitations under the License.
            };
 
            this.resolveContent = function(name, project) {
-               return Guild.Project.section(project, "component", name);
+               return Guild.Project.section(project, "components", name);
            };
        }
    });
