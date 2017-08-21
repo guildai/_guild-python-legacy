@@ -24,7 +24,8 @@ def testfile(path):
         optionflags=(
             doctest.REPORT_ONLY_FIRST_FAILURE |
             doctest.ELLIPSIS |
-            doctest.IGNORE_EXCEPTION_DETAIL))
+            doctest.IGNORE_EXCEPTION_DETAIL |
+            doctest.NORMALIZE_WHITESPACE))
 
 def testfile_(filename, globs, optionflags):
     """Modified from doctest.py to use custom checker."""
