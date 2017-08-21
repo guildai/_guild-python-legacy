@@ -46,6 +46,10 @@ class Project(object):
             _resolve_profile_flags(self),
             self.flags())
 
+    def reload(self):
+        if project.source:
+            self.data = _load_data(project.source)
+
 class Section(object):
 
     def __init__(self, path, data, project):
@@ -113,10 +117,3 @@ def copy_with_new_data(project, data):
         project.source,
         project.dir,
         project.annotation)
-
-def reload(project):
-    if project.source:
-        new_data = _load_data(project.source)
-        return copy_with_new_data(project, new_data)
-    else:
-        return project
