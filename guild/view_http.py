@@ -181,16 +181,16 @@ def _run_ids_for_params(params):
     raw = params.get("runs")
     if raw is None:
         return None
-    return [_run_id(id_str) for id_str in raw.split(",")]
+    return [_run_id_from_string(s) for s in raw.split(",")]
 
-def _run_id(id_str):
+def _run_id_from_string(id_str):
     try:
         return int(id_str)
     except ValueError:
         _raise_bad_request("invalid run_id: %s" % id_str)
 
-def _handle_sources(_view, _req):
-    _raise_bad_request("TODO: handle sources")
+def _handle_sources(view, _req):
+    return _view_lookup(view.sources)
 
 def _handle_settings(view, _req):
     return _json_resp(json.dumps(view.settings))

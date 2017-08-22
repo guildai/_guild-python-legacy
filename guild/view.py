@@ -104,6 +104,19 @@ class ProjectView(object):
         else:
             raise ValueError(source)
 
+    def sources(self):
+        return ["flags", "attrs"] + self._series_keys()
+
+    def _series_keys(self):
+        keys = set()
+        self._series_keys_acc(self._runs(), keys)
+        return sorted(list(keys))
+
+    def _series_keys_acc(self, runs, acc):
+        for run in runs:
+            db = self._run_db_for_id(run.id)
+            acc.update(["series/" + key for key in db.series_keys()])
+
 def _format_run(run):
     attrs = {
         "id": run.id,
