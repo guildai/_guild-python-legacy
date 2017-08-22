@@ -24,7 +24,7 @@ First let's load a project:
 >>> pprint(cmd)
 ['python',
  '-u',
- '/home/garrett/SCM/guild-python/tests/samples/mnist/intro.py',
+ '.../guild-python/tests/samples/mnist/intro.py',
  '--prepare',
  '--batch_size',
  '100',
