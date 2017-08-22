@@ -22,6 +22,7 @@ def start(op, stop, interval=DEFAULT_INTERVAL):
 
 def _log_events(op):
     scalars = _latest_scalars(op.opdir)
+    guild.log.debug("tensorflow scalars: %s", scalars)
     op.db.log_series_values(scalars.items())
 
 def _latest_scalars(opdir):

@@ -46,7 +46,9 @@ def _init():
     return True
 
 def _log_gpu_stats(op):
-    guild.task_support.log_kv_as_series(_gpu_stats(), op.db)
+    stats = _gpu_stats()
+    guild.log.debug("gpu stats: %s", stats)
+    guild.task_support.log_kv_as_series(stats, op.db)
 
 def _gpu_stats():
     stats = {}

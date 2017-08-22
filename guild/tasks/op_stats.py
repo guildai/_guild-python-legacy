@@ -2,6 +2,7 @@ from __future__ import division
 
 import psutil
 
+import guild.log
 import guild.task_support
 
 DEFAULT_INTERVAL = 5 # seconds
@@ -20,7 +21,9 @@ def _init_proc(proc_pid):
         return None
 
 def _log_op_stats(op, proc):
-    guild.task_support.log_kv_as_series(_pid_stats(proc), op.db)
+    stats = _pid_stats(proc)
+    guild.log.debug("op stats: %s", stats)
+    guild.task_support.log_kv_as_series(stats, op.db)
 
 def _pid_stats(proc):
     global cpu_percent_init

@@ -1,3 +1,4 @@
+import guild.log
 import guild.system
 import guild.tensorflow_support
 
@@ -6,6 +7,7 @@ def start(op, _stop):
         _sys_attrs() +
         _gpu_attrs() +
         _tensorflow_attrs())
+    guild.log.debug("system attrs: %s", attrs)
     op.db.log_attrs(attrs)
 
 def _sys_attrs():

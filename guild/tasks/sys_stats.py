@@ -4,6 +4,7 @@ import time
 
 import psutil
 
+import guild.log
 import guild.task_support
 
 DEFAULT_INTERVAL = 5 # seconds
@@ -19,7 +20,9 @@ def _log_sys_stats(op):
     _log_disk_stats(op)
 
 def _log_cpu_stats(op):
-    guild.task_support.log_kv_as_series(_cpu_stats(), op.db)
+    stats = _cpu_stats()
+    guild.log.debug("cpu stats: %s", stats)
+    guild.task_support.log_kv_as_series(stats, op.db)
 
 def _cpu_stats():
     global cpu_percent_init
@@ -36,7 +39,9 @@ def _cpu_stats():
     return stats
 
 def _log_disk_stats(op):
-    guild.task_support.log_kv_as_series(_disk_stats(), op.db)
+    stats = _disk_stats()
+    guild.log.debug("disk stats: %s", stats)
+    guild.task_support.log_kv_as_series(stats, op.db)
 
 def _disk_stats():
     global last_disk
