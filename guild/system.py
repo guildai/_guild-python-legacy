@@ -23,7 +23,7 @@ def _read_sys_attrs():
         guild.log.exception("sys-attrs")
         return []
     else:
-        return _parse_sys_attrs(raw.decode(sys.stdout.encoding))
+        return _parse_sys_attrs(raw.decode(sys.stdout.encoding or "UTF-8"))
 
 def _parse_sys_attrs(line):
     parts = line.split("\t")
@@ -53,7 +53,7 @@ def _read_gpu_attrs():
         guild.log.exception("reading gpu attrs")
         return []
     else:
-        return _parse_gpu_attrs(raw.decode(sys.stdout.encoding))
+        return _parse_gpu_attrs(raw.decode(sys.stdout.encoding or "UTF-8"))
 
 def _parse_gpu_attrs(s):
     return [_parse_gpu_attrs_line(line) for line in s.split("\n") if line]
