@@ -62,7 +62,11 @@ def _script_model_data(script):
     return data
 
 def _script_train_spec(script):
-    return " ".join([_keras_run_path(), script])
+    args = [_keras_run_path(), script, "$RUNDIR"]
+    return " ".join([_quote_arg(arg) for arg in args])
+
+def _quote_arg(arg):
+    return arg if arg.find(" ") == -1 else '"%s"' % arg
 
 def _keras_run_path():
     this_dir = os.path.dirname(__file__)

@@ -52,6 +52,20 @@ class ProjectView(object):
         return [_format_run(run, self.project) for run in self._runs()]
 
     def flags(self, run_id):
+        return guild.util.try_find([
+            lambda: self._flags_from_json(run_id),
+            lambda: self._flags_from_db(run_id)
+        ])
+
+    def _flags_from_json(self, run_id):
+        run = self._run_for_id(run_id)
+        flags_path = run.guild_file("flags.json")
+        try:
+            return json.load(open(flags_path, "r"))
+        except IOError:
+            return None
+
+    def _flags_from_db(self, run_id):
         return dict(self._run_db_for_id(run_id).flags())
 
     def attrs(self, run_id):

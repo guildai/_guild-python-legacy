@@ -1,30 +1,27 @@
+import argparse
+import json
 import numbers
 import os
-import sys
 import types
 
 import keras
 
-RUNDIR = None
+FLAGS = None
 
 def main():
-    _init_rundir()
-    script = _script_from_argv()
-    _shift_argv()
+    _init_flags()
     _patch_keras()
-    _exec_script(script)
+    _exec_script()
 
-def _init_rundir():
-    global RUNDIR
-    RUNDIR = os.getenv("RUNDIR")
-    if not RUNDIR:
-        raise AssertionError("RUNDIR env not set")
-
-def _script_from_argv():
-    return sys.argv[1]
-
-def _shift_argv():
-    sys.argv = sys.argv[1:]
+def _init_flags():
+    global FLAGS
+    p = argparse.ArgumentParser()
+    p.add_argument("script", help="Keras script to execute")
+    p.add_argument("opdir", help="Guild opdir")
+    p.add_argument("--epochs", type=int, help="training epochs")
+    p.add_argument("--batch-size", type=int, help="training batch size")
+    FLAGS, rest = p.parse_known_args()
+    FLAGS.rest_args = rest
 
 def _patch_keras():
     _patch_all_keras_modules(keras, log=set())
@@ -54,9 +51,16 @@ def _patch_keras_model(cls, log):
 
 def _fit_wrapper(fit0):
     def fit(self, *args, **kw):
+        _patch_fit_kw(kw)
         _ensure_tensorboard_cb(kw)
         return fit0(self, *args, **kw)
     return fit
+
+def _patch_fit_kw(kw):
+    for name in kw:
+        val = getattr(FLAGS, name, None)
+        if val is not None:
+            kw[name] = val
 
 def _ensure_tensorboard_cb(kw):
     callbacks = kw.setdefault("callbacks", [])
@@ -64,10 +68,8 @@ def _ensure_tensorboard_cb(kw):
     if cb is None:
         cb = keras.callbacks.TensorBoard(write_graph=True)
         callbacks.append(cb)
-    if not hasattr(cb, "__GUILD_WRAPPED__"):
-        cb.log_dir = RUNDIR
+    if not _is_wrapped(cb):
         _wrap_tensorboard_cb(cb)
-        cb.__GUILD_WRAPPED__ = True
 
 def _find_tensorboard_cb(l):
     for cb in l:
@@ -75,17 +77,25 @@ def _find_tensorboard_cb(l):
             return cb
     return None
 
+def _is_wrapped(cb):
+    return getattr(cb, "__GUILD_WRAPPED__", False)
+
 def _wrap_tensorboard_cb(cb):
+    cb.log_dir = FLAGS.opdir
     cb.set_params = types.MethodType(_set_params_wrapper(cb), cb)
+    cb.__GUILD_WRAPPED__ = True
 
 def _set_params_wrapper(cb):
     set_params0 = cb.set_params
-    def set_params(self, params):
-        print("#################", self)
-        print("*** TODO: log flags %s" % _flags_for_params(params))
-        print("*** TODO: write fields %s", _fields_for_params(params))
+    def set_params(_self, params):
+        _write_run_flags(params)
+        _write_run_view(params)
         return set_params0(params)
     return set_params
+
+def _write_run_flags(params):
+    flags_path = os.path.join(FLAGS.opdir, "guild.d", "flags.json")
+    json.dump(_flags_for_params(params), open(flags_path, "w"))
 
 def _flags_for_params(params):
     return {
@@ -94,12 +104,22 @@ def _flags_for_params(params):
         if isinstance(val, (basestring, numbers.Number, bool))
     }
 
-def _fields_for_params(params):
-    return params.get("metrics")
+def _write_run_view(params):
+    view_path = os.path.join(FLAGS.opdir, "guild.d", "view.json")
+    json.dump(_view_for_params(params), open(view_path, "w"))
 
-def _exec_script(script):
+def _view_for_params(params):
+    return {
+        "trainFields": _train_fields_for_params(params)
+    }
+
+def _train_fields_for_params(params):
+    print("**** TODO: train field for %s" % params)
+    return []
+
+def _exec_script():
     # pylint: disable=exec-used
-    exec(open(script, "r").read())
+    exec(open(FLAGS.script, "r").read())
 
 if __name__ == "__main__":
     main()

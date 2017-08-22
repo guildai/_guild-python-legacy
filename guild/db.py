@@ -31,40 +31,75 @@ class Pool(object):
 class DB(object):
 
     def __init__(self, path):
-        self._conn = sqlite3.connect(path, check_same_thread=False)
+        self._conn = sqlite3.connect(
+            path,
+            isolation_level="EXCLUSIVE",
+            check_same_thread=False)
         self._try_init_schema()
+
+    def _try_init_schema(self):
+        SQL = """
+        CREATE TABLE IF NOT EXISTS attr (
+            name TEXT PRIMARY KEY,
+            val TEXT);
+        CREATE TABLE IF NOT EXISTS flag (
+            name TEXT PRIMARY KEY,
+            val TEXT);
+        CREATE TABLE IF NOT EXISTS series (
+            key_hash INTEGER,
+            time INTEGER,
+            encoding INTEGER,
+            data,
+            PRIMARY KEY (key_hash, time));
+        CREATE TABLE IF NOT EXISTS series_key (
+            key TEXT PRIMARY KEY,
+            hash INTEGER);
+        CREATE TABLE IF NOT EXISTS output (
+            time INTEGER,
+            stream INTEGER,
+            val TEXT);
+        """
+        self._begin_exclusive()
+        self._exec_script(SQL)
+        self._commit()
 
     def log_attrs(self, attrs):
         if attrs:
             arg_placeholders = _sql_arg_placeholders(attrs)
-            SQL = "insert or replace into attr values %s" % arg_placeholders
+            SQL = "INSERT OR REPLACE INTO attr VALUES %s" % arg_placeholders
             params = _sql_arg_vals(attrs, (str, str))
+            self._begin_exclusive()
             self._exec(SQL, params)
+            self._commit()
 
     def attrs(self):
-        SQL = "select * from attr"
-        return self._select(SQL)
+        SQL = "SELECT * FROM attr"
+        return list(self._select(SQL))
 
     def log_flags(self, flags):
         if flags:
             arg_placeholders = _sql_arg_placeholders(flags)
-            SQL = "insert or replace into flag values %s" % arg_placeholders
+            SQL = "INSERT OR REPLACE INTO flag VALUES %s" % arg_placeholders
             params = _sql_arg_vals(flags, (str, str))
+            self._begin_exclusive()
             self._exec(SQL, params)
+            self._commit()
 
     def flags(self):
-        SQL = "select * from flag"
-        return self._select(SQL)
+        SQL = "SELECT * FROM flag"
+        return list(self._select(SQL))
 
     def log_series_values(self, vals):
         if vals:
+            self._begin_exclusive()
             self._update_series_key_hashes(vals)
             self._insert_series_values(vals)
+            self._commit()
 
     def _update_series_key_hashes(self, series_vals):
         vals = [(key, _key_hash(key)) for key, _ in series_vals]
         arg_placeholders = _sql_arg_placeholders(vals)
-        SQL = "insert or ignore into series_key values %s" % arg_placeholders
+        SQL = "INSERT OR IGNORE INTO series_key VALUES %s" % arg_placeholders
         params = _sql_arg_vals(vals, (str, int))
         self._exec(SQL, params)
 
@@ -72,13 +107,13 @@ class DB(object):
         encoded_vals = _encode_series_values(raw_vals)
         if encoded_vals:
             arg_placeholders = _sql_arg_placeholders(encoded_vals)
-            SQL = "insert or ignore into series values %s" % arg_placeholders
-            params = _sql_arg_vals(encoded_vals, (int, int, int,
-                                                  _buffer_type()))
+            SQL = "INSERT OR IGNORE INTO series VALUES %s" % arg_placeholders
+            params = _sql_arg_vals(
+                encoded_vals, (int, int, int, _buffer_type()))
             self._exec(SQL, params)
 
     def series_keys(self):
-        SQL = "select key from series_key order by key"
+        SQL = "SELECT key FROM series_key ORDER BY key"
         return [key for key, in self._select(SQL)]
 
     def series_values(self, pattern):
@@ -88,56 +123,34 @@ class DB(object):
 
     def _encoded_series_for_hashes(self, hashes):
         SQL = """
-        select key_hash, time, encoding, data from series
-            where key_hash in (%s) order by key_hash, time
+        SELECT key_hash, time, encoding, data FROM series
+            WHERE key_hash IN (%s) ORDER BY key_hash, time
         """ % _hash_list(hashes)
         return self._select(SQL)
 
     def _key_hashes_for_pattern(self, pattern):
-        all_hashes = self._select("select key, hash from series_key")
+        all_hashes = self._select("SELECT key, hash FROM series_key")
         return _filter_hashes(all_hashes, pattern)
 
     def close(self):
         self._conn.close()
 
-    def _try_init_schema(self):
-        SQL = """
-        create table if not exists attr (
-            name text primary key,
-            val text);
-        create table if not exists flag (
-            name text primary key,
-            val text);
-        create table if not exists series (
-            key_hash integer,
-            time integer,
-            encoding integer,
-            data,
-            primary key (key_hash, time));
-        create table if not exists series_key (
-            key text primary key,
-            hash integer);
-        create table if not exists output (
-            time integer,
-            stream integer,
-            val text);
-        """
-        self._exec_script(SQL)
+    def _begin_exclusive(self):
+        self._conn.execute("BEGIN EXCLUSIVE")
 
     def _exec(self, SQL, params=None):
-        c = self._conn.cursor()
-        c.execute(SQL, [] if params is None else params)
-        self._conn.commit()
+        self._conn.execute(SQL, [] if params is None else params)
 
     def _exec_script(self, SQL):
-        c = self._conn.cursor()
-        c.executescript(SQL)
+        self._conn.executescript(SQL)
+
+    def _commit(self):
         self._conn.commit()
 
     def _select(self, SQL, params=None):
         c = self._conn.cursor()
         c.execute(SQL, [] if params is None else params)
-        return list(c)
+        return c
 
 def init_for_opdir(opdir):
     db_path = guild.opdir.guild_file(opdir, "db")
