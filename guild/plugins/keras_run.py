@@ -89,7 +89,6 @@ def _set_params_wrapper(cb):
     set_params0 = cb.set_params
     def set_params(_self, params):
         _write_run_flags(params)
-        _write_run_view(params)
         return set_params0(params)
     return set_params
 
@@ -104,18 +103,35 @@ def _flags_for_params(params):
         if isinstance(val, (basestring, numbers.Number, bool))
     }
 
-def _write_run_view(params):
-    view_path = os.path.join(FLAGS.opdir, "guild.d", "view.json")
-    json.dump(_view_for_params(params), open(view_path, "w"))
-
-def _view_for_params(params):
+def _acc_field():
     return {
-        "trainFields": _train_fields_for_params(params)
+        "color": "teal-600",
+        "format": "0.00%",
+        "icon": "accuracy",
+        "label": "Training Accuracy",
+        "reduce": "last",
+        "source": "series/tf/acc"
     }
 
-def _train_fields_for_params(params):
-    print("**** TODO: train field for %s" % params)
-    return []
+def _epochs_field():
+    return {
+        "color": "blue-700",
+        "format": "0,0",
+        "icon": "steps",
+        "label": "Epochs",
+        "reduce": "steps1",
+        "source": "series/tf/loss"
+    }
+
+def _time_field():
+    return {
+        "color": "yellow-700",
+        "format": "0:00:00",
+        "icon": "time",
+        "label": "Time",
+        "reduce": "duration",
+        "source": "series/tf/loss"
+    }
 
 def _exec_script():
     # pylint: disable=exec-used

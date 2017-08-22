@@ -52,12 +52,12 @@ templates:
     format: 0.00%
 
   train-accuracy-field:
-    type: accuracy-field
+    extends: accuracy-field
     color: teal-600
     label: Train Accuracy
 
   validation-accuracy-field:
-    type: accuracy-field
+    extends: accuracy-field
     label: Validation Accuracy
 
   loss-field:
@@ -76,6 +76,13 @@ templates:
 
   steps-field:
     label: Steps
+    icon: steps
+    color: blue-700
+    reduce: steps
+    format: 0,0
+
+  epochs-field:
+    label: Epochs
     icon: steps
     color: blue-700
     reduce: steps

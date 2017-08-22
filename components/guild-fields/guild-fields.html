@@ -42,7 +42,7 @@ limitations under the License.
            scope: String,
            fields: {
                type: Array,
-               computed: "computeFields(env.selectedRun, env.runs)"
+               computed: "computeFields(env.project, env.selectedRun, env.runs)"
            },
            active: {
                type: Boolean,
@@ -57,13 +57,13 @@ limitations under the License.
            this.parentElement.classList.add("bottom-spaced");
        },
 
-       computeFields: function(selected, runs) {
+       computeFields: function(project, selected, runs) {
            if (this.lastFieldsRun == selected) {
                return this.fields;
            }
            this.lastFieldsRun = selected;
            var run = Guild.Run.runForId(selected, runs);
-           return run.view.trainFields;
+           return Guild.Project.section(project, "train-fields");
        },
 
        fieldColClasses: function(fields) {

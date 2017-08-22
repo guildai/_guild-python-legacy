@@ -47,7 +47,25 @@ def _project_data_for_scripts(scripts):
                 "element": "guild-fields",
                 "foo-config": 123
             }
-        }
+        },
+        "train-fields": [
+            {
+                "extends": "validation-accuracy-field",
+                "source": "series/tf/val_acc"
+            },
+            {
+                "extends": "train-accuracy-field",
+                "source": "series/tf/acc"
+            },
+            {
+                "extends": "epochs-field",
+                "source": "series/tf/loss"
+            },
+            {
+                "extends": "time-field",
+                "source": "series/tf/loss"
+            }
+        ]
     }
 
 def _script_name(script):

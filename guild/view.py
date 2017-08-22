@@ -1,5 +1,4 @@
 import json
-import os
 
 import guild.db
 import guild.log
@@ -49,7 +48,7 @@ class ProjectView(object):
         return self.project
 
     def formatted_runs(self):
-        return [_format_run(run, self.project) for run in self._runs()]
+        return [_format_run(run) for run in self._runs()]
 
     def flags(self, run_id):
         return guild.util.try_find([
@@ -74,47 +73,17 @@ class ProjectView(object):
     def series(self, run_id, series_pattern, max_epochs=None):
         db = self._run_db_for_id(run_id)
         series = db.series_values(series_pattern)
-        return _reduce_series(series, max_epochs)
+        return dict(_reduce_series(series, max_epochs))
 
-def _format_run(run, project):
+def _format_run(run):
     attrs = {
         "id": run.id,
         "dir": run.opdir,
         "status": guild.op_util.op_status(run.opdir),
-        "extended_status": guild.op_util.extended_op_status(run.opdir),
-        "view": _run_view(run, project)
+        "extended_status": guild.op_util.extended_op_status(run.opdir)
     }
     attrs.update(_format_run_meta(run))
     return attrs
-
-def _run_view(run, project):
-    return guild.util.try_find([
-        lambda: _run_defined_view(run),
-        lambda: _project_defined_view(project, run.attr("model")),
-        lambda: {}])
-
-def _run_defined_view(run):
-    view_def = run.guild_file("view.json")
-    if os.path.exists(view_def):
-        return json.load(open(view_def, "r"))
-    else:
-        return None
-
-def _project_defined_view(project, model):
-    return guild.util.try_find([
-        lambda: _model_level_view(project, model),
-        lambda: _project_level_view(project)])
-
-def _model_level_view(project, model):
-    if not model:
-        return None
-    model_def = project.section("models", model)
-    if not model_def:
-        return None
-    return model_def.attr("view")
-
-def _project_level_view(project):
-    return project.attr("view")
 
 def _format_run_meta(run):
     meta = guild.opdir.read_all_meta(run.opdir)

@@ -163,7 +163,8 @@ def _model(name, project):
 
 def _no_such_model_error(name):
     guild.cli.error(
-        "There are no models with the name '%s' in the project"
+        "There are no models with the name '%s' in the project\n"
+        "Try 'guild project models' to list available models."
         % name)
 
 def _default_model(project):

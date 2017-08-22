@@ -48,8 +48,7 @@ represented by a dict, which can easily be converted to JSON):
   'model': 'intro',
   'started': 1502198513402,
   'status': 'stopped',
-  'stopped': 1502198513402,
-  'view': {u'trainFields': []}}]
+  'stopped': 1502198513402}]
 
 Settings
 --------
@@ -110,7 +109,7 @@ Series
 ------
 
 >>> pprint(view.series(runs[0]["id"], "op/mem/vms"))
-[(u'op/mem/vms', [(1502387773776, 0, 50723835904.0)])]
+{u'op/mem/vms': [(1502387773776, 0, 50723835904.0)]}
 
 Cleanup
 -------

@@ -41,6 +41,12 @@ Guild.Reduce = new function() {
         }, data);
     };
 
+    var steps0 = function(data) {
+        return mapSeries(function(series) {
+            return seriesSteps0(series);
+        }, data);
+    };
+
     var duration = function(data) {
         return mapSeries(function(series) {
             return seriesDuration(series);
@@ -78,14 +84,15 @@ Guild.Reduce = new function() {
         if (!series) {
             return 0;
         }
-        return series[series.length - 1][1];
+        var interval = series.length == 1 ? 1 : series[1][1] - series[0][1];
+        return series[series.length - 1][1] + interval;
     };
 
     var seriesSteps0 = function(series) {
-        if (!series || series.length < 2) {
+        if (!series) {
             return 0;
         }
-        return series[series.length - 1][1] + 1;
+        return series[series.length - 1][1];
     };
 
     var seriesDuration = function(series) {
@@ -99,5 +106,6 @@ Guild.Reduce = new function() {
     this.average = average;
     this.last = last;
     this.steps = steps;
+    this.steps0 = steps0;
     this.duration = duration;
 };
