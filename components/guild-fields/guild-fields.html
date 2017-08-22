@@ -63,6 +63,7 @@ limitations under the License.
            }
            this.lastFieldsRun = selected;
            var run = Guild.Run.runForId(selected, runs);
+           // TODO: use scope to resolve fields
            return Guild.Project.section(project, "train-fields");
        },
 
