@@ -48,11 +48,12 @@ def _print_resolved_project(project, args):
     _print_project(resolved, args)
 
 def _print_project(project, args):
-    filtered = _filter_project_by_types(project, args.types)
+    if args.types:
+        project = _filter_project_by_types(project, args.types)
     if args.json:
-        _print_project_json(filtered)
+        _print_project_json(project)
     else:
-        _print_project_yaml(filtered)
+        _print_project_yaml(project)
 
 def _filter_project_by_types(project, types):
     filtered_data = {
