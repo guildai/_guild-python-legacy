@@ -75,6 +75,35 @@ class ProjectView(object):
         series = db.series_values(series_pattern)
         return dict(_reduce_series(series, max_epochs))
 
+    def compare(self, run_ids, sources):
+        runs = self._runs_for_ids(run_ids)
+        return [self._run_compare_item(run, sources) for run in runs]
+
+    def _runs_for_ids(self, ids):
+        return [run for run in self._runs()
+                if ids is None or run.id in ids]
+
+    def _run_compare_item(self, run, sources):
+        item = {}
+        item.update({
+            "run": _format_run(run)
+        })
+        item.update({
+            name: self._resolve_run_source(name, run)
+            for name in sources
+        })
+        return item
+
+    def _resolve_run_source(self, source, run):
+        if source == "flags":
+            return self.flags(run.id)
+        elif source == "attrs":
+            return self.attrs(run.id)
+        elif source.startswith("series/"):
+            return self.series(run.id, source[7:])
+        else:
+            raise ValueError(source)
+
 def _format_run(run):
     attrs = {
         "id": run.id,
