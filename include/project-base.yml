@@ -5,12 +5,12 @@ views:
     content:
       - fields
       - series
-      - output
+      - _output
     sidebar:
       - flags
       - attrs
 
-  eval:
+  _eval:
     scope: eval
     content:
       - fields
