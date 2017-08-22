@@ -70,5 +70,7 @@ def main(args):
         view.close()
         sys.stdout.write("Guild View stopped\n")
 
-def _view_settings_for_args(_args):
-    return {}
+def _view_settings_for_args(args):
+    return {
+        "refreshInterval": args.refresh_interval
+    }
