@@ -41,7 +41,7 @@ def add_parser(subparsers):
         type=int,
         default=DEFAULT_REFRESH_INTERVAL)
     p.add_argument(
-        "--debug",
+        "--tf-demo",
         help=argparse.SUPPRESS,
         action="store_true")
     guild.cmd_support.add_project_arguments(p)
@@ -72,5 +72,8 @@ def main(args):
 
 def _view_settings_for_args(args):
     return {
-        "refreshInterval": args.refresh_interval
+        "refreshInterval": args.refresh_interval,
+        "tensorboard": {
+            "demo": args.tf_demo
+        }
     }

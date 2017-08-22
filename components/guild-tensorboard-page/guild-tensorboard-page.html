@@ -197,7 +197,7 @@ limitations under the License.
        },
 
        computeRouter: function(settings) {
-           if (settings.tensorboard) {
+           if (settings && settings.tensorboard) {
                if (settings.tensorboard.demo) {
                    return TF.Backend.router("/assets/tf-demo", true);
                } else {
