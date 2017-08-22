@@ -77,19 +77,19 @@ limitations under the License.
 
        util: new function() {
            this.projectSeries = function(project, run) {
-               return Guild.Project.orderedNamedSections(
-                   project, "series", run.model);
+               // TODO use scope to resolve series
+               return Guild.Project.section(project, "train-series");
            };
 
            this.extraSeries = function(project) {
                var series = [];
-               var componentDef = Guild.Project.namedSection(
-                   project, "component", "series");
+               var componentDef = Guild.Project.section(
+                   project, "components", "series");
                if (componentDef) {
-                   var names = (componentDef.extra_series_templates || "").split(/\s+/);
+                   var names = componentDef.extra_series_templates || [];
                    for (var i = 0; i < names.length; i++) {
-                       var template = Guild.Project.namedSection(
-                           project, "template", names[i]);
+                       var template = Guild.Project.section(
+                           project, "templates", names[i]);
                        if (template) {
                            series.push(template);
                        }

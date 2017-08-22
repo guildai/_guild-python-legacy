@@ -91,7 +91,7 @@ limitations under the License.
            if (project === undefined) {
                return undefined;
            }
-           return Guild.Project.orderedSections(project, "compare-field");
+           return Guild.Project.section(project, "compare-fields");
        },
 
        computeTableDataReady: function(fields) {
