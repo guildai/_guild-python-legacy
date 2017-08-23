@@ -33,6 +33,7 @@ def add_parser(subparsers):
         help="Run names or indexes applied to the command",
         metavar="RUN",
         nargs="*")
+    guild.cmd_support.add_project_arguments(p)
     p.add_argument(
         "--all",
         help="",
@@ -45,7 +46,6 @@ def add_parser(subparsers):
         "--deleted",
         help="Prints deleted runs, which may be purged or recovered",
         action="store_true")
-    guild.cmd_support.add_project_arguments(p)
     p.set_defaults(func=main)
 
 def main(args):

@@ -22,6 +22,7 @@ def add_parser(subparsers):
         metavar="TYPE",
         help=("print the specified type (e.g. models, profiles, "
               "resources, etc.)"))
+    guild.cmd_support.add_project_arguments(p)
     p.add_argument(
         "--json",
         help="print project in JSON format (default format is YAML)",
@@ -30,7 +31,6 @@ def add_parser(subparsers):
         "--resolve",
         help="fully resolve extends references and includes",
         action="store_true")
-    guild.cmd_support.add_project_arguments(p)
     p.set_defaults(func=main)
 
 def main(args):
