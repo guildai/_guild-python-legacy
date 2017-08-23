@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 import werkzeug
@@ -15,9 +16,14 @@ DEFAULT_MAX_EPOCHS = 400
 # Server
 ####################################################################
 
-def start(host, port, view):
+def start(host, port, view, log_level=logging.WARNING):
+    _init_logging(log_level)
     server = _init_server(host, port, view)
     server.serve_forever()
+
+def _init_logging(level):
+    logger = logging.getLogger("werkzeug")
+    logger.setLevel(level)
 
 def _init_server(host, port, view):
     app = _init_app(view)
@@ -199,5 +205,11 @@ def _handle_project(view, _req):
     project = view.resolved_project()
     return _json_resp(guild.project_util.project_to_json(project))
 
-def _handle_tf_data(_view, _req, path):
-    _raise_bad_request("TODO: handle tf data: %s" % path)
+def _handle_tf_data(view, _req, path):
+    try:
+        status, headers, body = view.tf_data(path)
+    except guild.view.NotSupportedError:
+        pass
+    else:
+        status_str = "%i %s" % status
+        return werkzeug.wrappers.Response(body, status_str, headers)

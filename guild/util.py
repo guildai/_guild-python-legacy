@@ -88,3 +88,28 @@ def try_find(funs):
         if result is not None:
             return result
     return None
+
+def free_port():
+    import errno
+    import random
+    import socket
+
+    min_port = 49152
+    max_port = 65535
+    max_attempts = 100
+    attempts = 0
+
+    while True:
+        if attempts > max_attempts:
+            raise RuntimeError("too many free port attempts")
+        port = random.randint(min_port, max_port)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.1)
+        try:
+            sock.connect(('localhost', port))
+        except socket.error as e:
+            if e.errno == errno.ECONNREFUSED:
+                return port
+        else:
+            sock.close()
+        attempts += 1

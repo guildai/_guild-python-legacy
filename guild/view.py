@@ -1,4 +1,5 @@
 import json
+import threading
 
 import guild.db
 import guild.log
@@ -6,11 +7,18 @@ import guild.op_util
 import guild.project_util
 import guild.run
 
+class NotSupportedError(RuntimeError):
+
+    def __init__(self, msg):
+        super(NotSupportedError, self).__init__(msg)
+
 class ProjectView(object):
 
-    def __init__(self, project, settings):
+    def __init__(self, project, settings, tb_proxy=None):
         self.project = project
         self.settings = settings
+        self._tb_proxy = tb_proxy
+        self._tb_proxy_lock = threading.Lock()
         self._runs_dir = guild.project_util.runs_dir_for_project(project)
         self._dbs = guild.db.Pool()
 
@@ -116,6 +124,13 @@ class ProjectView(object):
         for run in runs:
             db = self._run_db_for_id(run.id)
             acc.update(["series/" + key for key in db.series_keys()])
+
+    def tf_data(self, path):
+        if self._tb_proxy:
+            with self._tb_proxy_lock:
+                return self._tb_proxy.data(path)
+        else:
+            raise NotSupportedError("tb_proxy not configured")
 
 def _format_run(run):
     attrs = {
