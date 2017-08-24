@@ -25,13 +25,12 @@ def add_parser(subparsers):
         """)
     p.add_argument(
         "run_command",
-        help=("Optional command. Valid options: remove (or rm), purge, "
-              "recover"),
+        help=("optional command: remove (or rm), purge, recover"),
         metavar="COMMAND",
         nargs="?")
     p.add_argument(
         "runs",
-        help="Run names or indexes applied to the command",
+        help="run names or indexes applied to the command",
         metavar="RUN",
         nargs="*")
     guild.cmd_support.add_project_arguments(p)
@@ -41,11 +40,11 @@ def add_parser(subparsers):
         action="store_true")
     p.add_argument(
         "--yes",
-        help="Answer 'Y' to any prompts",
+        help="answer 'Y' to any prompts",
         action="store_true")
     p.add_argument(
         "--deleted",
-        help="Prints deleted runs, which may be purged or recovered",
+        help="prints deleted runs, which may be purged or recovered",
         action="store_true")
     p.set_defaults(func=main)
 
