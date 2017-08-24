@@ -48,6 +48,7 @@ def _print_info():
     _print_nvidia_tools_info()
     _print_werkzeug_info()
     _print_psutil_info()
+    _print_pyyaml_info()
 
 def _print_guild_info():
     sys.stdout.write("guild_version:          %s\n" % guild.app.version())
@@ -78,6 +79,10 @@ def _print_werkzeug_info():
 def _print_psutil_info():
     ver = _try_module_version("psutil")
     sys.stdout.write("psutil_version:         %s\n" % ver)
+
+def _print_pyyaml_info():
+    ver = _try_module_version("yaml")
+    sys.stdout.write("pyyaml_version:         %s\n" % ver)
 
 def _try_module_version(name):
     try:
