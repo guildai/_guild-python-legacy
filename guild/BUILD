@@ -287,9 +287,9 @@ py_library(
     name = "view_http",
     srcs = ["view_http.py"],
     deps = [
-        # TODO werkzeug dep somehow
         ":app",
         ":project_util",
         ":view",
+        #"@org_pocoo_werkzeug",
     ],
 )
