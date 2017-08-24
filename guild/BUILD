@@ -83,7 +83,6 @@ py_library(
     name = "evaluate_cmd",
     srcs = ["evaluate_cmd.py"],
     deps = [
-        # TODO PyYAML dep somehow
     ],
 )
 
@@ -144,6 +143,9 @@ py_library(
 py_library(
     name = "project",
     srcs = ["project.py"],
+    deps = [
+        "@org_pyyaml",
+    ]
 )
 
 py_library(
@@ -152,6 +154,7 @@ py_library(
     deps = [
         ":cmd_support",
         ":view",
+        "@org_pyyaml",
     ],
 )
 
