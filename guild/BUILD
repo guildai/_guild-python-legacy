@@ -290,6 +290,6 @@ py_library(
         ":app",
         ":project_util",
         ":view",
-        #"@org_pocoo_werkzeug",
+        "@org_pocoo_werkzeug",
     ],
 )
