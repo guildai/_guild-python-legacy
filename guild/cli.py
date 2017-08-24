@@ -101,5 +101,5 @@ def _print_error_and_exit(prog, msg, exit_status):
         sys.stderr.write("\n")
     sys.exit(exit_status)
 
-def error(msg, exit_status=1):
+def error(msg=None, exit_status=1):
     raise Exit(msg, exit_status)

@@ -40,11 +40,11 @@ represented by a dict, which can easily be converted to JSON):
 
 >>> runs = view.formatted_runs()
 >>> pprint(runs)
-[{'cmd': '...',
-  'dir': 'tests/samples/runs/2017-08-08T13-21-53Z-intro',
+[{'cmd': 'python -u ./intro.py ...',
+  'dir': '.../samples/runs/2017-08-08T13-21-53Z-intro',
   'exit_status': 0,
   'extended_status': 'completed',
-  'id': 2853895303,
+  'id': 3504324183,
   'model': 'intro',
   'started': 1502198513402,
   'status': 'stopped',

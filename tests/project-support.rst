@@ -22,7 +22,7 @@ We can use these to parse command line arguments:
 
 >>> args = parser.parse_args(["-P", sample("mnist")])
 >>> args.project_dir
-'tests/samples/mnist'
+'.../samples/mnist'
 
 Loading a project from command line args
 ----------------------------------------

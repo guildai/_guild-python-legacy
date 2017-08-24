@@ -10,18 +10,18 @@ Projects can be loaded from a file:
 
 >>> p_from_file = guild.project.from_file(sample("guild.yml"))
 >>> p_from_file.source
-'tests/samples/guild.yml'
+'.../samples/guild.yml'
 >>> p_from_file.dir
-'tests/samples'
+'.../samples'
 
 They can also be loaded from a directory, provided the project name is
 'guild.yml':
 
 >>> p_from_dir = guild.project.from_dir(samples_dir())
 >>> p_from_dir.source
-'tests/samples/guild.yml'
+'.../samples/guild.yml'
 >>> p_from_file.dir
-'tests/samples'
+'.../samples'
 
 An Error is raised if the project file doesn't exist (note there are
 differences between Python2 and Python3 so we just check the error

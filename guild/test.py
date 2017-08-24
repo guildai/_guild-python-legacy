@@ -1,9 +1,12 @@
 import doctest
+import glob
 import os
 import pprint
 import re
 import sys
 import tempfile
+
+import guild.app
 
 class Py23DocChecker(doctest.OutputChecker):
     """Output checker that works around Python 2/3 unicode representations.
@@ -17,9 +20,49 @@ class Py23DocChecker(doctest.OutputChecker):
             want = re.sub('u"(.*?)"', '"\\1"', want)
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 
-def testfile(path):
-    return testfile_(
-        path,
+def run_all():
+    return run(all_tests())
+
+def all_tests():
+    test_pattern = os.path.join(_tests_dir(), "*.rst")
+    return sorted(
+        [_test_name_from_path(path)
+         for path in glob.glob(test_pattern)])
+
+def _tests_dir():
+    return os.path.join(guild.app.home(), "tests")
+
+def _test_name_from_path(path):
+    name, _ = os.path.splitext(os.path.basename(path))
+    return name
+
+def run(tests):
+    success = True
+    for test in tests:
+        run_success = _run_test(test)
+        success = success and run_success
+    return success
+
+def _run_test(name):
+    sys.stdout.write(name + ":")
+    try:
+        failures, tests = _run_test_file(_test_filename(name))
+    except IOError:
+        sys.stdout.write(" ERROR test not found\n")
+        return False
+    else:
+        if not failures:
+            sys.stdout.write(" " * (20 - len(name)))
+            sys.stdout.write(" ok\n")
+        return failures == 0
+
+def _test_filename(name):
+    # Path must be relative to module
+    return os.path.join("..", "tests", name + ".rst")
+
+def _run_test_file(filename):
+    return _run_test_file_with_config(
+        filename,
         globs=test_globals(),
         optionflags=(
             doctest.REPORT_ONLY_FIRST_FAILURE |
@@ -27,7 +70,7 @@ def testfile(path):
             doctest.IGNORE_EXCEPTION_DETAIL |
             doctest.NORMALIZE_WHITESPACE))
 
-def testfile_(filename, globs, optionflags):
+def _run_test_file_with_config(filename, globs, optionflags):
     """Modified from doctest.py to use custom checker."""
 
     text, filename = _load_testfile(filename)
@@ -83,7 +126,7 @@ def sample(name):
     return os.path.join(samples_dir(), name)
 
 def samples_dir():
-    return os.path.join("tests", "samples")
+    return os.path.join(guild.app.home(), "tests", "samples")
 
 def mkdtemp():
     return tempfile.mkdtemp(prefix="guildtest-")

@@ -25,12 +25,15 @@ def _format_description(desc):
 def _format_par(par):
     normalized = _strip_repeating_ws(par).strip()
     wrapper = textwrap.TextWrapper(
-        width=_console_width() - 10)
+        width=_safe_console_width() - 10)
     lines = wrapper.wrap(normalized)
     return "\n".join(lines)
 
 def _strip_repeating_ws(s):
     return re.sub(r"\s+", " ", s)
+
+def _safe_console_width():
+    return max(_console_width(), 72)
 
 def _console_width():
     global __CONSOLE_WIDTH

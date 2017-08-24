@@ -40,23 +40,25 @@ py_library(
 )
 
 py_library(
-    name = "cli",
-    srcs = ["cli.py"],
-    deps = [
-        ":app",
-    ],
-)
-
-py_library(
     name = "check_cmd",
     srcs = ["check_cmd.py"],
     deps = [
         ":app",
+        ":cli",
+        ":test",
     ],
     data = [
         "//scripts:nvidia-tools-check",
         "//scripts:tensorflow-check",
     ]
+)
+
+py_library(
+    name = "cli",
+    srcs = ["cli.py"],
+    deps = [
+        ":app",
+    ],
 )
 
 py_library(
@@ -231,6 +233,17 @@ py_library(
     ],
     data = [
         "//scripts:tensorflow-attrs",
+    ],
+)
+
+py_library(
+    name = "test",
+    srcs = ["test.py"],
+    deps = [
+        ":app",
+    ],
+    data = [
+        "//tests",
     ],
 )
 

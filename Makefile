@@ -1,12 +1,8 @@
+GUILD = bazel-bin/guild/guild
+
 .PHONY: build
 build:
 	bazel build guild
-
-install:
-	python setup.py develop
-
-install3:
-	python3 setup.py develop
 
 component-deps: components/.deps-resolved
 
@@ -15,8 +11,16 @@ components/.deps-resolved:
 	scripts/patch-components
 	touch components/.deps-resolved
 
-check:
-	python2 scripts/test $(TESTS)
+check: $(GUILD)
+	@if [ -z "$(TESTS)" ]; then \
+	  opts="--all-tests"; \
+	else \
+	  opts=""; \
+	  for test in $(TESTS); do \
+	    opts="$$opts --test $$test"; \
+	  done; \
+	fi; \
+	$(GUILD) check $$opts; \
 
 check3:
 	python3 scripts/test $(TESTS)
