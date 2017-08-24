@@ -1,8 +1,5 @@
 .PHONY: build
 build:
-	@echo "Use 'sudo make install' to install dependencies and link to this project"
-
-bazel-build:
 	bazel build guild
 
 install:
@@ -29,3 +26,6 @@ lint:
 
 lint3:
 	pylint3 guild
+
+clean:
+	bazel clean
