@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-import guild
+import guild.app
 
 def add_parser(subparsers):
     p = subparsers.add_parser(
@@ -12,15 +12,13 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(_args):
-    import guild.app
-
     _print_guild_info()
     _print_python_info()
     _print_tensorflow_info()
     _print_nvidia_tools_info()
 
 def _print_guild_info():
-    sys.stdout.write("guild_version:          %s\n" % guild.version())
+    sys.stdout.write("guild_version:          %s\n" % guild.app.version())
 
 def _print_python_info():
     sys.stdout.write("python_version:         %s\n" % _python_version())

@@ -1,6 +1,6 @@
-import http.client
 import os
 import subprocess
+import http.client
 
 import guild.log
 

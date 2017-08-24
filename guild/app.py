@@ -1,5 +1,14 @@
 import os
 
+def version():
+    import guild
+    if guild.__version__:
+        return guild.__version__
+    elif guild.__git_commit__:
+        return "GIT (%s)" % guild.__git_commit__
+    else:
+        return "UNKNOWN"
+
 def home():
     abs_file = os.path.abspath(__file__)
     return os.path.dirname(os.path.dirname(abs_file))

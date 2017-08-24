@@ -90,7 +90,6 @@ def try_find(funs):
     return None
 
 def free_port():
-    import errno
     import random
     import socket
 

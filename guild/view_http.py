@@ -3,12 +3,14 @@ import logging
 import os
 
 import werkzeug
+from werkzeug import serving
+
+import guild.app
+import guild.project_util
+import guild.view
 
 # Manually setup package level access for consistent API usage
-from werkzeug import serving
 werkzeug.serving = serving
-
-import guild # pylint: disable=wrong-import-position
 
 DEFAULT_MAX_EPOCHS = 400
 
@@ -179,9 +181,6 @@ def _handle_compare(view, req):
 def _sources_for_params(params):
     sources = params.get("sources", "").split(",")
     return sorted(set(sources))
-
-def _runs_for_params(params, view):
-    return _runs_for_ids(_run_ids_for_params(params), view)
 
 def _run_ids_for_params(params):
     raw = params.get("runs")

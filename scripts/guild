@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import guild.cli
-import guild.devmode
+import guild.main
 
-guild.devmode.maybe_set_git_commit()
-guild.cli.main()
+guild.main.main()

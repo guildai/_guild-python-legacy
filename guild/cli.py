@@ -3,15 +3,7 @@ import logging
 import cProfile
 import sys
 
-import guild.check_cmd
-import guild.cmd_support
-import guild.evaluate_cmd
-import guild.prepare_cmd
-import guild.project_cmd
-import guild.runs_cmd
-import guild.series_cmd
-import guild.train_cmd
-import guild.view_cmd
+import guild.app
 
 STOPPED_BY_USER_EXIT = 2
 
@@ -25,10 +17,11 @@ class Exit(Exception):
     def __str__(self):
         return "(%i) %s" % (self.exit_status, self.msg)
 
-def parser():
+def parser(commands):
     p = argparse.ArgumentParser(
         description="Guild AI command line interface.",
-        epilog="For details on a command, use 'guild COMMAND --help'")
+        epilog="For details on a command, use 'guild COMMAND --help'",
+        prog="guild")
     p.add_argument(
         "--version",
         action="version",
@@ -43,29 +36,23 @@ def parser():
         metavar="FILE",
         help=("write command timing stats to FILE; use '-' to write to "
               "standard output"))
-    cmd = p.add_subparsers(
+    sub_p = p.add_subparsers(
         title="commands",
         dest="command",
         metavar="")
-    cmd.required = True
-    _add_command(guild.check_cmd, cmd)
-    _add_command(guild.prepare_cmd, cmd)
-    _add_command(guild.train_cmd, cmd)
-    _add_command(guild.evaluate_cmd, cmd)
-    _add_command(guild.view_cmd, cmd)
-    _add_command(guild.runs_cmd, cmd)
-    _add_command(guild.project_cmd, cmd)
-    _add_command(guild.series_cmd, cmd)
+    sub_p.required = True
+    for cmd in commands:
+        _add_command(cmd, sub_p)
     return p
 
 def _version_pattern():
-    return "%(prog)s " + guild.version()
+    return "%(prog)s " + guild.app.version()
 
 def _add_command(module, subparsers):
     module.add_parser(subparsers)
 
-def main():
-    p = parser()
+def main(commands):
+    p = parser(commands)
     args = p.parse_args()
     _init_logging(args)
     try:
