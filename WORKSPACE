@@ -1,3 +1,3 @@
 #-*-python-*-
 
-workspace(name = "org_guildai_guild")
+workspace(name = "ai_guild_guild")
