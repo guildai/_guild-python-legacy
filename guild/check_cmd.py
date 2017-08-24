@@ -9,9 +9,18 @@ def add_parser(subparsers):
         "check",
         help="check Guild setup")
     p.description = "Check Guild setup."
+    p.add_argument(
+        "-v", "--verbose",
+        help="print more information",
+        action="store_true")
     p.set_defaults(func=main)
 
-def main(_args):
+def main(args):
+    _print_base()
+    if args.verbose:
+        _print_more()
+
+def _print_base():
     _print_guild_info()
     _print_python_info()
     _print_tensorflow_info()
@@ -38,3 +47,15 @@ def _print_check_results(script_name):
     devnull = open(os.devnull, 'w')
     out = subprocess.check_output(script_path, stderr=devnull)
     sys.stdout.write(out.decode(sys.stdout.encoding))
+
+def _print_more():
+    _print_werkzeug_info()
+
+def _print_werkzeug_info():
+    try:
+        import werkzeug
+    except ImportError:
+        ver = "NOT INSTALLED"
+    else:
+        ver = werkzeug.__version__
+    sys.stdout.write("werkzeug_version:       %s\n" % ver)
