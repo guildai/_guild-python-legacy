@@ -3,6 +3,7 @@ import logging
 import socket
 import sys
 
+import guild.cli
 import guild.cmd_support
 
 DEFAULT_PORT = 6333
@@ -58,8 +59,6 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    import guild.cli
-    import guild.tensorboard_proxy
     import guild.view
     import guild.view_http
 
@@ -84,6 +83,8 @@ def main(args):
         sys.stdout.write("Guild View stopped\n")
 
 def _try_start_tensorboard_proxy(project, args):
+    import guild.tensorboard_proxy
+
     logdir = guild.project_util.runs_dir_for_project(project)
     port = guild.util.free_port()
     proxy = guild.tensorboard_proxy.TensorBoardProxy(

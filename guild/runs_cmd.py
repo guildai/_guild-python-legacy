@@ -3,6 +3,7 @@ import re
 import shutil
 import sys
 
+import guild.cli
 import guild.cmd_support
 
 def add_parser(subparsers):
@@ -49,9 +50,6 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    import guild.op_util
-    import guild.run
-
     project = guild.cmd_support.project_for_args(args, required=False)
     if args.command is None:
         _list_runs(project, args)
@@ -65,6 +63,8 @@ def main(args):
         _unknown_command_error(args.command)
 
 def _list_runs(project, args):
+    import guild.op_util
+
     runs = _runs_for_project(project, args)
     index = 0
     for rundir in runs:
@@ -77,12 +77,16 @@ def _runs_for_project(project, args):
     runs_dir = _runs_dir_for_project(project, args)
     if args.deleted:
         runs_dir = os.path.join(runs_dir, ".deleted")
-    runs = guild.run.runs_for_runs_dir(runs_dir)
+    runs = _runs_for_runs_dir(runs_dir)
     return [run.opdir for run in runs]
+
+def _runs_for_runs_dir(d):
+    import guild.run
+    return guild.run.runs_for_runs_dir(d)
 
 def _delete_runs(project, args):
     runs_dir = _runs_dir_for_project(project, args)
-    runs = guild.run.runs_for_runs_dir(runs_dir)
+    runs = _runs_for_runs_dir(runs_dir)
     deleted_dir = os.path.join(runs_dir, ".deleted")
     rundirs_to_delete = _rundirs_for_args(args, runs_dir, runs)
     if rundirs_to_delete:
@@ -149,7 +153,7 @@ def _move_run(rundir, dest, move_desc):
 def _recover_runs(project, args):
     runs_dir = _runs_dir_for_project(project, args)
     deleted_dir = os.path.join(runs_dir, ".deleted")
-    runs = guild.run.runs_for_runs_dir(deleted_dir)
+    runs = _runs_for_runs_dir(deleted_dir)
     rundirs_to_recover = _rundirs_for_args(args, deleted_dir, runs)
     if rundirs_to_recover:
         for rundir in rundirs_to_recover:

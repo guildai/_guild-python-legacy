@@ -34,8 +34,6 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    import guild.view
-
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     if args.resolve:
         _print_resolved_project(project, args)
@@ -43,6 +41,8 @@ def main(args):
         _print_project(project, args)
 
 def _print_resolved_project(project, args):
+    import guild.view
+
     view = guild.view.ProjectView(project, {})
     resolved = view.resolved_project()
     _print_project(resolved, args)

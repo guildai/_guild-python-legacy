@@ -20,16 +20,6 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    import guild.op
-    import guild.project_util
-    import guild.tasks.log_flags
-    import guild.tasks.log_system_attrs
-    import guild.tasks.snapshot_project
-    import guild.tasks.tensorflow_events
-    import guild.tasks.op_stats
-    import guild.tasks.sys_stats
-    import guild.tasks.gpu_stats
-
     op = _train_op(args)
     if args.preview:
         _preview(op)
@@ -43,6 +33,8 @@ def _train_op(args):
     return _train_op_for_spec(spec, model)
 
 def _train_op_for_spec(spec, model):
+    import guild.op
+
     if spec is not None:
         return guild.op.Op(
             cmd_args=guild.op_support.python_cmd_for_spec(spec, model),
@@ -63,6 +55,7 @@ def _cmd_env():
     return env
 
 def _rundir_pattern(model):
+    import guild.project_util
     runs_dir = guild.project_util.runs_dir_for_project(model.project)
     return os.path.join(runs_dir, "%(started)s-" + model.path[1])
 
@@ -72,6 +65,14 @@ def _meta(model):
     }
 
 def _tasks(model):
+    import guild.tasks.log_flags
+    import guild.tasks.log_system_attrs
+    import guild.tasks.snapshot_project
+    import guild.tasks.tensorflow_events
+    import guild.tasks.op_stats
+    import guild.tasks.sys_stats
+    import guild.tasks.gpu_stats
+
     return [
         (guild.tasks.log_flags.start, [model.all_flags()]),
         (guild.tasks.log_system_attrs.start, []),

@@ -1,3 +1,4 @@
+import guild.cli
 import guild.cmd_support
 
 def add_parser(subparsers):
@@ -24,10 +25,6 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    import guild.cli
-    import guild.op
-    import guild.op_support
-
     op = _prepare_op(args)
     if args.preview:
         _preview(op)
@@ -41,6 +38,9 @@ def _prepare_op(args):
     return _prepare_op_for_spec(spec, section)
 
 def _prepare_op_for_spec(spec, section):
+    import guild.op
+    import guild.op_support
+
     if spec is not None:
         return guild.op.Op(
             cmd_args=guild.op_support.python_cmd_for_spec(spec, section),
