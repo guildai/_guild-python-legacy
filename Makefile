@@ -2,6 +2,9 @@
 build:
 	@echo "Use 'sudo make install' to install dependencies and link to this project"
 
+bazel-build:
+	bazel build guild
+
 install:
 	python setup.py develop
 

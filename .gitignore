@@ -5,3 +5,4 @@ guild.egg-info
 !/components/guild-*
 !/components/vz-*
 !/components/tf-*
+/bazel-*
