@@ -36,6 +36,7 @@ py_library(
     deps = [
         "//guild:log",
         "//guild:task_support",
+        "@org_psutil",
     ],
 )
 
@@ -58,6 +59,7 @@ py_library(
     deps = [
         "//guild:log",
         "//guild:task_support",
+        "@org_psutil",
     ],
 )
 
