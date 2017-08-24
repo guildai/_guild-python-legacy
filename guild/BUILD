@@ -11,6 +11,7 @@ py_binary(
     name = "guild",
     srcs = ["main.py"],
     main = "main.py",
+    default_python_version = "PY2",
     deps = [
         ":__init__",
         ":app",
