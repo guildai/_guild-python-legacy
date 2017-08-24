@@ -24,7 +24,7 @@ def add_parser(subparsers):
         the runs without a prompt.
         """)
     p.add_argument(
-        "command",
+        "run_command",
         help=("Optional command. Valid options: remove (or rm), purge, "
               "recover"),
         metavar="COMMAND",
@@ -51,16 +51,16 @@ def add_parser(subparsers):
 
 def main(args):
     project = guild.cmd_support.project_for_args(args, required=False)
-    if args.command is None:
+    if args.run_command is None:
         _list_runs(project, args)
-    elif args.command == "remove" or args.command == "rm":
+    elif args.run_command == "remove" or args.run_command == "rm":
         _delete_runs(project, args)
-    elif args.command == "recover":
+    elif args.run_command == "recover":
         _recover_runs(project, args)
-    elif args.command == "purge":
+    elif args.run_command == "purge":
         _purge_deleted_runs(project, args)
     else:
-        _unknown_command_error(args.command)
+        _unknown_command_error(args.run_command)
 
 def _list_runs(project, args):
     import guild.op_util
