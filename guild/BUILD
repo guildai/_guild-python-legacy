@@ -19,8 +19,8 @@ py_binary(
         ":evaluate_cmd",
         ":prepare_cmd",
         ":project_cmd",
+        ":query_cmd",
         ":runs_cmd",
-        ":series_cmd",
         ":train_cmd",
         ":view_cmd",
     ],
@@ -174,21 +174,22 @@ py_library(
 )
 
 py_library(
+    name = "query_cmd",
+    srcs = ["query_cmd.py"],
+    deps = [
+        ":cmd_support",
+        ":db",
+        ":op_util",
+    ],
+)
+
+py_library(
     name = "runs_cmd",
     srcs = ["runs_cmd.py"],
     deps = [
         ":cmd_support",
         ":op_util",
         ":run",
-    ],
-)
-
-py_library(
-    name = "series_cmd",
-    srcs = ["series_cmd.py"],
-    deps = [
-        ":cmd_support",
-        ":db",
     ],
 )
 
