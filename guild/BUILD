@@ -147,7 +147,7 @@ py_library(
     name = "project",
     srcs = ["project.py"],
     deps = [
-        "@org_pyyaml",
+        "//external:yaml",
     ]
 )
 
@@ -157,7 +157,7 @@ py_library(
     deps = [
         ":cmd_support",
         ":view",
-        "@org_pyyaml",
+        "//external:yaml",
     ],
 )
 
@@ -307,6 +307,6 @@ py_library(
         ":app",
         ":project_util",
         ":view",
-        "@org_pocoo_werkzeug",
+        "//external:werkzeug",
     ],
 )

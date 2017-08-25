@@ -12,6 +12,11 @@ def third_party_workspace():
         build_file = "//third_party:werkzeug.BUILD",
     )
 
+    native.bind(
+        name = "werkzeug",
+        actual = "@org_pocoo_werkzeug",
+    )
+
     native.new_http_archive(
         name = "org_pyyaml",
         urls = [
@@ -23,6 +28,11 @@ def third_party_workspace():
         build_file = "//third_party:pyyaml.BUILD",
     )
 
+    native.bind(
+        name = "yaml",
+        actual = "@org_pyyaml",
+    )
+
     native.new_http_archive(
         name = "org_psutil",
         urls = [
@@ -32,4 +42,9 @@ def third_party_workspace():
         strip_prefix = "psutil-5.2.2",
         sha256 = "44746540c0fab5b95401520d29eb9ffe84b3b4a235bd1d1971cbe36e1f38dd13",
         build_file = "//third_party:psutil.BUILD",
+    )
+
+    native.bind(
+        name = "psutil",
+        actual = "@org_psutil",
     )
