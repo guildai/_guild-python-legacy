@@ -69,6 +69,6 @@ py_library(
     deps = [
         "//guild:log",
         "//guild:task_support",
-        # TODO TensorFlow/Board deps somehow
+        "//external:tensorboard",
     ],
 )
