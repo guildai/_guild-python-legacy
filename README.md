@@ -118,3 +118,26 @@ our UI dependencies (thanks to Bazel's strict and fine-grained
 dependency management facility) and our use of TensorBoard. The result
 will be more stable builds and UI behavior and easier synchronization
 with changes made to TensorBoard.
+
+### Python 3
+
+***Guild Python does not currently support Python 3.***
+
+While earlier versions worked with Python 3, they suffered from some
+problems:
+
+- Third party dependencies had to be installed independently of Guild
+  for Python 2 and Python 3
+- As Python 3 is not the primary development platform, features would
+  routinely break
+
+As we are now including all of our dependencies in the build itself,
+we are focussing on Python 2 and not supporting Python 3. Support for
+Python 3, either a single distribution or a two separate
+distributions, is planned, but we're working aggressively on these
+priorities, in order:
+
+- Stabilize the project to eliminate volatile and breaking changes
+- Achieve feature parity with the Erlang version
+- Complete support for `evaluate` and its related UI/visualizations
+- Complete preliminary package support
