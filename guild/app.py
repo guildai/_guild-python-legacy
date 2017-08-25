@@ -36,3 +36,6 @@ def _iter_core_plugins():
             yield importlib.import_module("guild.plugins.%s_plugin" % name)
         except ImportError:
             pass
+
+def external(name):
+    return os.path.join(home(), "..", name)

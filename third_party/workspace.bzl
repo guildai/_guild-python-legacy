@@ -1,21 +1,10 @@
 #-*-python-*-
 
-def third_party_workspace():
-    native.new_http_archive(
-        name = "org_pocoo_werkzeug",
-        urls = [
-            "http://mirror.bazel.build/pypi.python.org/packages/b7/7f/44d3cfe5a12ba002b253f6985a4477edfa66da53787a2a838a40f6415263/Werkzeug-0.11.10.tar.gz",
-            "https://pypi.python.org/packages/b7/7f/44d3cfe5a12ba002b253f6985a4477edfa66da53787a2a838a40f6415263/Werkzeug-0.11.10.tar.gz",
-        ],
-        strip_prefix = "Werkzeug-0.11.10",
-        sha256 = "cc64dafbacc716cdd42503cf6c44cb5a35576443d82f29f6829e5c49264aeeee",
-        build_file = "//third_party:werkzeug.BUILD",
-    )
+load("@org_tensorflow_tensorboard//third_party:workspace.bzl", "tensorboard_workspace")
 
-    native.bind(
-        name = "werkzeug",
-        actual = "@org_pocoo_werkzeug",
-    )
+def third_party_workspace():
+
+    tensorboard_workspace()
 
     native.new_http_archive(
         name = "org_pyyaml",
@@ -28,11 +17,6 @@ def third_party_workspace():
         build_file = "//third_party:pyyaml.BUILD",
     )
 
-    native.bind(
-        name = "yaml",
-        actual = "@org_pyyaml",
-    )
-
     native.new_http_archive(
         name = "org_psutil",
         urls = [
@@ -42,6 +26,21 @@ def third_party_workspace():
         strip_prefix = "psutil-5.2.2",
         sha256 = "44746540c0fab5b95401520d29eb9ffe84b3b4a235bd1d1971cbe36e1f38dd13",
         build_file = "//third_party:psutil.BUILD",
+    )
+
+    native.bind(
+        name = "tensorboard",
+        actual = "@org_tensorflow_tensorboard//tensorboard:tensorboard",
+    )
+
+    native.bind(
+        name = "werkzeug",
+        actual = "@org_pocoo_werkzeug",
+    )
+
+    native.bind(
+        name = "yaml",
+        actual = "@org_pyyaml",
     )
 
     native.bind(

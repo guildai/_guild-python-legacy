@@ -22,7 +22,7 @@ class TensorBoardProxy(object):
         guild.log.debug("starting TensorBoard proxy on port %s", self.port)
         devnull = open(os.devnull, "w")
         self._proc = subprocess.Popen(
-            ["tensorboard", "--logdir", self.logdir, "--port", str(self.port)],
+            [_tensorboard_bin(), "--logdir", self.logdir, "--port", str(self.port)],
             stdout=devnull,
             stderr=devnull)
 
@@ -44,12 +44,6 @@ class TensorBoardProxy(object):
             self._conn = http.client.HTTPConnection("localhost", self.port)
         return self._conn
 
-if __name__ == "__main__":
-    proxy = TensorBoardProxy(
-        "tensorboard",
-        "/home/garrett/SCM/guild-examples/mnist2/runs",
-        6006)
-    proxy.start()
-    print(proxy.data("runs"))
-    print(proxy.data("runs"))
-    proxy.stop()
+def _tensorboard_bin():
+    return guild.app.external(
+        "org_tensorflow_tensorboard/tensorboard/tensorboard")

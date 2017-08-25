@@ -223,6 +223,9 @@ py_library(
     deps = [
         ":log",
     ],
+    data = [
+        "//external:tensorboard",
+    ],
 )
 
 py_library(
