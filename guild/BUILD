@@ -43,15 +43,15 @@ py_library(
 py_library(
     name = "check_cmd",
     srcs = ["check_cmd.py"],
+    data = [
+        "//scripts:nvidia-tools-check",
+        "//scripts:tensorflow-check",
+    ],
     deps = [
         ":app",
         ":cli",
         ":test",
     ],
-    data = [
-        "//scripts:nvidia-tools-check",
-        "//scripts:tensorflow-check",
-    ]
 )
 
 py_library(
@@ -202,14 +202,14 @@ py_library(
 py_library(
     name = "system",
     srcs = ["system.py"],
+    data = [
+        "//scripts:gpu-attrs",
+        "//scripts:sys-attrs",
+    ],
     deps = [
         ":app",
         ":log",
     ],
-    data = [
-        "//scripts:gpu-attrs",
-        "//scripts:sys-attrs",
-    ]
 )
 
 py_library(
@@ -220,34 +220,34 @@ py_library(
 py_library(
     name = "tensorboard_proxy",
     srcs = ["tensorboard_proxy.py"],
-    deps = [
-        ":log",
-    ],
     data = [
         "//external:tensorboard",
+    ],
+    deps = [
+        ":log",
     ],
 )
 
 py_library(
     name = "tensorflow_support",
     srcs = ["tensorflow_support.py"],
+    data = [
+        "//scripts:tensorflow-attrs",
+    ],
     deps = [
         ":app",
         ":log",
-    ],
-    data = [
-        "//scripts:tensorflow-attrs",
     ],
 )
 
 py_library(
     name = "test",
     srcs = ["test.py"],
-    deps = [
-        ":app",
-    ],
     data = [
         "//tests",
+    ],
+    deps = [
+        ":app",
     ],
 )
 
@@ -276,6 +276,9 @@ py_library(
 py_library(
     name = "view",
     srcs = ["view.py"],
+    data = [
+        "//include:project-base.yml",
+    ],
     deps = [
         ":db",
         ":log",
@@ -283,14 +286,14 @@ py_library(
         ":project_util",
         ":run",
     ],
-    data = [
-        "//include:project-base.yml",
-    ],
 )
 
 py_library(
     name = "view_cmd",
     srcs = ["view_cmd.py"],
+    data = [
+        "//include:project-base.yml",
+    ],
     deps = [
         ":cli",
         ":cmd_support",
