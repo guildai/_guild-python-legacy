@@ -15,6 +15,27 @@ werkzeug.serving = serving
 DEFAULT_MAX_EPOCHS = 400
 
 ####################################################################
+# App page handler
+####################################################################
+
+class AppPageHandler(object):
+    """Use SharedDataMiddleware to serve index.html statically."""
+
+    def __init__(self, paths):
+        index_path = os.path.join(guild.app.home(), "components", "index.html")
+        exports = {
+            path: index_path for path in paths
+        }
+        self.static = werkzeug.wsgi.SharedDataMiddleware(
+            _not_found_app, exports)
+
+    def __call__(self, _view, _req, _path):
+        return lambda env, start_resp: self.static(env, start_resp)
+
+def _not_found_app(_env, _start_resp):
+    _raise_not_found()
+
+####################################################################
 # Server
 ####################################################################
 
@@ -54,7 +75,7 @@ def _routes():
         _handler("/data/project", _handle_project),
         _handler("/data/tf/<path:path>", _handle_tf_data),
         _redirect("/", "/train"),
-        _handler("/<path:_path>", _handle_app_page)
+        _handler("/<path:_path>", _app_page_handler())
     ])
 
 def _base_app_for_routes(routes, view):
@@ -125,18 +146,6 @@ def _view_lookup(fun, *args):
 ####################################################################
 # Handlers
 ####################################################################
-
-def _handle_app_page(_view, _req, _path):
-    return werkzeug.wrappers.Response(
-        _index_page(),
-        content_type="text/html")
-
-def _index_page():
-    with open(_index_page_path(), "r") as f:
-        return f.read()
-
-def _index_page_path():
-    return os.path.join(guild.app.home(), "assets", "view-index.html")
 
 def _handle_runs(view, _req):
     return _json_resp(json.dumps(view.formatted_runs()))
@@ -212,3 +221,9 @@ def _handle_tf_data(view, _req, path):
     else:
         status_str = "%i %s" % status
         return werkzeug.wrappers.Response(body, status_str, headers)
+
+def _app_page_handler():
+    paths = [
+        "/train",
+    ]
+    return AppPageHandler(paths)

@@ -2,6 +2,8 @@
 
 package(default_visibility = ["//guild:visibility"])
 
+load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
+
 package_group(
     name = "visibility",
     packages = ["//guild/..."],
@@ -25,6 +27,14 @@ py_binary(
         ":train_cmd",
         ":view_cmd",
     ],
+)
+
+ts_web_library(
+    name = "assets",
+    srcs = [
+        "//components:index.html",
+    ],
+    path = "/",
 )
 
 py_library(
@@ -301,14 +311,14 @@ py_library(
         ":view",
         ":view_http",
     ],
-    data = [
-        "//include:project-base.yml",
-    ],
 )
 
 py_library(
     name = "view_http",
     srcs = ["view_http.py"],
+    data = [
+        ":assets",
+    ],
     deps = [
         ":app",
         ":project_util",
