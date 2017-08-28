@@ -4,7 +4,7 @@ This project intends to rewrite Guild AI in Python, replacing Erlang.
 
 ## Building
 
-Guild Python requires Bazel to
+Guild Python requires Bazel 0.5.4 or higher to
 build. See
 [Installing Bazel](https://docs.bazel.build/versions/master/install.html) for
 help with you system.
