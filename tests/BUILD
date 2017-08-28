@@ -3,5 +3,5 @@
 filegroup(
     name = "tests",
     srcs = glob(["*.rst", "samples/**"]),
-    visibility = ["//guild:visibility"]
+    visibility = ["//guild:package"]
 )
