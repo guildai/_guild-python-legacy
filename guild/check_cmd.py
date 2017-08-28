@@ -88,6 +88,6 @@ def _try_module_version(name):
     try:
         mod = __import__(name)
     except ImportError:
-         return "NOT INSTALLED"
+        return "NOT INSTALLED"
     else:
         return mod.__version__

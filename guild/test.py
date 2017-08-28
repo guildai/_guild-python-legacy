@@ -46,7 +46,7 @@ def run(tests):
 def _run_test(name):
     sys.stdout.write(name + ":")
     try:
-        failures, tests = _run_test_file(_test_filename(name))
+        failures, _tests = _run_test_file(_test_filename(name))
     except IOError:
         sys.stdout.write(" ERROR test not found\n")
         return False

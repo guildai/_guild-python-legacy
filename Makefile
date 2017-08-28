@@ -22,14 +22,8 @@ check: $(GUILD)
 	fi; \
 	$(GUILD) check $$opts; \
 
-check3:
-	python3 scripts/test $(TESTS)
-
 lint:
-	pylint guild
-
-lint3:
-	pylint3 guild
+	PYTHONPATH=bazel-bin/guild/guild.runfiles/org_pyyaml/lib:bazel-bin/guild/guild.runfiles/org_pocoo_werkzeug pylint guild
 
 clean:
 	bazel clean
