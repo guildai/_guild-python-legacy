@@ -1,6 +1,6 @@
 import os
 import subprocess
-import http.client
+import httplib
 
 import guild.log
 
@@ -41,7 +41,7 @@ class TensorBoardProxy(object):
 
     def _connection(self):
         if self._conn is None:
-            self._conn = http.client.HTTPConnection("localhost", self.port)
+            self._conn = httplib.HTTPConnection("localhost", self.port)
         return self._conn
 
 def _tensorboard_bin():
