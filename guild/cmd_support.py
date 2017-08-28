@@ -4,10 +4,10 @@ import re
 import sys
 import textwrap
 
-import guild.app
 import guild.cli
-import guild.run
 import guild.util
+# NOTE: Avoid time consuming imports here and instead move into
+# functions that use them.
 
 __CONSOLE_WIDTH = None
 
@@ -92,6 +92,7 @@ def _project_for_args(args, name, use_plugins):
         raise
 
 def _try_project_for_plugins(args):
+    import guild.app
     for plugin in guild.app.plugins():
         project = plugin.try_project(args)
         guild.log.debug(
@@ -240,6 +241,7 @@ def _print_env(env):
         sys.stdout.write("  %s=%s\n" % (name, env[name]))
 
 def run_for_args(args):
+    import guild.run
     project = project_for_args(args, required=False)
     if project:
         runs = guild.run.runs_for_project(project)
