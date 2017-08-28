@@ -1,8 +1,2 @@
-/build
-guild.egg-info
 *.pyc
-/components/*
-!/components/guild-*
-!/components/vz-*
-!/components/tf-*
-/bazel-*
+bazel-*
