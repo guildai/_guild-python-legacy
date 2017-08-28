@@ -24,14 +24,6 @@ py_binary(
     ],
 )
 
-ts_web_library(
-    name = "assets",
-    srcs = [
-        "//components:index.html",
-    ],
-    path = "/",
-)
-
 py_library(
     name = "__init__",
     srcs = ["__init__.py"],
@@ -42,6 +34,7 @@ py_library(
     srcs = ["app.py"],
     deps = [
         ":__init__",
+        "//guild/plugins"
     ]
 )
 
@@ -298,6 +291,8 @@ py_library(
     srcs = ["view_cmd.py"],
     data = [
         "//include:project-base.yml",
+        "//assets",
+        "//components:index.html",
     ],
     deps = [
         ":cli",
@@ -311,9 +306,6 @@ py_library(
 py_library(
     name = "view_http",
     srcs = ["view_http.py"],
-    data = [
-        ":assets",
-    ],
     deps = [
         ":app",
         ":project_util",

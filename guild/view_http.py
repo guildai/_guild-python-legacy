@@ -105,8 +105,7 @@ def _handle_error(error, env, start_response):
 
 def _apply_static(app):
     routes = {
-        "/assets": os.path.join(guild.app.home(), "assets"),
-        "/components": os.path.join(guild.app.home(), "components")
+        "/assets": os.path.join(guild.app.home(), "assets")
     }
     return werkzeug.wsgi.SharedDataMiddleware(app, routes)
 
