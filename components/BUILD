@@ -2,8 +2,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 load("@org_tensorflow_tensorboard//tensorboard/defs:vulcanize.bzl", "tensorboard_html_binary")
+load("@io_bazel_rules_closure//closure:defs.bzl", "web_library")
 
 tensorboard_html_binary(
     name = "index",
@@ -12,10 +12,11 @@ tensorboard_html_binary(
     deps = [":guild"],
 )
 
-ts_web_library(
+web_library(
     name = "guild",
     srcs = [
         "guild.html",
     ],
     path = "/",
+    deps = ["//assets"],
 )
