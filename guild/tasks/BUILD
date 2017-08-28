@@ -1,6 +1,6 @@
 #-*-python-*-
 
-package(default_visibility = ["//guild:package"])
+package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "gpu_stats",

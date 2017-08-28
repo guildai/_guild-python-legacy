@@ -1,13 +1,8 @@
 #-*-python-*-
 
-package(default_visibility = ["//guild:package"])
+package(default_visibility = ["//visibility:public"])
 
 load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
-
-package_group(
-    name = "package",
-    packages = ["//guild/..."],
-)
 
 py_binary(
     name = "guild",
