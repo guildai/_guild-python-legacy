@@ -2,7 +2,7 @@
 
 py_library(
     name = "org_psutil",
-    srcs = glob(["psutil/*.py", "psutil/*.{so,dll}"]),
+    srcs = glob(["psutil/*.py", "psutil/*.so"]),
     visibility = ["//visibility:public"],
     data = [":psutil_native"],
 )
