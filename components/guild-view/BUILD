@@ -16,14 +16,3 @@ web_library(
         "@org_polymer_app_route",
     ],
 )
-
-web_library(
-    name = "demo",
-    srcs = ["demo.html"],
-    path = "/guild-view",
-    deps = [
-        ":guild-view",
-        "@org_polymer_webcomponentsjs",
-        "@org_polymer_iron_demo_helpers",
-    ],
-)

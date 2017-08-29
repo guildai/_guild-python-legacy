@@ -13,7 +13,7 @@ web_library(
     ],
     path = "/guild-util",
     deps = [
-        "//components/guild-imports:d3",
+        "//components/guild-imports:d3-time-format",
         "//components/guild-imports:numeraljs",
     ],
 )

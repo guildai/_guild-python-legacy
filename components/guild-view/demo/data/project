@@ -1,0 +1,274 @@
+{
+    "compare-fields": [
+        {
+            "color": "green-700",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "id": "validation-accuracy",
+            "label": "Validation Accuracy",
+            "reduce": "last",
+            "source": "series/tf/validation/accuracy"
+        },
+        {
+            "color": "green-700",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "id": "train-accuracy",
+            "label": "Training Accuracy",
+            "reduce": "last",
+            "source": "series/tf/train/accuracy"
+        },
+        {
+            "attribute": "batch_size",
+            "label": "Batch Size",
+            "source": "flags"
+        },
+        {
+            "color": "blue-700",
+            "format": "0,0",
+            "icon": "steps",
+            "id": "train-steps",
+            "label": "Steps",
+            "reduce": "steps",
+            "source": "series/tf/train/loss"
+        },
+        {
+            "color": "yellow-700",
+            "format": "00:00:00",
+            "icon": "time",
+            "id": "train-time",
+            "label": "Time",
+            "reduce": "duration",
+            "source": "series/tf/train/loss"
+        }
+    ],
+    "components": {
+        "artifacts": {
+            "element": "guild-artifacts"
+        },
+        "attrs": {
+            "element": "guild-attrs"
+        },
+        "fields": {
+            "element": "guild-fields"
+        },
+        "flags": {
+            "element": "guild-flags"
+        },
+        "output": {
+            "element": "guild-output"
+        },
+        "series": {
+            "element": "guild-series",
+            "extra_series_templates": [
+                "op-cpu-percent-series",
+                "op-memory-series",
+                "gpu-percent-series",
+                "gpu-memory-series"
+            ]
+        }
+    },
+    "description": "Guild MNIST example",
+    "flags": {
+        "batch_size": 100,
+        "datadir": "./data",
+        "epochs": 10,
+        "rundir": "$RUNDIR"
+    },
+    "models": {
+        "expert": {
+            "evaluate": "expert --test",
+            "prepare": "expert --prepare",
+            "train": "expert",
+            "train_requires": "./data"
+        },
+        "intro": {
+            "default": true,
+            "evaluate": "intro --test",
+            "prepare": "intro --prepare",
+            "train": "intro",
+            "train_requires": "./data"
+        }
+    },
+    "name": "MNIST",
+    "resources": {
+        "samples": {
+            "flags": {
+                "sample-count": 100
+            },
+            "prepare": "samples --sample-dir samples"
+        }
+    },
+    "sources": "*.py",
+    "templates": {
+        "accuracy-field": {
+            "color": "green-700",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "label": "Accuracy",
+            "reduce": "last"
+        },
+        "accuracy-series": {
+            "format": "0.00%",
+            "title": "Accuracy"
+        },
+        "epochs-field": {
+            "color": "blue-700",
+            "format": "0,0",
+            "icon": "steps",
+            "label": "Epochs",
+            "reduce": "steps"
+        },
+        "gpu-memory-series": {
+            "source": "series/sys/gpu.*/mem/used",
+            "title": "GPU Memory",
+            "type": "memory-series"
+        },
+        "gpu-percent-series": {
+            "source": "series/sys/gpu.*/gpu/util",
+            "title": "GPU %",
+            "type": "percent-util-series"
+        },
+        "learning-rate-field": {
+            "color": "green-500",
+            "format": 0.0,
+            "icon": "learning-rate",
+            "label": "Learning Rate",
+            "reduce": "last"
+        },
+        "learning-rate-series": {
+            "format": 0.0,
+            "title": "Learning Rate"
+        },
+        "loss-field": {
+            "color": "red-700",
+            "format": 0.0,
+            "icon": "loss",
+            "label": "Loss",
+            "reduct": "last"
+        },
+        "loss-series": {
+            "format": 0.0,
+            "title": "Loss"
+        },
+        "memory-series": {
+            "format": "0.0 b",
+            "title": "Memory"
+        },
+        "op-cpu-percent-series": {
+            "source": "series/op/cpu/util",
+            "title": "Process CPU %",
+            "type": "percent-util-series"
+        },
+        "op-memory-series": {
+            "source": "series/op/mem/rss",
+            "title": "Process Memory",
+            "type": "memory-series"
+        },
+        "percent-util-series": {
+            "format": "%",
+            "title": "Percent Util"
+        },
+        "steps-field": {
+            "color": "blue-700",
+            "format": "0,0",
+            "icon": "steps",
+            "label": "Steps",
+            "reduce": "steps"
+        },
+        "time-field": {
+            "color": "yellow-700",
+            "format": "00:00:00",
+            "icon": "time",
+            "label": "Time",
+            "reduce": "duration"
+        },
+        "train-accuracy-field": {
+            "color": "teal-600",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "label": "Train Accuracy",
+            "reduce": "last"
+        },
+        "validation-accuracy-field": {
+            "color": "green-700",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "label": "Validation Accuracy",
+            "reduce": "last"
+        }
+    },
+    "train-fields": [
+        {
+            "color": "green-700",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "id": "validation-accuracy",
+            "label": "Validation Accuracy",
+            "reduce": "last",
+            "source": "series/tf/validation/accuracy"
+        },
+        {
+            "color": "green-700",
+            "format": "0.00%",
+            "icon": "accuracy",
+            "id": "train-accuracy",
+            "label": "Training Accuracy",
+            "reduce": "last",
+            "source": "series/tf/train/accuracy"
+        },
+        {
+            "color": "blue-700",
+            "format": "0,0",
+            "icon": "steps",
+            "id": "train-steps",
+            "label": "Steps",
+            "reduce": "steps",
+            "source": "series/tf/train/loss"
+        },
+        {
+            "color": "yellow-700",
+            "format": "00:00:00",
+            "icon": "time",
+            "id": "train-time",
+            "label": "Time",
+            "reduce": "duration",
+            "source": "series/tf/train/loss"
+        }
+    ],
+    "train-series": [
+        {
+            "format": 0.0,
+            "source": "series/tf/train/loss",
+            "title": "Loss"
+        },
+        {
+            "format": "0.00%",
+            "source": "series/tf/.+/accuracy",
+            "title": "Accuracy"
+        }
+    ],
+    "views": {
+        "_eval": {
+            "content": [
+                "fields"
+            ],
+            "scope": "eval",
+            "sidebar": [
+                "flags"
+            ]
+        },
+        "train": {
+            "content": [
+                "fields",
+                "series",
+                "_output"
+            ],
+            "scope": "run",
+            "sidebar": [
+                "flags",
+                "attrs"
+            ]
+        }
+    }
+}

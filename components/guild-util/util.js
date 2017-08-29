@@ -17,7 +17,7 @@ var Guild = Guild || {};
 
 Guild.Util = new function() {
 
-    var SHORT_DATE_FORMAT = d3.time.format("%b %d %H:%M:%S");
+    var SHORT_DATE_FORMAT = d3.timeFormat("%b %d %H:%M:%S");
 
     var tryFormat = function(value, format) {
         if (value != null && value != undefined && value == value) {

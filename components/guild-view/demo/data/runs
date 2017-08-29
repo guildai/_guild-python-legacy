@@ -1,0 +1,74 @@
+[
+    {
+        "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 10 --rundir $RUNDIR",
+        "dir": "./mnist2/runs/2017-08-25T16-18-33Z-intro",
+        "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
+        "exit_status": 0,
+        "extended_status": "completed",
+        "id": 2366477603,
+        "model": "intro",
+        "started": 1503677913256,
+        "status": "stopped",
+        "stopped": 1503677913256
+    },
+    {
+        "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 10 --rundir $RUNDIR",
+        "dir": "./mnist2/runs/2017-08-24T20-41-17Z-intro",
+        "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
+        "exit_status": 0,
+        "extended_status": "completed",
+        "id": 2856718406,
+        "model": "intro",
+        "started": 1503607277778,
+        "status": "stopped",
+        "stopped": 1503607277778
+    },
+    {
+        "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 1 --rundir $RUNDIR",
+        "dir": "./mnist2/runs/2017-08-24T16-21-52Z-intro",
+        "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
+        "exit_status": 0,
+        "extended_status": "completed",
+        "id": 3116944129,
+        "model": "intro",
+        "started": 1503591712691,
+        "status": "stopped",
+        "stopped": 1503591712691
+    },
+    {
+        "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 10 --rundir $RUNDIR",
+        "dir": "./mnist2/runs/2017-08-24T16-06-49Z-intro",
+        "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
+        "exit_status": 0,
+        "extended_status": "completed",
+        "id": 920209416,
+        "model": "intro",
+        "started": 1503590809819,
+        "status": "stopped",
+        "stopped": 1503590809819
+    },
+    {
+        "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 10 --rundir $RUNDIR",
+        "dir": "./mnist2/runs/2017-08-24T15-28-14Z-intro",
+        "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
+        "exit_status": 0,
+        "extended_status": "completed",
+        "id": 627542228,
+        "model": "intro",
+        "started": 1503588494335,
+        "status": "stopped",
+        "stopped": 1503588494335
+    },
+    {
+        "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 10 --rundir $RUNDIR",
+        "dir": "./mnist2/runs/2017-08-24T14-23-00Z-intro",
+        "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
+        "exit_status": 0,
+        "extended_status": "completed",
+        "id": 142144607,
+        "model": "intro",
+        "started": 1503584580201,
+        "status": "stopped",
+        "stopped": 1503584580201
+    }
+]

@@ -81,7 +81,7 @@ limitations under the License.
            this.selectedRun = function(runs, route) {
                var runId = route.__queryParams.run;
                if (runId) {
-                   return parseInt(runId) || null;
+                   return parseInt(runId, 10) || null;
                } else {
                    return runs.length > 0 ? runs[0].id : null;
                }

@@ -1,0 +1,6 @@
+{
+    "refreshInterval": 5,
+    "tensorboard": {
+        "demo": false
+    }
+}
