@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<!--
 <link rel="import" href="../app-route/app-location.html">
+
+<link rel="import" href="guild-view-route.html">
 <link rel="import" href="../guild-env/guild-env.html">
 
+<!--
 <link rel="import" href="../guild-compare-page/guild-compare-page.html">
 <link rel="import" href="../guild-components-page/guild-components-page.html">
 <link rel="import" href="../guild-run/guild-run.html">
@@ -26,21 +28,26 @@ limitations under the License.
 <link rel="import" href="guild-view-app-layout.html">
 <link rel="import" href="guild-view-fullscreen.html">
 <link rel="import" href="guild-view-page.html">
-<link rel="import" href="guild-view-route.html">
 <link rel="import" href="guild-view-styles.html">
 -->
 
 <dom-module id="guild-view">
   <template>
 
-    TODO: guild-view component here!
+    <h1>Guild View - WIP</h1>
 
     <!--
-    <style include="root-styles"></style>
+         <style include="root-styles"></style>
+         -->
 
     <app-location route="{{route}}"></app-location>
     <guild-view-route route="{{route}}" selected="{{page}}"></guild-view-route>
-    <guild-env env="{{env}}" route="{{route}}"></guild-env>
+    <guild-env route="{{route}}" env="{{env}}"></guild-env>
+
+    <div>route.path: [[route.path]]</div>
+    <div>this.page: [[path]]</div>
+
+    <!--
 
     <guild-view-fullscreen></guild-view-fullscreen>
 
@@ -51,7 +58,6 @@ limitations under the License.
           <guild-components-page env="{{env}}" viewdef="[[viewdef]]" scope="train"></guild-components-page>
         </template>
       </guild-view-page>
-
       -->
 
       <!--
@@ -88,11 +94,11 @@ limitations under the License.
 
        //behaviors: [Guild.FullscreenHost],
 
-       //properties: {
-       //    route: Object,
-       //    page: String,
-       //    env: Object
-       //},
+       properties: {
+           route: Object,
+           page: String,
+           env: Object
+       },
 
        //observers: [
        //    "setTitle(env.project)"
