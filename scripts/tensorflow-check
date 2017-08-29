@@ -16,7 +16,12 @@
 
 import sys
 
-import tensorflow as tf
+try:
+    import tensorflow as tf
+except ImportError as e:
+    sys.stderr.write(str(e))
+    sys.stderr.write("\n")
+    tf = None
 
 def print_info():
     sys.stdout.write("tf_version:             %s\n" % version())
@@ -25,12 +30,18 @@ def print_info():
     sys.stdout.flush()
 
 def version():
+    if tf is None:
+        return "NOT INSTALLED"
     return tf.__version__
 
 def cuda_support():
+    if tf is None:
+        return "NOT INSTALLED"
     return "yes" if tf.test.is_built_with_cuda() else "no"
 
 def gpu_available():
+    if tf is None:
+        return "NOT INSTALLED"
     return "yes" if tf.test.is_gpu_available() else "no"
 
 if __name__ == "__main__":

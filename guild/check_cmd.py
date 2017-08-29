@@ -1,4 +1,3 @@
-import os
 import subprocess
 import sys
 
@@ -68,8 +67,7 @@ def _print_nvidia_tools_info():
 
 def _print_check_results(script_name):
     script_path = guild.app.script(script_name)
-    devnull = open(os.devnull, 'w')
-    out = subprocess.check_output(script_path, stderr=devnull)
+    out = subprocess.check_output(script_path)
     sys.stdout.write(out.decode(sys.stdout.encoding))
 
 def _print_werkzeug_info():
