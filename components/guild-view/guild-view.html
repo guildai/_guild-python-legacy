@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<!--
 <link rel="import" href="../app-route/app-location.html">
 <link rel="import" href="../guild-env/guild-env.html">
 
@@ -27,9 +28,14 @@ limitations under the License.
 <link rel="import" href="guild-view-page.html">
 <link rel="import" href="guild-view-route.html">
 <link rel="import" href="guild-view-styles.html">
+-->
 
 <dom-module id="guild-view">
   <template>
+
+    TODO: guild-view component here!
+
+    <!--
     <style include="root-styles"></style>
 
     <app-location route="{{route}}"></app-location>
@@ -46,6 +52,8 @@ limitations under the License.
         </template>
       </guild-view-page>
 
+      -->
+
       <!--
       <guild-view-page id="eval" label="Evaluate" icon="search" env="{{env}}">
         <template>
@@ -54,6 +62,7 @@ limitations under the License.
       </guild-view-page>
       -->
 
+      <!--
       <guild-view-page id="compare" label="Compare" icon="av:playlist-add-check" env="[[env]]">
         <template>
           <guild-compare-page env="[[env]]" viewdef="[[viewdef]]"></guild-compare-page>
@@ -69,31 +78,34 @@ limitations under the License.
       <guild-view-404 class="not-found" path="[[route.path]]"></guild-view-404>
 
     </guild-view-app-layout>
+    -->
 
   </template>
+
   <script>
    Polymer({
        is: "guild-view",
 
-       behaviors: [Guild.FullscreenHost],
+       //behaviors: [Guild.FullscreenHost],
 
-       properties: {
-           route: Object,
-           page: String,
-           env: Object
-       },
+       //properties: {
+       //    route: Object,
+       //    page: String,
+       //    env: Object
+       //},
 
-       observers: [
-           "setTitle(env.project)"
-       ],
+       //observers: [
+       //    "setTitle(env.project)"
+       //],
 
-       setTitle: function(project) {
-           if (project && project.name) {
-               document.title = project.name + " - Guild View";
-           } else {
-               document.title = "Guild View";
-           }
-       }
+       //setTitle: function(project) {
+       //    if (project && project.name) {
+       //        document.title = project.name + " - Guild View";
+       //    } else {
+       //        document.title = "Guild View";
+       //    }
+      // }
    });
   </script>
+
 </dom-module>
