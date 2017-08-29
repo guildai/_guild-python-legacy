@@ -27,23 +27,3 @@ def third_party_workspace():
         sha256 = "44746540c0fab5b95401520d29eb9ffe84b3b4a235bd1d1971cbe36e1f38dd13",
         build_file = "//third_party:psutil.BUILD",
     )
-
-    native.bind(
-        name = "tensorboard",
-        actual = "@org_tensorflow_tensorboard//tensorboard:tensorboard",
-    )
-
-    native.bind(
-        name = "werkzeug",
-        actual = "@org_pocoo_werkzeug",
-    )
-
-    native.bind(
-        name = "yaml",
-        actual = "@org_pyyaml",
-    )
-
-    native.bind(
-        name = "psutil",
-        actual = "@org_psutil",
-    )

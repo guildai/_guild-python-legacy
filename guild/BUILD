@@ -145,7 +145,7 @@ py_library(
     name = "project",
     srcs = ["project.py"],
     deps = [
-        "//external:yaml",
+        "@org_pyyaml",
     ]
 )
 
@@ -155,7 +155,7 @@ py_library(
     deps = [
         ":cmd_support",
         ":view",
-        "//external:yaml",
+        "@org_pyyaml",
     ],
 )
 
@@ -219,7 +219,7 @@ py_library(
     name = "tensorboard_proxy",
     srcs = ["tensorboard_proxy.py"],
     data = [
-        "//external:tensorboard",
+        "@org_tensorflow_tensorboard//tensorboard",
     ],
     deps = [
         ":log",
@@ -310,6 +310,6 @@ py_library(
         ":app",
         ":project_util",
         ":view",
-        "//external:werkzeug",
+        "@org_pocoo_werkzeug",
     ],
 )

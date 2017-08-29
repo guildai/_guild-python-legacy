@@ -18,5 +18,9 @@ web_library(
         "guild.html",
     ],
     path = "/",
-    deps = ["//assets"],
+    deps = [
+        "//assets",
+        "//components/guild-view",
+        "@org_polymer_webcomponentsjs",
+    ],
 )

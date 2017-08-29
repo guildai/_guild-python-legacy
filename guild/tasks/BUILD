@@ -36,7 +36,7 @@ py_library(
     deps = [
         "//guild:log",
         "//guild:task_support",
-        "//external:psutil",
+        "@org_psutil",
     ],
 )
 
@@ -59,7 +59,7 @@ py_library(
     deps = [
         "//guild:log",
         "//guild:task_support",
-        "//external:psutil",
+        "@org_psutil",
     ],
 )
 
@@ -69,6 +69,6 @@ py_library(
     deps = [
         "//guild:log",
         "//guild:task_support",
-        "//external:tensorboard",
+        "@org_tensorflow_tensorboard//tensorboard",
     ],
 )
