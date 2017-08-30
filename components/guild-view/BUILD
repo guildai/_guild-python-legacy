@@ -12,6 +12,7 @@ web_library(
         ":guild-view-route",
         ":guild-view-app-layout",
         ":guild-view-page",
+        ":guild-view-styles",
         "//components/guild-env",
         "@org_polymer_app_route",
     ],
@@ -69,5 +70,13 @@ web_library(
         "@org_polymer_app_layout",
         "@org_polymer_iron_icon",
         "@org_polymer_paper_tabs",
+    ],
+)
+
+web_library(
+    name = "guild-view-styles",
+    srcs = ["guild-view-styles.html"],
+    path = "/guild-view",
+    deps = [
     ],
 )

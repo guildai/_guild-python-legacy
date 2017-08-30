@@ -20,6 +20,7 @@ limitations under the License.
 <link rel="import" href="guild-view-route.html">
 <link rel="import" href="guild-view-app-layout.html">
 <link rel="import" href="guild-view-page.html">
+<link rel="import" href="guild-view-styles.html">
 
 <!--
 <link rel="import" href="../guild-compare-page/guild-compare-page.html">
@@ -28,25 +29,17 @@ limitations under the License.
 <link rel="import" href="../guild-tensorboard-page/guild-tensorboard-page.html">
 
 <link rel="import" href="guild-view-fullscreen.html">
-<link rel="import" href="guild-view-styles.html">
 <link rel="import" href="guild-view-404.html">
 -->
 
 <dom-module id="guild-view">
   <template>
 
-    <h1>Guild View - WIP</h1>
-
-    <!--
-         <style include="root-styles"></style>
-         -->
+    <style include="root-styles"></style>
 
     <app-location route="{{route}}"></app-location>
     <guild-view-route route="{{route}}" selected="{{page}}"></guild-view-route>
     <guild-env route="{{route}}" env="{{env}}"></guild-env>
-
-    <div>route.path: [[route.path]]</div>
-    <div>this.page: [[page]]</div>
 
     <!--
          <guild-view-fullscreen></guild-view-fullscreen>
@@ -56,6 +49,7 @@ limitations under the License.
 
       <guild-view-page id="train" label="Train" icon="av:repeat" env="{{env}}">
         <template>
+          <p>TODO: integrate guild-components-page for train scope</p>
           <!--
           <guild-components-page env="{{env}}" viewdef="[[viewdef]]" scope="train"></guild-components-page>
           -->
@@ -70,22 +64,26 @@ limitations under the License.
       </guild-view-page>
       -->
 
-      <!--
       <guild-view-page id="compare" label="Compare" icon="av:playlist-add-check" env="[[env]]">
         <template>
+          <p>TODO: integrate guild-compare-page</p>
+          <!--
           <guild-compare-page env="[[env]]" viewdef="[[viewdef]]"></guild-compare-page>
+          -->
         </template>
       </guild-view-page>
 
       <guild-view-page id="tensorboard" label="TensorBoard" icon="timeline" env="[[env]]">
         <template>
+          <p>TODO: integrate guild-tensorboard-page</p>
+          <!--
           <guild-tensorboard-page env="[[env]]"></guild-tensorboard-page>
+          -->
         </template>
       </guild-view-page>
 
       <guild-view-404 class="not-found" path="[[route.path]]"></guild-view-404>
 
-           -->
     </guild-view-app-layout>
 
   </template>
