@@ -14,6 +14,7 @@ web_library(
         ":guild-view-page",
         ":guild-view-styles",
         "//components/guild-env",
+        "//components/guild-components-page",
         "@org_polymer_app_route",
     ],
 )
@@ -78,5 +79,14 @@ web_library(
     srcs = ["guild-view-styles.html"],
     path = "/guild-view",
     deps = [
+    ],
+)
+
+web_library(
+    name = "guild-view-page-overlay",
+    srcs = ["guild-view-page-overlay.html"],
+    path = "/guild-view",
+    deps = [
+        "@org_polymer_iron_resizable_behavior",
     ],
 )

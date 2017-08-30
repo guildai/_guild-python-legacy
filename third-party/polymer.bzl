@@ -146,3 +146,40 @@ def guild_polymer_workspace():
             "@org_polymer_iron_iconset_svg",
         ],
     )
+
+    web_library_external(
+        name = "org_pkaske_fa_awesome",
+        licenses = ["notice"],  # MIT
+        sha256 = "bfd2273ffdb5b429bc74f95c2b321d2902c10a8777bee8086df4ca3907fdbb41",
+        urls = [
+            "https://github.com/pkaske/fa-awesome/archive/1.3.1.tar.gz",
+        ],
+        strip_prefix = "fa-awesome-1.3.1",
+        path = "/fa-awesome",
+        srcs = [
+            "fa-awesome.html",
+            "fa-awesome.css",
+        ],
+        deps = [
+            "@org_polymer",
+            "@org_polymer_iron_flex_layout",
+            "@org_polymer_neon_animation",
+            "@org_fontawesome",
+        ],
+    )
+
+    web_library_external(
+        name = "org_polymer_paper_card",
+        licenses = ["notice"],  # BSD-3-Clause
+        sha256 = "bfd2273ffdb5b429bc74f95c2b321d2902c10a8777bee8086df4ca3907fdbb41",
+        urls = [
+            "https://github.com/PolymerElements/paper-card/archive/v1.1.6.tar.gz",
+        ],
+        strip_prefix = "paper-card-1.1.6",
+        path = "/paper-card",
+        srcs = [
+            "paper-card.html",
+        ],
+        deps = [
+        ],
+    )

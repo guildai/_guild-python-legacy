@@ -16,6 +16,7 @@ limitations under the License.
 
 <link rel="import" href="../app-route/app-location.html">
 <link rel="import" href="../guild-env/guild-env.html">
+<link rel="import" href="../guild-components-page/guild-components-page.html">
 
 <link rel="import" href="guild-view-route.html">
 <link rel="import" href="guild-view-app-layout.html">
@@ -24,7 +25,6 @@ limitations under the License.
 
 <!--
 <link rel="import" href="../guild-compare-page/guild-compare-page.html">
-<link rel="import" href="../guild-components-page/guild-components-page.html">
 <link rel="import" href="../guild-run/guild-run.html">
 <link rel="import" href="../guild-tensorboard-page/guild-tensorboard-page.html">
 
@@ -49,10 +49,7 @@ limitations under the License.
 
       <guild-view-page id="train" label="Train" icon="av:repeat" env="{{env}}">
         <template>
-          <p>TODO: integrate guild-components-page for train scope</p>
-          <!--
           <guild-components-page env="{{env}}" viewdef="[[viewdef]]" scope="train"></guild-components-page>
-          -->
         </template>
       </guild-view-page>
 

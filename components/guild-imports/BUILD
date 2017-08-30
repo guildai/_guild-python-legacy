@@ -21,3 +21,15 @@ web_library(
     ],
     path = "/guild-imports",
 )
+
+web_library(
+    name = "bootstrap-grid",
+    srcs = [
+        "bootstrap-grid.html",
+        "@org_twbs_bootstrap//:css/bootstrap-grid.css",
+    ],
+    path = "/guild-imports",
+    deps = [
+        "//components/guild-bootstrap:grid-xxl",
+    ],
+)
