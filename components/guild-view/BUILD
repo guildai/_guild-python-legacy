@@ -31,6 +31,7 @@ web_library(
     path = "/guild-view",
     deps = [
         ":guild-view-app-menu",
+        ":guild-view-app-toolbar",
         "@org_polymer_app_layout",
         "@org_polymer_iron_pages",
         "@org_polymer_paper_icon_button",
@@ -51,5 +52,22 @@ web_library(
     path = "/guild-view",
     deps = [
         "//components/guild-icons",
+        "@org_polymer_iron_icon",
+        "@org_polymer_paper_item",
+        "@org_polymer_paper_menu",
+        "@org_polymer_paper_toolbar",
+    ],
+)
+
+web_library(
+    name = "guild-view-app-toolbar",
+    srcs = ["guild-view-app-toolbar.html"],
+    path = "/guild-view",
+    deps = [
+        ":guild-view-app-menu",
+        "//components/guild-icons",
+        "@org_polymer_app_layout",
+        "@org_polymer_iron_icon",
+        "@org_polymer_paper_tabs",
     ],
 )

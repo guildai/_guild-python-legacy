@@ -112,3 +112,37 @@ def guild_polymer_workspace():
             "@org_polymer_iron_selector",
         ],
     )
+
+    web_library_external(
+        name = "org_pkaske_font_awesome_polymer_icons",
+        licenses = ["notice"],  # BSD-3-Clause
+        sha256 = "7c83916b54b5d16460def96181d864c698a803567cc34abdbf62faca9da7ed81",
+        urls = [
+            "https://github.com/pkaske/font-awesome-polymer-icons/archive/v4.4.0.tar.gz",
+        ],
+        strip_prefix = "font-awesome-polymer-icons-4.4.0",
+        path = "/font-awesome-polymer-icons",
+        srcs = [
+            "fa-all.html",
+            "fa-brand.html",
+            "fa-chart.html",
+            "fa-currency.html",
+            "fa-directional.html",
+            "fa-file-type.html",
+            "fa-form-control.html",
+            "fa-gender.html",
+            "fa-hand.html",
+            "fa-medical.html",
+            "fa-payment.html",
+            "fa-spinner.html",
+            "fa-text-editor.html",
+            "fa-transportation.html",
+            "fa-video-player.html",
+            "fa-web-application.html",
+        ],
+        deps = [
+            "@org_polymer",
+            "@org_polymer_iron_icon",
+            "@org_polymer_iron_iconset_svg",
+        ],
+    )

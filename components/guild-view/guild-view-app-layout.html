@@ -48,7 +48,7 @@ limitations under the License.
               selected="{{selected}}"
               narrow="[[narrow]]">
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div class="toolbar-title"><a href="train">Guild View</a></div>
+            <div class="toolbar-title"><a href="[[firstTab]]">Guild View</a></div>
           </guild-view-app-toolbar>
         </app-header>
 
@@ -78,7 +78,10 @@ limitations under the License.
                type: String,
                notify: true
            },
-           narrow: Boolean
+           narrow: Boolean,
+           firstTab: {
+               value: "train",
+           }
        },
 
        observers: [
