@@ -12,15 +12,28 @@ tensorboard_html_binary(
     deps = [":guild"],
 )
 
+guild_deps = [
+    "//assets",
+    "//components/guild-view",
+    "@org_polymer_webcomponentsjs",
+]
+
 web_library(
     name = "guild",
     srcs = [
         "guild.html",
     ],
     path = "/",
-    deps = [
-        "//assets",
-        "//components/guild-view",
-        "@org_polymer_webcomponentsjs",
+    deps = guild_deps,
+)
+
+web_library(
+    name = "guild-demo",
+    srcs = [
+        "guild.html",
+    ],
+    path = "/",
+    deps = guild_deps + [
+        "//components/guild-view/demo:demo-data"
     ],
 )

@@ -12,12 +12,12 @@ web_library(
         "//components/guild-view",
         "@org_polymer_webcomponentsjs",
         "@org_polymer_iron_demo_helpers",
-        ":demo_data",
+        ":demo-data",
     ],
 )
 
 web_library(
-    name = "demo_data",
+    name = "demo-data",
     srcs = glob(["data/**"]),
     path = "/",
 )
