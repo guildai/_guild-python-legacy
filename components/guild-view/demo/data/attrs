@@ -1,0 +1,8 @@
+{
+    "cpu_cores": "8",
+    "cpu_model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
+    "gpu0_memory": "2002 MB",
+    "gpu0_name": "GeForce 940MX",
+    "mem_total": "32040 MB",
+    "tensorflow_version": "1.3.0"
+}

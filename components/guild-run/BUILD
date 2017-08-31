@@ -15,3 +15,25 @@ web_library(
         "//components/guild-util",
     ],
 )
+
+web_library(
+    name = "guild-run-data-listener",
+    srcs = [
+        "guild-run-data-listener.html",
+    ],
+    path = "/guild-run",
+    deps = [
+        "//components/guild-data:guild-data-listener",
+    ],
+)
+
+web_library(
+    name = "guild-run-compare-data-listener",
+    srcs = [
+        "guild-run-compare-data-listener.html",
+    ],
+    path = "/guild-run",
+    deps = [
+        "//components/guild-data:guild-data-listener",
+    ],
+)

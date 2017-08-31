@@ -90,3 +90,11 @@ web_library(
         "@org_polymer_iron_resizable_behavior",
     ],
 )
+
+web_library(
+    name = "guild-fullscreen-behavior",
+    srcs = ["guild-fullscreen-behavior.html"],
+    path = "/guild-view",
+    deps = [
+    ],
+)

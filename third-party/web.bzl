@@ -61,3 +61,47 @@ def guild_web_workspace():
         ],
         suppress = ["strictDependencies"],
     )
+
+    filegroup_external(
+        name = "com_jquery",
+        licenses = ["notice"],  # MIT
+        sha256_urls = {
+            "87083882cc6015984eb0411a99d3981817f5dc5c90ba24f0940420c5548d82de": [
+                "https://code.jquery.com/jquery-3.2.1.min.js",
+            ],
+        },
+        rename = {"jquery-3.2.1.min.js": "jquery.min.js"},
+    )
+
+    web_library_external(
+        name = "net_datatables",
+        licenses = ["notice"],  # MIT
+        sha256 = "ee0ad0063cac4c04c20644e7bb9e8950a67346eafdcc2051a414fc95a0f4ab36",
+        urls = [
+            "https://github.com/DataTables/Dist-DataTables/archive/1.10.15.zip",
+        ],
+        strip_prefix = "Dist-DataTables-1.10.15",
+        path = "/datatables.net",
+        srcs = [
+            "js/jquery.dataTables.min.js",
+        ],
+    )
+
+    web_library_external(
+        name = "net_datatables_dt",
+        licenses = ["notice"],  # MIT
+        sha256 = "91ea05c88003c12e967f8d5318af0c4deabf836f70a7a3c9d165ec01333e288c",
+        urls = [
+            "https://github.com/DataTables/Dist-DataTables-DataTables/archive/1.10.15.zip",
+        ],
+        strip_prefix = "Dist-DataTables-DataTables-1.10.15",
+        path = "/datatables.net-dt",
+        srcs = [
+            "css/jquery.dataTables.min.css",
+            "images/sort_both.png",
+            "images/sort_asc.png",
+            "images/sort_desc.png",
+            "images/sort_asc_disabled.png",
+            "images/sort_desc_disabled.png",
+        ],
+    )

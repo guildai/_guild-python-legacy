@@ -17,7 +17,7 @@ limitations under the License.
 <link rel="import" href="../guild-component-panel/guild-component-panel.html">
 <link rel="import" href="../guild-datatable/guild-datatable.html">
 <link rel="import" href="../guild-filter-input/guild-filter-input.html">
-<link rel="import" href="../guild-imports/d3.html">
+<link rel="import" href="../guild-imports/d3-time-format.html">
 <link rel="import" href="../guild-run/guild-run-data-listener.html">
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 
@@ -96,7 +96,7 @@ limitations under the License.
        },
 
        formatItems: function(data) {
-           var formatTime = d3.time.format("%b %d %H:%M:%S.%L");
+           var formatTime = d3.timeFormat("%b %d %H:%M:%S.%L");
            return data.map(function(item, index) {
                return {
                    // index used to order when times are equal

@@ -15,13 +15,11 @@
         "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 10 --rundir $RUNDIR",
         "dir": "./mnist2/runs/2017-08-24T20-41-17Z-intro",
         "env": "GPU_COUNT=1\nPKG_HOME=%(pkg_home)s\nRUNDIR=%(opdir)s",
-        "exit_status": 0,
-        "extended_status": "completed",
+        "extended_status": "terminated",
         "id": 2856718406,
         "model": "intro",
         "started": 1503607277778,
-        "status": "stopped",
-        "stopped": 1503607277778
+        "status": "crashed"
     },
     {
         "cmd": "python -u ./intro.py --batch_size 100 --datadir ./data --epochs 1 --rundir $RUNDIR",

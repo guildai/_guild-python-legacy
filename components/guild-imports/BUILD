@@ -33,3 +33,25 @@ web_library(
         "//components/guild-bootstrap:grid-xxl",
     ],
 )
+
+web_library(
+    name = "datatables",
+    srcs = [
+        "datatables.html",
+    ],
+    path = "/guild-imports",
+    deps = [
+        ":jquery",
+        "@net_datatables",
+        "@net_datatables_dt",
+    ],
+)
+
+web_library(
+    name = "jquery",
+    srcs = [
+        "jquery.html",
+        "@com_jquery",
+    ],
+    path = "/guild-imports",
+)

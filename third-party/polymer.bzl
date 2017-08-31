@@ -171,7 +171,7 @@ def guild_polymer_workspace():
     web_library_external(
         name = "org_polymer_paper_card",
         licenses = ["notice"],  # BSD-3-Clause
-        sha256 = "bfd2273ffdb5b429bc74f95c2b321d2902c10a8777bee8086df4ca3907fdbb41",
+        sha256 = "bcfecab0d28dcc5f7b8dd784d71b3c5a90c645fc984f7f57974211b82eccc31b",
         urls = [
             "https://github.com/PolymerElements/paper-card/archive/v1.1.6.tar.gz",
         ],
@@ -181,5 +181,28 @@ def guild_polymer_workspace():
             "paper-card.html",
         ],
         deps = [
+            "@org_polymer",
+            "@org_polymer_iron_flex_layout",
+            "@org_polymer_iron_image",
+            "@org_polymer_paper_material",
+            "@org_polymer_paper_styles",
+        ],
+    )
+
+    web_library_external(
+        name = "org_polymer_iron_image",
+        licenses = ["notice"],  # BSD-3-Clause
+        sha256 = "c6e8b4840e95314bc452e270d01dd69eedd7362c4babd78f3d63be7b35aeaa6a",
+        urls = [
+            "https://github.com/PolymerElements/iron-image/archive/v1.2.6.zip",
+        ],
+        strip_prefix = "iron-image-1.2.6",
+        path = "/iron-image",
+        srcs = [
+            "iron-image.html",
+        ],
+        deps = [
+            "@org_polymer",
+            "@org_polymer_iron_flex_layout",
         ],
     )

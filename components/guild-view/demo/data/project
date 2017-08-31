@@ -120,12 +120,12 @@
             "reduce": "steps"
         },
         "gpu-memory-series": {
-            "source": "series/sys/gpu.*/mem/used",
+            "source": "series/sys/gpu.+/mem/used",
             "title": "GPU Memory",
             "type": "memory-series"
         },
         "gpu-percent-series": {
-            "source": "series/sys/gpu.*/gpu/util",
+            "source": "series/sys/gpu.+/gpu/util",
             "title": "GPU %",
             "type": "percent-util-series"
         },
