@@ -1,6 +1,6 @@
 #-*-python-*-
 
-workspace(name = "ai_guild_guild")
+workspace(name = "org_guildai_guild")
 
 http_archive(
     name = "io_bazel_rules_closure",

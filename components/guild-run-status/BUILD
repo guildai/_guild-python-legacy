@@ -11,6 +11,6 @@ web_library(
     deps = [
         "//components/guild-run",
         "//components/guild-styles",
-        "@org_pkaske_fa_awesome",
+        "@org_guildai_fa_awesome",
     ],
 )

@@ -161,12 +161,15 @@ limitations under the License.
            scope: String,
            active: Boolean,
            waitingForEval: {
+               type: Boolean,
                computed: "computeWaitingForEval(scope, env.selectedRun, env.runs)"
            },
            runDir: {
+               type: String,
                computed: "computeRunDir(env.selectedRun, env.runs)"
            },
            components: {
+               type: Array,
                computed: "computeComponents(env.project, env.selectedRun, env.runs, scope)"
            }
        },
