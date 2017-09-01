@@ -10,7 +10,7 @@
             "source": "series/tf/validation/accuracy"
         },
         {
-            "color": "green-700",
+            "color": "teal-600",
             "format": "0.00%",
             "icon": "accuracy",
             "id": "train-accuracy",
@@ -209,7 +209,7 @@
             "source": "series/tf/validation/accuracy"
         },
         {
-            "color": "green-700",
+            "color": "teal-600",
             "format": "0.00%",
             "icon": "accuracy",
             "id": "train-accuracy",
