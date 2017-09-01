@@ -1,5 +1,3 @@
-#-*-python-*-
-
 exports_files([
     "gpu-attrs",
     "nvidia-tools-check",
