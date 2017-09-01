@@ -148,13 +148,13 @@ def guild_polymer_workspace():
     )
 
     web_library_external(
-        name = "org_pkaske_fa_awesome",
+        name = "org_guildai_fa_awesome",
         licenses = ["notice"],  # MIT
-        sha256 = "42ce7da0951b90a085b47a4c4a251d57b59d463061fcc1067ab937012777c173",
+        sha256 = "9703a0eb570f7f6ccf5737d780c15fcf9115b0e38b6986dca506760c4eacac49",
         urls = [
-            "https://github.com/pkaske/fa-awesome/archive/2.0.2.tar.gz",
+            "https://github.com/guildai/fa-awesome/archive/2.0.2-type-fix.tar.gz",
         ],
-        strip_prefix = "fa-awesome-2.0.2",
+        strip_prefix = "fa-awesome-2.0.2-type-fix",
         path = "/fa-awesome",
         srcs = [
             "fa-awesome.html",
