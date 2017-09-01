@@ -121,7 +121,7 @@ def guild_polymer_workspace():
             "https://github.com/pkaske/font-awesome-polymer-icons/archive/v4.4.0.tar.gz",
         ],
         strip_prefix = "font-awesome-polymer-icons-4.4.0",
-        path = "/font-awesome-polymer-icons",
+        path = "/polymer-font-awesome-icons",
         srcs = [
             "fa-all.html",
             "fa-brand.html",
@@ -148,23 +148,23 @@ def guild_polymer_workspace():
     )
 
     web_library_external(
-        name = "org_guildai_fa_awesome",
+        name = "org_pkaske_fa_awesome",
         licenses = ["notice"],  # MIT
-        sha256 = "b156e7c9c778156332585ad36273fd7bfa1a99fe490849a5afa66226128796e7",
+        sha256 = "42ce7da0951b90a085b47a4c4a251d57b59d463061fcc1067ab937012777c173",
         urls = [
-            "https://github.com/guildai/fa-awesome/archive/1.3.2.tar.gz",
+            "https://github.com/pkaske/fa-awesome/archive/2.0.2.tar.gz",
         ],
-        strip_prefix = "fa-awesome-1.3.2",
+        strip_prefix = "fa-awesome-2.0.2",
         path = "/fa-awesome",
         srcs = [
             "fa-awesome.html",
-            "fa-awesome.css",
         ],
         deps = [
             "@org_polymer",
             "@org_polymer_iron_flex_layout",
+            "@org_polymer_iron_icon",
             "@org_polymer_neon_animation",
-            "@org_fontawesome",
+            "@org_pkaske_font_awesome_polymer_icons",
         ],
     )
 

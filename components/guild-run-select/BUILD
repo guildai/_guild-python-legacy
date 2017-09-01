@@ -21,7 +21,7 @@ web_library(
     srcs = ["guild-run-select-item.html"],
     path = "/guild-run-select",
     deps = [
-        "@org_guildai_fa_awesome",
+        "@org_pkaske_fa_awesome",
         "//components/guild-styles",
         "//components/guild-run",
         "@org_polymer_paper_item",
@@ -33,7 +33,7 @@ web_library(
     srcs = ["guild-run-select-error.html"],
     path = "/guild-run-select",
     deps = [
-        "@org_guildai_fa_awesome",
+        "@org_pkaske_fa_awesome",
         "@org_polymer_paper_button",
         "@org_polymer_paper_tooltip",
     ],

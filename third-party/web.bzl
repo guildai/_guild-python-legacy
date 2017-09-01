@@ -39,29 +39,6 @@ def guild_web_workspace():
         },
     )
 
-    web_library_external(
-        name = "org_fontawesome",
-        licenses = ["notice"],  # ???
-        sha256 = "de512ba0e1dead382bbfce372cde74b3f18971d876fffb635ee9333f0db05d43",
-        urls = [
-            "https://github.com/FortAwesome/Font-Awesome/archive/v4.7.0.tar.gz",
-        ],
-        strip_prefix = "Font-Awesome-4.7.0",
-        path = "/font-awesome",
-        srcs = [
-            "css/font-awesome.css",
-            "css/font-awesome.css.map",
-            "css/font-awesome.min.css",
-            "fonts/FontAwesome.otf",
-            "fonts/fontawesome-webfont.eot",
-            "fonts/fontawesome-webfont.svg",
-            "fonts/fontawesome-webfont.ttf",
-            "fonts/fontawesome-webfont.woff",
-            "fonts/fontawesome-webfont.woff2",
-        ],
-        suppress = ["strictDependencies"],
-    )
-
     filegroup_external(
         name = "com_jquery",
         licenses = ["notice"],  # MIT
