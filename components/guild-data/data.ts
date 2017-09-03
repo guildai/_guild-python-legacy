@@ -13,22 +13,20 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
+namespace guild.data {
 
-Guild.Data = new function() {
+    const waiting = {};
 
-    var waiting = {};
-
-    var fetch = function(url, callback) {
+    export function fetch(url, callback) {
         if (url in waiting) {
             waiting[url].push(callback);
         } else {
             waiting[url] = [callback];
             ajax(encodeDataUrl(url), fetchHandler(url));
         }
-    };
+    }
 
-    var ajax = function(url, callback) {
+    function ajax(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.onload = function() {
@@ -44,28 +42,25 @@ Guild.Data = new function() {
             }
         };
         xhr.send();
-    };
+    }
 
-    var fetchHandler = function(url) {
+    function fetchHandler(url) {
         return function(data) {
             waiting[url].map(function(callback) {
                 callback(data);
             });
             delete waiting[url];
         };
-    };
+    }
 
-    var encodeDataUrl = function(url) {
+    function encodeDataUrl(url) {
         return url.replace("/./", "/.{1}/").replace("/../", "/.{2}/");
-    };
+    }
 
-    var scheduleFetch = function(url, callback, when) {
+    export function scheduleFetch(url, callback, when) {
         var scheduledFetch = function() {
-            Guild.Data.fetch(url, callback);
+            fetch(url, callback);
         };
         return window.setTimeout(scheduledFetch, when);
-    };
-
-    this.fetch = fetch;
-    this.scheduleFetch = scheduleFetch;
-};
+    }
+}

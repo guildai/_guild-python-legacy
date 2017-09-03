@@ -13,13 +13,11 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
+namespace guild.util {
+    
+    const SHORT_DATE_FORMAT = d3.timeFormat("%b %d %H:%M:%S");
 
-Guild.Util = new function() {
-
-    var SHORT_DATE_FORMAT = d3.timeFormat("%b %d %H:%M:%S");
-
-    var tryFormat = function(value, format) {
+    export function tryFormat(value, format) {
         if (value != null && value != undefined && value == value) {
             try {
                 return formatValue(value, format);
@@ -30,9 +28,9 @@ Guild.Util = new function() {
         } else {
             return value;
         }
-    };
+    }
 
-    var formatValue = function(value, format) {
+    export function formatValue (value, format) {
         var split = splitFormatAndSuffix(format);
         var formatted;
         if (split.format.endsWith("e")) {
@@ -42,18 +40,18 @@ Guild.Util = new function() {
         }
         return formatted + split.suffix;
 
-    };
+    }
 
-    var formatExponential = function(value, format) {
+    function formatExponential(value, format) {
         var match = /0\.(0+)/.exec(format);
         if (match) {
             return value.toExponential(match[1].length);
         } else {
             return value.toExponential();
         }
-    };
+    }
 
-    var splitFormatAndSuffix = function(format) {
+    function splitFormatAndSuffix(format) {
         // Guild specific additions to numeral formatting support
         var suffixes = [" ms"];
         for (var i in suffixes) {
@@ -69,12 +67,9 @@ Guild.Util = new function() {
             format: format,
             suffix: ""
         };
-    };
+    }
 
-    var formatShortDate = function(date) {
+    export function formatShortDate (date) {
         return SHORT_DATE_FORMAT(date);
-    };
-
-    this.tryFormat = tryFormat;
-    this.formatShortDate = formatShortDate;
-};
+    }
+}

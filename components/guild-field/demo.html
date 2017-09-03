@@ -1,0 +1,112 @@
+<!--
+Copyright 2016-2017 TensorHub, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>guild-field demo</title>
+    <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../app-route/app-location.html">
+    <link rel="import" href="../guild-env/guild-env.html">
+    <link rel="import" href="guild-field.html">
+    <style type="text/css" is="custom-style">
+     body {
+         font-family: 'Roboto', 'Noto', sans-serif;
+     }
+    </style>
+  </head>
+  <body>
+    <h3>guild-field</h3>
+    <demo-snippet>
+      <template>
+        <dom-module id="guild-field-demo">
+          <template>
+            <style>
+             :host {
+                 display: flex;
+             }
+             
+             guild-field {
+                 --vz-field: {
+                     width: 300px;
+                 }
+                 margin-right: 20px;
+             } 
+            </style>
+            <app-location route="{{route}}"></app-location>
+            <guild-env route="{{route}}" env="{{env}}"></guild-env>
+            <guild-field env="[[env]]" field="[[opMem]]"></guild-field>
+            <guild-field env="[[env]]" field="[[cpuUtil]]"></guild-field> 
+            <guild-field env="[[env]]" field="[[trainAcc]]"></guild-field>
+          </template>
+          <script>
+           Polymer({
+               is: "guild-field-demo",
+               
+               properties: {
+                   route: Object,
+                   env: Object,
+                   cpuUtil: {
+                       type: Object,
+                       value: function() {
+                           return {
+                               "color": "red-700",
+                               "format": "0.00%",
+                               "icon": "hardware:computer",
+                               "label": "Avg CPU Util",
+                               "reduce": "average",
+                               "source": "series/op/cpu/util"
+                           }
+                       }
+                   },
+                   opMem: {
+                       type: Object,
+                       value: function() {
+                           return {
+                               "color": "green-600",
+                               "format": "0 b",
+                               "icon": "hardware:memory",
+                               "label": "Avg RSS",
+                               "reduce": "average",
+                               "source": "series/op/mem/rss"
+                           }
+                       }
+                   },
+                   trainAcc: {
+                       type: Object,
+                       value: function() {
+                           return {
+                               "color": "blue-600",
+                               "format": "0.00%",
+                               "icon": "accuracy",
+                               "label": "Train Accuracy",
+                               "reduce": "last",
+                               "source": "series/tf/train/accuracy"
+                           }
+                       }
+                   }
+               }
+           });
+          </script>
+        </dom-module>
+        <guild-field-demo></guild-field-demo>
+      </template>
+    </demo-snippet>
+  </body>
+</html>

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<link rel="import" href="../guild-run/guild-run.html">
 <link rel="import" href="../guild-data/guild-data-listener.html">
 
 <dom-module id="guild-run-data-listener">
@@ -103,8 +104,8 @@ limitations under the License.
        util: new function() {
 
            this.isRunning = function(selected, runs) {
-               var run = Guild.Run.runForId(selected, runs);
-               return Guild.Run.isRunning(run);
+               var run = guild.run.runForId(selected, runs);
+               return guild.run.isRunning(run);
            };
        }
    });

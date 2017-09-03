@@ -62,7 +62,7 @@ limitations under the License.
              var handler = this.handleFetchResult.bind(this);
              this.cancelPendingFetch();
              this.pendingFetch =
-                 Guild.Data.scheduleFetch(url, handler, whenSeconds * 1000);
+                 guild.data.scheduleFetch(url, handler, whenSeconds * 1000);
          }
      },
 
@@ -93,7 +93,7 @@ limitations under the License.
      },
 
      maybeReduce: function(data) {
-         var reduce = Guild.Reduce[this.dataReduce];
+         var reduce = guild.util.reduceFunctions[this.dataReduce];
          return reduce ? reduce(data) : data;
      },
 
@@ -104,7 +104,7 @@ limitations under the License.
      formatData: function(data, defaultValue) {
          var val = this.dataValue(data);
          if (val != undefined) {
-             return Guild.Util.tryFormat(val, this.dataFormat);
+             return guild.util.tryFormat(val, this.dataFormat);
          } else {
              return defaultValue;
          }

@@ -1,12 +1,12 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "web_library")
+load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 
-web_library(
+ts_web_library(
     name = "guild-run",
     srcs = [
         "guild-run.html",
-        "run.js",
+        "run.ts",
     ],
     path = "/guild-run",
     deps = [
@@ -14,18 +14,19 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-run-data-listener",
     srcs = [
         "guild-run-data-listener.html",
     ],
     path = "/guild-run",
     deps = [
+        "//components/guild-run:guild-run",
         "//components/guild-data:guild-data-listener",
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-run-compare-data-listener",
     srcs = [
         "guild-run-compare-data-listener.html",

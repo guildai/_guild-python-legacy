@@ -12,3 +12,14 @@ web_library(
         "@org_polymer_paper_styles",
     ],
 )
+
+web_library(
+    name = "demo",
+    srcs = ["demo.html"],
+    path = "/vz-field",
+    deps = [
+        ":vz-field",
+        "@org_polymer_webcomponentsjs",
+        "@org_polymer_iron_demo_helpers",
+    ]
+)

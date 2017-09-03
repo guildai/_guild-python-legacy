@@ -13,56 +13,54 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
+namespace guild.util {
 
-Guild.Reduce = new function() {
-
-    var last_5_average = function(data) {
+    export function last_5_average(data) {
         return mapSeries(function(series) {
             return seriesAverage(series.slice(-5));
         }, data);
-    };
+    }
 
-    var average = function(data) {
+    export function average(data) {
         return mapSeries(function(series) {
             return seriesAverage(series);
         }, data);
-    };
+    }
 
-    var last = function(data) {
+    export function last(data) {
         return mapSeries(function(series) {
             return seriesLast(series);
         }, data);
-    };
+    }
 
-    var steps = function(data) {
+    export function steps(data) {
         return mapSeries(function(series) {
             return seriesSteps(series);
         }, data);
-    };
+    }
 
-    var steps0 = function(data) {
+    export function steps0(data) {
         return mapSeries(function(series) {
             return seriesSteps0(series);
         }, data);
-    };
+    }
 
-    var duration = function(data) {
+    export function duration(data) {
         return mapSeries(function(series) {
             return seriesDuration(series);
         }, data);
-    };
+    }
 
-    var mapSeries = function(f, data) {
+    export function mapSeries(f, data) {
         var result = {};
         for (var name in data) {
             var series = data[name];
             result[name] = series ? f(series) : undefined;
         }
         return result;
-    };
+    }
 
-    var seriesAverage = function(series) {
+    export function seriesAverage(series) {
         if (!series) {
             return undefined;
         }
@@ -71,41 +69,43 @@ Guild.Reduce = new function() {
             total += series[i][2];
         }
         return total / series.length;
-    };
+    }
 
-    var seriesLast = function(series) {
+    export function seriesLast(series) {
         if (!series) {
             return undefined;
         }
         return series[series.length - 1][2];
-    };
+    }
 
-    var seriesSteps = function(series) {
+    export function seriesSteps(series) {
         if (!series) {
             return 0;
         }
         var interval = series.length == 1 ? 1 : series[1][1] - series[0][1];
         return series[series.length - 1][1] + interval;
-    };
+    }
 
-    var seriesSteps0 = function(series) {
+    export function seriesSteps0(series) {
         if (!series) {
             return 0;
         }
         return series[series.length - 1][1];
-    };
+    }
 
-    var seriesDuration = function(series) {
+    export function seriesDuration(series) {
         if (!series || series.length < 2) {
             return null;
         }
         return (series[series.length - 1][0] - series[0][0]) / 1000;
-    };
+    }
 
-    this.last_5_average = last_5_average;
-    this.average = average;
-    this.last = last;
-    this.steps = steps;
-    this.steps0 = steps0;
-    this.duration = duration;
-};
+    export const reduceFunctions = {
+        "last_5_average": last_5_average,
+        "average": average,
+        "last": last,
+        "steps": steps,
+        "steps0": steps0,
+        "duration": duration
+    }
+}

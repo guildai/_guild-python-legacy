@@ -13,15 +13,13 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
+namespace guild.run {
 
-Guild.Run = new function() {
-
-    var runLabel = function(run) {
+    export function runLabel(run) {
         var label = "";
         if (run.started) {
             var started = new Date(run.started);
-            label += Guild.Util.formatShortDate(started);
+            label += guild.util.formatShortDate(started);
         }
         if (run.model) {
             if (label) {
@@ -30,9 +28,9 @@ Guild.Run = new function() {
             label += run.model;
         }
         return label;
-    };
+    }
 
-    var runStatusRules = [
+    const runStatusRules = [
         [["running"],
          {label: "Running",
           iconClass: "icon running",
@@ -56,35 +54,32 @@ Guild.Run = new function() {
           icon:  "help"}]
     ];
 
-    var runStatus = function(run) {
-        for (var i in runStatusRules) {
-            var rule = runStatusRules[i][0];
-            var parts = rule.length;
-            if ((parts == 0)
-                || (parts == 1
-                    && rule[0] == run.status)
-                || (parts == 2
-                    && rule[0] == run.status
-                    && rule[1] == run.exit_status))
+    export function runStatus(run) {
+        for (let rule of runStatusRules) {
+            let status = rule[0];
+            // Not sure why this requires a cast, but it appears to
+            let statusParts = (<any[]>status).length;
+            let attrs = rule[1];
+            if ((statusParts == 0)
+                || (statusParts == 1
+                    && status[0] == run.status)
+                || (statusParts == 2
+                    && status[0] == run.status
+                    && status[1] == run.exit_status))
             {
-                return runStatusRules[i][1];
+                return attrs;
             }
         }
         throw "unreachable"; // rules must have catch-all
-    };
+    }
 
-    var runForId = function(runId, runs) {
+    export function runForId(runId, runs) {
         return runs.find(function(run) {
             return run.id == runId;
         });
-    };
+    }
 
-    var isRunning = function(run) {
+    export function isRunning(run) {
         return run && run.status == "running";
-    };
-
-    this.runLabel = runLabel;
-    this.runStatus = runStatus;
-    this.runForId = runForId;
-    this.isRunning = isRunning;
-};
+    }
+}
