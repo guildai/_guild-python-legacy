@@ -329,8 +329,8 @@ limitations under the License.
                },
 
                computeIsSelectedRunning: function(selected, runs) {
-                   var run = Guild.Run.runForId(selected, runs);
-                   return run ? Guild.Run.isRunning(run) : false;
+                   var run = GuildRun.runForId(selected, runs);
+                   return run ? GuildRun.isRunning(run) : false;
                },
 
                selectedRunChanged: function(item) {
@@ -348,7 +348,7 @@ limitations under the License.
                },
 
                setSelectedStatus: function(status) {
-                   var run = Guild.Run.runForId(
+                   var run = GuildRun.runForId(
                        this.env.selectedRun,
                        this.env.runs);
                    var updatedRun = Object.assign({}, run);
@@ -370,7 +370,7 @@ limitations under the License.
                },
 
                runStatusLabel: function(selected) {
-                   var run = Guild.Run.runForId(selected, this.env.runs);
+                   var run = GuildRun.runForId(selected, this.env.runs);
                    return run ? run.status : "";
                },
 

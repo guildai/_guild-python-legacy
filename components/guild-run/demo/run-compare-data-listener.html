@@ -336,7 +336,7 @@ limitations under the License.
                },
 
                isRunning: function(run) {
-                   return Guild.Run.isRunning(run);
+                   return GuildRun.isRunning(run);
                },
 
                startRun: function(e) {
@@ -352,7 +352,7 @@ limitations under the License.
                },
 
                setRunStatus: function(runId, status) {
-                   var run = Guild.Run.runForId(runId, this.env.runs);
+                   var run = GuildRun.runForId(runId, this.env.runs);
 
                    // Update run by creating a copy + updated status
                    var updatedRun = Object.assign({}, run);

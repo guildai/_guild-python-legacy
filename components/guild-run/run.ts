@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-namespace guild.run {
+namespace GuildRun {
 
     export function runLabel(run) {
         var label = "";
         if (run.started) {
             var started = new Date(run.started);
-            label += guild.util.formatShortDate(started);
+            label += GuildUtil.formatShortDate(started);
         }
         if (run.model) {
             if (label) {

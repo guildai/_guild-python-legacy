@@ -104,8 +104,8 @@ limitations under the License.
        util: new function() {
 
            this.isRunning = function(selected, runs) {
-               var run = guild.run.runForId(selected, runs);
-               return guild.run.isRunning(run);
+               var run = GuildRun.runForId(selected, runs);
+               return GuildRun.isRunning(run);
            };
        }
    });

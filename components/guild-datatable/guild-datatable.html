@@ -71,7 +71,7 @@ limitations under the License.
 
        initDatatable: function() {
            var opts = this;
-           return Guild.DataTable.init(this.$.table, this.columns(), opts);
+           return GuildDatatable.init(this.$.table, this.columns(), opts);
        },
 
        columns: function() {
@@ -88,7 +88,7 @@ limitations under the License.
 
        addRows: function(rows) {
            this.dtOp(function(dt) {
-               Guild.DataTable.addRows(dt, rows)
+               GuildDatatable.addRows(dt, rows)
            });
        },
 

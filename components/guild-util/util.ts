@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace guild.util {
+namespace GuildUtil {
     
     const SHORT_DATE_FORMAT = d3.timeFormat("%b %d %H:%M:%S");
 

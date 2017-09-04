@@ -179,17 +179,17 @@ limitations under the License.
        ],
 
        computeWaitingForEval: function(scope, selected, runs) {
-           var run = Guild.Run.runForId(selected, runs);
+           var run = GuildRun.runForId(selected, runs);
            return scope == "eval" && run && !run.has_eval;
        },
 
        computeRunDir: function(selected, runs) {
-           var run = Guild.Run.runForId(selected, runs);
+           var run = GuildRun.runForId(selected, runs);
            return run && run.dir;
        },
 
        computeComponents: function(project, selected, runs, scope) {
-           var run = Guild.Run.runForId(selected, runs);
+           var run = GuildRun.runForId(selected, runs);
            if (run) {
                var view = this.util.viewForRun(project, run, scope);
                if (view) {
@@ -237,7 +237,7 @@ limitations under the License.
        },
 
        runChanged: function(selected, runs) {
-           var run = Guild.Run.runForId(selected, runs);
+           var run = GuildRun.runForId(selected, runs);
            if (run) {
                if (this.lastContentRun != run.id) {
                    this.lastContentRun = run.id;

@@ -13,13 +13,11 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
-
-Guild.DataTable = new function() {
+namespace GuildDatatable {
 
     var DEFAULT_HEIGHT = "360px";
 
-    var init = function(table, columns, options) {
+    export function init(table, columns, options) {
         return jQuery(table).DataTable({
             data: [],
             columns: columns,
@@ -33,9 +31,9 @@ Guild.DataTable = new function() {
                 + "<'row'<'col-12'tr>>"
                 + "<'row'<'col-12'i>>"
         });
-    };
+    }
 
-    var tableOrderOption = function(columns) {
+    function tableOrderOption(columns) {
         var order = [];
         columns.forEach(function(col, index) {
             var node = col.node;
@@ -47,9 +45,9 @@ Guild.DataTable = new function() {
             }
         });
         return order.length > 0 ? order : undefined;
-    };
+    }
 
-    var tableLanguageOption = function(options) {
+    function tableLanguageOption(options) {
         var itemNamePlural = (options && options.itemNamePlural) || "items";
         return {
             info: "_TOTAL_ " + itemNamePlural,
@@ -57,19 +55,19 @@ Guild.DataTable = new function() {
             infoEmpty: "_TOTAL_ " + itemNamePlural,
             search: "",
             zeroRecords: "Waiting for data"
-        };
-    };
+        }
+    }
 
-    var addRows = function(dt, rows) {
+    export function addRows(dt, rows) {
         var added = dt.rows.add(rows);
         added.draw(false);
-    };
+    }
 
-    var defaultColTitle = function(title) {
+    export function defaultColTitle(title) {
         return "<span class='header-title'>" + title + "</span>";
-    };
+    }
 
-    var templateRenderer = function(templatizer, renderType) {
+    export function templateRenderer(templatizer, renderType) {
         return function(value, type, data) {
             if (type == renderType) {
                 var instance = templatizer.stamp(data);
@@ -77,19 +75,14 @@ Guild.DataTable = new function() {
             } else {
                 return value;
             }
-        };
-    };
+        }
+    }
 
-    var fragmentHtml = function(fragment) {
+    function fragmentHtml(fragment) {
         var val = "";
         fragment.childNodes.forEach(function(node) {
             val += node.outerHTML || node.textContent;
         });
         return val;
-    };
-
-    this.init = init;
-    this.addRows = addRows;
-    this.defaultColTitle = defaultColTitle;
-    this.templateRenderer = templateRenderer;
-};
+    }
+}

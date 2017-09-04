@@ -15,6 +15,7 @@
 
 var Guild = Guild || {};
 
+// TODO: move to project.ts
 Guild.Project = new function() {
 
     this.section = function(project, type, name) {

@@ -124,7 +124,7 @@ limitations under the License.
 
        initDt: function(fields) {
            if (!this.dt) {
-               var dt = Guild.CompareTable.init(
+               var dt = GuildCompareTable.init(
                    this.$.table,
                    fields,
                    {height: "250px"});
@@ -139,7 +139,7 @@ limitations under the License.
        },
 
        computeDataSource: function(fields) {
-           return Guild.CompareTable.fieldsDataSource(fields);
+           return GuildCompareTable.fieldsDataSource(fields);
        },
 
        computeDataFetchInterval: function(settings) {
@@ -147,12 +147,12 @@ limitations under the License.
        },
 
        handleData: function(data) {
-           Guild.CompareTable.refresh(this.dt, data, this.fields);
+           GuildCompareTable.refresh(this.dt, data, this.fields);
            this.updateSelectedRuns();
        },
 
        handleSelected: function() {
-           Guild.CompareTable.refreshRowsForSelected(this.dt);
+           GuildCompareTable.refreshRowsForSelected(this.dt);
            this.refreshSelectHeader();
            this.updateSelectedRuns();
        },
@@ -172,7 +172,7 @@ limitations under the License.
            var newSelectedRuns = selectedItems.map(function(item) {
                return item.run;
            });
-           if (Guild.CompareTable.runsChanged(newSelectedRuns, this.selectedRuns)) {
+           if (GuildCompareTable.runsChanged(newSelectedRuns, this.selectedRuns)) {
                this.selectedRuns = newSelectedRuns;
            }
        },
@@ -184,7 +184,7 @@ limitations under the License.
        syncSelectsWithHeader: function() {
            if (!this.lockSelects) {
                this.lockSelects = true;
-               Guild.CompareTable.syncSelectsWithHeader(this.dt);
+               GuildCompareTable.syncSelectsWithHeader(this.dt);
                this.lockSelects = false;
            }
        },
@@ -192,7 +192,7 @@ limitations under the License.
        refreshSelectHeader: function() {
            if (!this.lockSelects) {
                this.lockSelects = true;
-               Guild.CompareTable.refreshSelectHeader(this.dt);
+               GuildCompareTable.refreshSelectHeader(this.dt);
                this.lockSelects = false;
            }
        },
@@ -226,7 +226,7 @@ limitations under the License.
        },
 
        handleSearch_: function() {
-           var deselected = Guild.CompareTable.deselectRemoved(this.dt);
+           var deselected = GuildCompareTable.deselectRemoved(this.dt);
            if (deselected) {
                // We need to fire this event because the removed items
                // aren't in the DOM and so their events don't propagate.

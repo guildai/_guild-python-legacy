@@ -68,8 +68,8 @@ limitations under the License.
        },
 
        computeStatus: function(selected, runs) {
-           var run = Guild.Run.runForId(selected, runs);
-           return run ? Guild.Run.runStatus(run) : {};
+           var run = GuildRun.runForId(selected, runs);
+           return run ? GuildRun.runStatus(run) : {};
        }
    });
   </script>

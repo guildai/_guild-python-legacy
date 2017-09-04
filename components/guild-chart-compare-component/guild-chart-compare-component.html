@@ -87,7 +87,7 @@ limitations under the License.
            data.forEach(function(item) {
                var seriesData = this.seriesData(item[this.source]);
                if (seriesData) {
-                   var label = Guild.Run.runLabel(item.run);
+                   var label = GuildRun.runLabel(item.run);
                    labels.push(label);
                    labelData[label] = seriesData;
                }

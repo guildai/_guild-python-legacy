@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace guild.util {
+namespace GuildUtil {
 
     export function last_5_average(data) {
         return mapSeries(function(series) {

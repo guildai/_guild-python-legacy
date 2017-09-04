@@ -13,11 +13,9 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
+namespace GuildCompareTable {
 
-Guild.CompareTable = new function() {
-
-    var fieldsDataSource = function(fields) {
+    export function fieldsDataSource(fields) {
         var sources = new Set();
         fields.forEach(function(field) {
             if (field.source) {
@@ -25,9 +23,9 @@ Guild.CompareTable = new function() {
             }
         });
         return Array.from(sources).join(",");
-    };
+    }
 
-    var init = function(table, fields, options) {
+    export function init(table, fields, options) {
         return jQuery(table).DataTable({
             data: [],
             rowId: "run.id",
@@ -48,22 +46,22 @@ Guild.CompareTable = new function() {
                 + "<'row'<'col-12'tr>>"
                 + "<'row'<'col-12'i>>"
         });
-    };
+    }
 
-    var columns = function(fields) {
+    function columns(fields) {
         return baseCols().concat(fieldCols(fields));
-    };
+    }
 
-    var baseCols = function() {
+    function baseCols() {
         return [
             selectedCol(),
             statusCol(),
             timeCol(),
             modelCol()
         ];
-    };
+    }
 
-    var selectedCol = function() {
+    function selectedCol() {
         return {
             title: "<guild-compare-table-select header></guild-compare-table-select>",
             data: null,
@@ -74,14 +72,14 @@ Guild.CompareTable = new function() {
                     return tableSelect();
                 }
             }
-        };
-    };
+        }
+    }
 
-    var tableSelect = function() {
+    function tableSelect() {
         return "<guild-compare-table-select></guild-compare-table-select>";
-    };
+    }
 
-    var statusCol = function() {
+    function statusCol() {
         return {
             title: statusTitle(),
             data: "status",
@@ -93,14 +91,14 @@ Guild.CompareTable = new function() {
                 sort: "sort",
                 filter: "label"
             }
-        };
-    };
+        }
+    }
 
-    var statusTitle = function() {
+    function statusTitle() {
         return "<span class='header-title status-title'></span>";
-    };
+    }
 
-    var statusIcon = function(status) {
+    function statusIcon(status) {
         return "<fa-awesome class='" + status.iconClass + "'"
             + maybeSpinAttr(status.spin)
             + " icon='" + status.icon
@@ -108,13 +106,13 @@ Guild.CompareTable = new function() {
             + "<paper-tooltip position='right'"
             + " animation-delay='250' offset='0'>"
             + status.label + "</paper-tooltip>";
-    };
+    }
 
-    var maybeSpinAttr = function(spin) {
+    function maybeSpinAttr(spin) {
         return spin ? " spin" : "";
-    };
+    }
 
-    var timeCol = function() {
+    function timeCol() {
         return {
             title: headerTitle("Time"),
             data: "time",
@@ -127,19 +125,19 @@ Guild.CompareTable = new function() {
                 sort: "sort",
                 filter: "value"
             }
-        };
-    };
+        }
+    }
 
-    var headerTitle = function(title) {
+    function headerTitle(title) {
         return "<span class='header-title'>" + title + "</span>";
-    };
+    }
 
-    var runLink = function(val, run) {
+    function runLink(val, run) {
         var link = "/train?run=" + run.id;
         return "<a href='" + link + "' class='date'>" + val + "</a>";
-    };
+    }
 
-    var modelCol = function() {
+    function modelCol() {
         return {
             title: headerTitle("Model"),
             data: "run",
@@ -148,10 +146,10 @@ Guild.CompareTable = new function() {
                 sort: "model",
                 filter: "model"
             }
-        };
-    };
+        }
+    }
 
-    var fieldCols = function(fields) {
+    function fieldCols(fields) {
         return fields.map(function(field, index) {
             return {
                 title: headerTitle(field.label),
@@ -170,46 +168,46 @@ Guild.CompareTable = new function() {
                     sort: "sort",
                     filter: "value"
                 }
-            };
+            }
         });
-    };
+    }
 
-    var fieldType = function(field) {
+    function fieldType(field) {
         // Infer numeric type by reduce function
         return field.reduce ? "num" : "string";
-    };
+    }
 
-    var refresh = function(dt, data, fields) {
+    export function refresh(dt, data, fields) {
         var items = formatItems(data, fields);
         deleteMissingRows(dt, items);
         addOrUpdateRows(dt, items);
-   };
+   }
 
-    var formatItems = function(data, fields) {
+    function formatItems(data, fields) {
         return data.map(function(item, index) {
             return Object.assign(
                 itemBase(item, index),
                 itemFields(item, fields));
         });
-    };
+    }
 
-    var itemBase = function(item, index) {
+    function itemBase(item, index) {
         return {
             run: item.run,
             time: formatTime(item.run.started),
             status: runStatus(item.run),
             index: index,
             selected: false
-        };
-    };
+        }
+    }
 
-    var runStatus = function(run) {
-        var status = Guild.Run.runStatus(run);
+    function runStatus(run) {
+        var status = GuildRun.runStatus(run);
         status.sort = statusSort(status);
         return status;
-    };
+    }
 
-    var statusSort = function(status) {
+    function statusSort(status) {
         var label = status.label;
         if (label == "Running") {
             return 0;
@@ -222,52 +220,52 @@ Guild.CompareTable = new function() {
         } else {
             return 4;
         }
-    };
+    }
 
-    var formatTime = function(epoch) {
+    function formatTime(epoch) {
         return {
-            value: Guild.Util.formatShortDate(new Date(epoch)),
+            value: GuildUtil.formatShortDate(new Date(epoch)),
             sort: epoch
-        };
-    };
+        }
+    }
 
-    var itemFields = function(item, fieldDefs) {
-        var fields = {};
+    function itemFields(item, fieldDefs) {
+        var fields = {}
         fieldDefs.forEach(function(field, index) {
             var data = item[field.source];
             var name = "f" + index;
             fields[name] = fieldValue(data, field);
         });
         return fields;
-    };
+    }
 
-    var fieldValue = function(data, field) {
+    function fieldValue(data, field) {
         var raw = fieldRawValue(data, field);
         var sort = raw == undefined ? null: raw;
         var formatted = fieldFormattedValue(raw, field) || "";
-        return {sort: sort, value: formatted};
-    };
+        return {sort: sort, value: formatted}
+    }
 
-    var fieldRawValue = function(data, field) {
+    function fieldRawValue(data, field) {
         if (field.attribute) {
             return data[field.attribute];
         } else if (field.reduce) {
-            var reduce = Guild.Reduce[field.reduce];
+            var reduce = GuildUtil.reduceFunctions[field.reduce];
             if (reduce) {
                 var reduced = reduce(data);
                 return reduced[Object.keys(reduced)[0]];
             }
         }
         return undefined;
-    };
+    }
 
-    var fieldFormattedValue = function(raw, field) {
+    function fieldFormattedValue(raw, field) {
         return field.format
-            ? Guild.Util.tryFormat(raw, field.format)
+            ? GuildUtil.tryFormat(raw, field.format)
             : raw;
-    };
+    }
 
-    var deleteMissingRows = function(dt, items) {
+    function deleteMissingRows(dt, items) {
         var itemIds = itemIdLookup(items);
         var missing = [];
         dt.rows().every(function(index) {
@@ -278,14 +276,14 @@ Guild.CompareTable = new function() {
         if (missing.length > 0) {
             dt.rows(missing).remove().draw();
         }
-    };
+    }
 
-    var itemIdLookup = function(items) {
+    function itemIdLookup(items) {
         var ids = items.map(function(item) { return item.run.id; });
         return new Set(ids);
-    };
+    }
 
-    var addOrUpdateRows = function(dt, items) {
+    function addOrUpdateRows(dt, items) {
         var added = false;
         items.forEach(function(item, index) {
             var curRow = findRow(dt, item);
@@ -299,14 +297,14 @@ Guild.CompareTable = new function() {
         if (added) {
             dt.columns.adjust();
         }
-    };
+    }
 
-    var findRow = function(dt, target) {
+    function findRow(dt, target) {
         var row = dt.row("#" + target.run.id);
         return row.data() != undefined ? row : null;
-    };
+    }
 
-    var updateRow = function(dt, row, newItem) {
+    function updateRow(dt, row, newItem) {
         var curItem = row.data();
         dt.columns().every(function(colIndex) {
             var property = dt.column(colIndex).dataSrc();
@@ -316,26 +314,26 @@ Guild.CompareTable = new function() {
                 dt.cell(row, colIndex).data(newVal);
             }
         });
-    };
+    }
 
-    var itemValChanged = function(a, b) {
+    function itemValChanged(a, b) {
         return JSON.stringify(a) != JSON.stringify(b);
-    };
+    }
 
-    var rowCellChanged = function(index, curVal, newVal) {
+    function rowCellChanged(index, curVal, newVal) {
         if (index == 0) {
             return curVal.status != newVal.status;
         } else {
             return curVal != newVal;
         }
-    };
+    }
 
-    var addRow = function(dt, item) {
+    function addRow(dt, item) {
         var row = dt.row.add(item);
         row.draw();
-    };
+    }
 
-    var refreshRowsForSelected = function(dt) {
+    export function refreshRowsForSelected(dt) {
         dt.rows().every(function(index) {
             var tr = dt.row(index).node();
             var item = dt.row(index).data();
@@ -348,23 +346,23 @@ Guild.CompareTable = new function() {
                 $(tr).removeClass("highlight");
             }
         });
-    };
+    }
 
-    var refreshSelectHeader = function(dt) {
+    export function refreshSelectHeader(dt) {
         var header = headerSelectForTable(dt);
         var selects = selectsForTable(dt);
         header.value = headerValueForSelects(selects);
-    };
+    }
 
-    var headerSelectForTable = function(dt) {
+    function headerSelectForTable(dt) {
         return dt.table().header().querySelector("guild-compare-table-select");
-    };
+    }
 
-    var selectsForTable = function(dt) {
+    function selectsForTable(dt) {
         return dt.table().body().querySelectorAll("guild-compare-table-select");
-    };
+    }
 
-    var headerValueForSelects = function(selects) {
+    function headerValueForSelects(selects) {
         var first = null;
         for (var i = 0; i < selects.length; i++) {
             var cur = selects[i].value;
@@ -375,17 +373,17 @@ Guild.CompareTable = new function() {
             }
         }
         return first || "false";
-    };
+    }
 
-    var syncSelectsWithHeader = function(dt) {
+    export function syncSelectsWithHeader(dt) {
         var header = headerSelectForTable(dt);
         var selects = selectsForTable(dt);
         selects.forEach(function(select) {
             select.value = header.value;
         });
-    };
+    }
 
-    var deselectRemoved = function(dt) {
+    export function deselectRemoved(dt) {
         var removed = removedItems(dt);
         var deselected = false;
         for (var i in removed) {
@@ -396,22 +394,22 @@ Guild.CompareTable = new function() {
             }
         }
         return deselected;
-    };
+    }
 
-    var removedItems = function(dt) {
+    export function removedItems(dt) {
         return dt.rows({search: "removed"}).data().toArray();
-    };
+    }
 
-    var deselect = function(dt, item) {
+    export function deselect(dt, item) {
         tableSelectComponent(dt, item).value = "false";
-    };
+    }
 
-    var tableSelectComponent = function(dt, item) {
+    function tableSelectComponent(dt, item) {
         var row = findRow(dt, item);
         return dt.cell(row, 0).node().firstChild;
-    };
+    }
 
-    var runsChanged = function(a, b) {
+    export function runsChanged(a, b) {
         // Returns true if any of these are true:
         //
         // - length of a and b differ
@@ -433,16 +431,5 @@ Guild.CompareTable = new function() {
             }
             return false;
         }
-    };
-
-    this.fieldsDataSource = fieldsDataSource;
-    this.init = init;
-    this.refresh = refresh;
-    this.removedItems = removedItems;
-    this.deselect = deselect;
-    this.refreshRowsForSelected = refreshRowsForSelected;
-    this.refreshSelectHeader = refreshSelectHeader;
-    this.syncSelectsWithHeader = syncSelectsWithHeader;
-    this.deselectRemoved = deselectRemoved;
-    this.runsChanged = runsChanged;
-};
+    }
+}

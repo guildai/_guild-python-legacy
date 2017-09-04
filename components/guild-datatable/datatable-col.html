@@ -41,13 +41,13 @@ limitations under the License.
            if (template) {
                this.templatize(template);
                this.renderDisplay =
-                   Guild.DataTable.templateRenderer(this, "display")
+                   GuildDatatable.templateRenderer(this, "display")
            }
        },
 
        toDatatableCol: function() {
            return {
-               title: Guild.DataTable.defaultColTitle(this.title),
+               title: GuildDatatable.defaultColTitle(this.title),
                data: null,
                render: {
                    display: this.renderDisplay || this.display,

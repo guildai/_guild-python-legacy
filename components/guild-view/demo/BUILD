@@ -9,8 +9,9 @@ web_library(
     deps = [
         "//components/guild-view",
         "@org_polymer_webcomponentsjs",
-        "@org_polymer_iron_demo_helpers",
         ":demo-data",
+
+        "//components/vz-field",
     ],
 )
 

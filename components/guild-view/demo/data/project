@@ -262,7 +262,7 @@
             "content": [
                 "fields",
                 "series",
-                "_output"
+                "output"
             ],
             "scope": "run",
             "sidebar": [
