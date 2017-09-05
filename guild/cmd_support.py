@@ -38,9 +38,16 @@ def _safe_console_width():
 def _console_width():
     global __CONSOLE_WIDTH
     if __CONSOLE_WIDTH is None:
-        _, cols = os.popen('stty size', 'r').read().split()
-        __CONSOLE_WIDTH = int(cols)
+        __CONSOLE_WIDTH = _stty_size_or_zero()
     return __CONSOLE_WIDTH
+
+def _stty_size_or_zero():
+    out = os.popen('stty size', 'r').read()
+    if out:
+        _, cols = out.split()
+        return int(cols)
+    else:
+        return 0
 
 def add_project_arguments(parser, flag_support=False):
     parser.add_argument(
