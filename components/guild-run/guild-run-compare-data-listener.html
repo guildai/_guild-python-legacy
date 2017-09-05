@@ -18,6 +18,8 @@ limitations under the License.
 
 <dom-module id="guild-run-compare-data-listener">
   <script>
+   import { isRunning } from "./run.js";
+   
    Polymer({
        is: "guild-run-compare-data-listener",
 
@@ -27,6 +29,7 @@ limitations under the License.
            env: Object,
            compareDataSource: String,
            dataSource: {
+               type: String,
                computed: 'computeDataSource(compareDataSource, runs)'
            },
            runs: Array,
@@ -39,6 +42,7 @@ limitations under the License.
                value: null
            },
            dataFetchInterval: {
+               type: Number,
                computed: "computeDataFetchInterval("
                        + "  compareDataFetchInterval,"
                        + "  stopWithRuns,"
@@ -75,7 +79,7 @@ limitations under the License.
 
            this.anyRunning = function(runs) {
                for (var i = 0; i < runs.length; i++) {
-                   if (GuildRun.isRunning(runs[i])) {
+                   if (isRunning(runs[i])) {
                        return true;
                    }
                }

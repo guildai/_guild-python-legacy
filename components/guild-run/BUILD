@@ -21,7 +21,7 @@ ts_web_library(
     ],
     path = "/guild-run",
     deps = [
-        "//components/guild-run:guild-run",
+        ":guild-run",
         "//components/guild-data:guild-data-listener",
     ],
 )

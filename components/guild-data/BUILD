@@ -13,7 +13,10 @@ ts_web_library(
 
 ts_web_library(
     name = "guild-data-listener",
-    srcs = ["guild-data-listener.html"],
+    srcs = [
+        "guild-data-listener.html",
+        "data-listener.ts",
+    ],
     path = "/guild-data",
     deps = [
         ":guild-data",

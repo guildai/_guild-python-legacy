@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "web_library")
+load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 
-web_library(
+ts_web_library(
     name = "guild-view",
     srcs = ["guild-view.html"],
     path = "/guild-view",
@@ -13,11 +13,12 @@ web_library(
         ":guild-view-styles",
         "//components/guild-env",
         "//components/guild-components-page",
+        "//components/guild-compare-page",
         "@org_polymer_app_route",
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-route",
     srcs = ["guild-view-route.html"],
     path = "/guild-view",
@@ -25,7 +26,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-app-layout",
     srcs = ["guild-view-app-layout.html"],
     path = "/guild-view",
@@ -38,7 +39,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-page",
     srcs = ["guild-view-page.html"],
     path = "/guild-view",
@@ -46,7 +47,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-app-menu",
     srcs = ["guild-view-app-menu.html"],
     path = "/guild-view",
@@ -59,7 +60,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-app-toolbar",
     srcs = ["guild-view-app-toolbar.html"],
     path = "/guild-view",
@@ -72,7 +73,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-styles",
     srcs = ["guild-view-styles.html"],
     path = "/guild-view",
@@ -80,7 +81,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-view-page-overlay",
     srcs = ["guild-view-page-overlay.html"],
     path = "/guild-view",
@@ -89,9 +90,12 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "guild-fullscreen-behavior",
-    srcs = ["guild-fullscreen-behavior.html"],
+    srcs = [
+        "guild-fullscreen-behavior.html",
+        "fullscreen-behavior.ts"
+    ],
     path = "/guild-view",
     deps = [
     ],

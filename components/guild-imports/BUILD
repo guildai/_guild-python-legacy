@@ -89,3 +89,15 @@ genrule(
     outs = ["jquery.d.ts"],
     cmd = "cp $< $@"
 )
+
+ts_web_library(
+    name = "jsondiffpatch",
+    srcs = [
+        "jsondiffpatch.html",
+    ],
+    path = "/guild-imports",
+    deps = [
+        "@org_jsondiffpatch",
+    ],
+)
+

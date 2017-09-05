@@ -13,54 +13,51 @@
  * limitations under the License.
  */
 
-namespace GuildData {
+const waiting = {};
 
-    const waiting = {};
+export function fetch(url, callback) {
+    if (url in waiting) {
+        waiting[url].push(callback);
+    } else {
+        waiting[url] = [callback];
+        ajax(encodeDataUrl(url), fetchHandler(url));
+    }
+}
 
-    export function fetch(url, callback) {
-        if (url in waiting) {
-            waiting[url].push(callback);
+function ajax(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            callback(json);
         } else {
-            waiting[url] = [callback];
-            ajax(encodeDataUrl(url), fetchHandler(url));
+            console.error(xhr);
+            // Weak interface, but keeping it simple for
+            // now. Errors are reported implicitly as null value
+            // to the callback.
+            callback(null);
         }
-    }
+    };
+    xhr.send();
+}
 
-    function ajax(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                var json = JSON.parse(xhr.responseText);
-                callback(json);
-            } else {
-                console.error(xhr);
-                // Weak interface, but keeping it simple for
-                // now. Errors are reported implicitly as null value
-                // to the callback.
-                callback(null);
-            }
-        };
-        xhr.send();
-    }
+function fetchHandler(url) {
+    return function(data) {
+        waiting[url].map(function(callback) {
+            callback(data);
+        });
+        delete waiting[url];
+    };
+}
 
-    function fetchHandler(url) {
-        return function(data) {
-            waiting[url].map(function(callback) {
-                callback(data);
-            });
-            delete waiting[url];
-        };
-    }
+function encodeDataUrl(url) {
+    return url.replace("/./", "/.{1}/").replace("/../", "/.{2}/");
+}
 
-    function encodeDataUrl(url) {
-        return url.replace("/./", "/.{1}/").replace("/../", "/.{2}/");
-    }
-
-    export function scheduleFetch(url, callback, when) {
-        var scheduledFetch = function() {
-            fetch(url, callback);
-        };
-        return window.setTimeout(scheduledFetch, when);
-    }
+export function scheduleFetch(url, callback, when) {
+    var scheduledFetch = function() {
+        fetch(url, callback);
+    };
+    return window.setTimeout(scheduledFetch, when);
 }

@@ -78,6 +78,17 @@ limitations under the License.
 
   </template>
   <script>
+   import {
+       init as initCompareTable,
+       fieldsDataSource,
+       refresh as refreshCompareTable,
+       refreshRowsForSelected,
+       runsChanged,
+       syncSelectsWithHeader,
+       refreshSelectHeader,
+       deselectRemoved
+   } from "./compare-table.js";
+   
    Polymer({
        is: "guild-compare-table",
 
@@ -85,9 +96,11 @@ limitations under the License.
            env: Object,
            fields: Array,
            dataSource: {
+               type: String,
                computed: "computeDataSource(fields)"
            },
            dataFetchInterval: {
+               type: Number,
                computed: "computeDataFetchInterval(env.settings)"
            },
            active: Boolean,
@@ -124,7 +137,7 @@ limitations under the License.
 
        initDt: function(fields) {
            if (!this.dt) {
-               var dt = GuildCompareTable.init(
+               var dt = initCompareTable(
                    this.$.table,
                    fields,
                    {height: "250px"});
@@ -139,7 +152,7 @@ limitations under the License.
        },
 
        computeDataSource: function(fields) {
-           return GuildCompareTable.fieldsDataSource(fields);
+           return fieldsDataSource(fields);
        },
 
        computeDataFetchInterval: function(settings) {
@@ -147,12 +160,12 @@ limitations under the License.
        },
 
        handleData: function(data) {
-           GuildCompareTable.refresh(this.dt, data, this.fields);
+           refreshCompareTable(this.dt, data, this.fields);
            this.updateSelectedRuns();
        },
 
        handleSelected: function() {
-           GuildCompareTable.refreshRowsForSelected(this.dt);
+           refreshRowsForSelected(this.dt);
            this.refreshSelectHeader();
            this.updateSelectedRuns();
        },
@@ -172,7 +185,7 @@ limitations under the License.
            var newSelectedRuns = selectedItems.map(function(item) {
                return item.run;
            });
-           if (GuildCompareTable.runsChanged(newSelectedRuns, this.selectedRuns)) {
+           if (runsChanged(newSelectedRuns, this.selectedRuns)) {
                this.selectedRuns = newSelectedRuns;
            }
        },
@@ -184,7 +197,7 @@ limitations under the License.
        syncSelectsWithHeader: function() {
            if (!this.lockSelects) {
                this.lockSelects = true;
-               GuildCompareTable.syncSelectsWithHeader(this.dt);
+               syncSelectsWithHeader(this.dt);
                this.lockSelects = false;
            }
        },
@@ -192,7 +205,7 @@ limitations under the License.
        refreshSelectHeader: function() {
            if (!this.lockSelects) {
                this.lockSelects = true;
-               GuildCompareTable.refreshSelectHeader(this.dt);
+               refreshSelectHeader(this.dt);
                this.lockSelects = false;
            }
        },
@@ -226,7 +239,7 @@ limitations under the License.
        },
 
        handleSearch_: function() {
-           var deselected = GuildCompareTable.deselectRemoved(this.dt);
+           var deselected = deselectRemoved(this.dt);
            if (deselected) {
                // We need to fire this event because the removed items
                // aren't in the DOM and so their events don't propagate.

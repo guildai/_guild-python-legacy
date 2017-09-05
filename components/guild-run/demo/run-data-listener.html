@@ -239,6 +239,9 @@ limitations under the License.
 
       </template>
       <script>
+
+       import { runForId, isRunning } from "../guild-run/run.js";
+
        var SAMPLE_ENV = {
            settings: {
                refreshInterval: 2
@@ -329,8 +332,8 @@ limitations under the License.
                },
 
                computeIsSelectedRunning: function(selected, runs) {
-                   var run = GuildRun.runForId(selected, runs);
-                   return run ? GuildRun.isRunning(run) : false;
+                   var run = runForId(selected, runs);
+                   return run ? isRunning(run) : false;
                },
 
                selectedRunChanged: function(item) {
@@ -348,7 +351,7 @@ limitations under the License.
                },
 
                setSelectedStatus: function(status) {
-                   var run = GuildRun.runForId(
+                   var run = runForId(
                        this.env.selectedRun,
                        this.env.runs);
                    var updatedRun = Object.assign({}, run);
@@ -370,7 +373,7 @@ limitations under the License.
                },
 
                runStatusLabel: function(selected) {
-                   var run = GuildRun.runForId(selected, this.env.runs);
+                   var run = runForId(selected, this.env.runs);
                    return run ? run.status : "";
                },
 

@@ -19,10 +19,13 @@ limitations under the License.
 
 <dom-module id="guild-run-data-listener">
   <script>
+   import { runForId, isRunning } from "./run.js";
+   import { DataListener } from "../guild-data/data-listener.js";
+   
    Polymer({
        is: "guild-run-data-listener",
 
-       behaviors: [Guild.DataListener],
+       behaviors: [DataListener],
 
        properties: {
            env: Object,
@@ -104,8 +107,8 @@ limitations under the License.
        util: new function() {
 
            this.isRunning = function(selected, runs) {
-               var run = GuildRun.runForId(selected, runs);
-               return GuildRun.isRunning(run);
+               var run = runForId(selected, runs);
+               return isRunning(run);
            };
        }
    });

@@ -49,6 +49,8 @@ limitations under the License.
     <div>[[label]]</div>
   </template>
   <script>
+   import { runLabel, runStatus } from "../guild-run/run.js";
+
    Polymer({
        is: "guild-run-select-item",
 
@@ -69,11 +71,11 @@ limitations under the License.
        },
 
        computeLabel: function(run) {
-           return GuildRun.runLabel(run);
+           return runLabel(run);
        },
 
        computeStatus: function(run) {
-           return GuildRun.runStatus(run);
+           return runStatus(run);
        }
     });
   </script>

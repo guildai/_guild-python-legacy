@@ -43,6 +43,8 @@ limitations under the License.
     </paper-dropdown-menu>
   </template>
   <script>
+   import { runLabel } from "../guild-run/run.js";
+   
    Polymer({
        is: "guild-run-dropdown-menu",
 
@@ -68,10 +70,6 @@ limitations under the License.
                type: Boolean,
                value: false
            }
-       },
-
-       runLabel: function(run) {
-           return GuildRun.runLabel(run);
        },
 
        selectedChanged: function(val) {

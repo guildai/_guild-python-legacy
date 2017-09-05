@@ -3,12 +3,10 @@ package(default_visibility = ["//visibility:public"])
 load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 
 ts_web_library(
-    name = "guild-env",
-    srcs = [
-        "guild-env.html",
-    ],
-    path = "/guild-env",
+    name = "guild-checkbox",
+    srcs = ["guild-checkbox.html"],
+    path = "/guild-checkbox",
     deps = [
-        "//components/guild-data:guild-data-listener",
+        "@org_polymer_paper_checkbox",
     ],
 )

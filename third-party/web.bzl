@@ -82,3 +82,19 @@ def guild_web_workspace():
             "images/sort_desc_disabled.png",
         ],
     )
+
+    web_library_external(
+        name = "org_jsondiffpatch",
+        licenses = ["notice"],  # MIT
+        sha256 = "0a7d984a500626adc6abb68901b97a053443325bd04cda75840529a90bbc5610",
+        urls = [
+            "https://github.com/benjamine/jsondiffpatch/archive/v0.2.4.zip",
+        ],
+        strip_prefix = "jsondiffpatch-0.2.4",
+        path = "/jsondiffpatch",
+        srcs = [
+            "public/build/jsondiffpatch.min.js",
+            "public/build/jsondiffpatch-formatters.min.js",
+        ],
+    )
+    

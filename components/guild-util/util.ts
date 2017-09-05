@@ -13,63 +13,60 @@
  * limitations under the License.
  */
 
-namespace GuildUtil {
-    
-    const SHORT_DATE_FORMAT = d3.timeFormat("%b %d %H:%M:%S");
+const SHORT_DATE_FORMAT = d3.timeFormat("%b %d %H:%M:%S");
 
-    export function tryFormat(value, format) {
-        if (value != null && value != undefined && value == value) {
-            try {
-                return formatValue(value, format);
-            } catch (err) {
-                console.error(err);
-                return value;
-            }
-        } else {
+export function tryFormat(value, format) {
+    if (value != null && value != undefined && value == value) {
+        try {
+            return formatValue(value, format);
+        } catch (err) {
+            console.error(err);
             return value;
         }
+    } else {
+        return value;
     }
+}
 
-    export function formatValue (value, format) {
-        var split = splitFormatAndSuffix(format);
-        var formatted;
-        if (split.format.endsWith("e")) {
-            formatted = formatExponential(value, split.format.slice(0, -1));
-        } else {
-            formatted = numeral(value).format(split.format);
+export function formatValue(value, format) {
+    var split = splitFormatAndSuffix(format);
+    var formatted;
+    if (split.format.endsWith("e")) {
+        formatted = formatExponential(value, split.format.slice(0, -1));
+    } else {
+        formatted = numeral(value).format(split.format);
+    }
+    return formatted + split.suffix;
+
+}
+
+function formatExponential(value, format) {
+    var match = /0\.(0+)/.exec(format);
+    if (match) {
+        return value.toExponential(match[1].length);
+    } else {
+        return value.toExponential();
+    }
+}
+
+function splitFormatAndSuffix(format) {
+    // Guild specific additions to numeral formatting support
+    var suffixes = [" ms"];
+    for (var i in suffixes) {
+        var suffix = suffixes[i];
+        if (format.endsWith(suffix)) {
+            return {
+                format: format.substring(0, format.length - suffix.length),
+                suffix: suffix
+            };
         }
-        return formatted + split.suffix;
-
     }
+    return {
+        format: format,
+        suffix: ""
+    };
+}
 
-    function formatExponential(value, format) {
-        var match = /0\.(0+)/.exec(format);
-        if (match) {
-            return value.toExponential(match[1].length);
-        } else {
-            return value.toExponential();
-        }
-    }
-
-    function splitFormatAndSuffix(format) {
-        // Guild specific additions to numeral formatting support
-        var suffixes = [" ms"];
-        for (var i in suffixes) {
-            var suffix = suffixes[i];
-            if (format.endsWith(suffix)) {
-                return {
-                    format: format.substring(0, format.length - suffix.length),
-                    suffix: suffix
-                };
-            }
-        }
-        return {
-            format: format,
-            suffix: ""
-        };
-    }
-
-    export function formatShortDate (date) {
-        return SHORT_DATE_FORMAT(date);
-    }
+export function formatShortDate (date) {
+    return SHORT_DATE_FORMAT(date);
 }

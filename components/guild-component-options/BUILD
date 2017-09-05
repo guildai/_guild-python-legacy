@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "web_library")
+load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 
-web_library(
+ts_web_library(
     name = "guild-component-options",
     srcs = ["guild-component-options.html"],
     path = "/guild-component-options",
@@ -13,7 +13,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "option-dropdown",
     srcs = ["option-dropdown.html"],
     path = "/guild-component-options",
@@ -25,7 +25,7 @@ web_library(
     ],
 )
 
-web_library(
+ts_web_library(
     name = "option-element",
     srcs = ["option-element.html"],
     path = "/guild-component-options",

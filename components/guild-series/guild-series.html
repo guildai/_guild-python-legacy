@@ -34,6 +34,8 @@ limitations under the License.
     </div>
   </template>
   <script>
+   import { runForId } from "../guild-run/run.js";
+
    Polymer({
        is: "guild-series",
 
@@ -62,7 +64,7 @@ limitations under the License.
                return this.series;
            }
            this.lastSeriesRun = selected;
-           var run = GuildRun.runForId(selected, runs);
+           var run = runForId(selected, runs);
            var projectSeries = this.util.projectSeries(project, run);
            var extraSeries = this.util.extraSeries(project);
            return projectSeries.concat(extraSeries);

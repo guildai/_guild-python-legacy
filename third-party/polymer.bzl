@@ -206,3 +206,26 @@ def guild_polymer_workspace():
             "@org_polymer_iron_flex_layout",
         ],
     )
+
+    web_library_external(
+        name = "org_polymer_paper_fab",
+        licenses = ["notice"],  # BSD-3-Clause
+        sha256 = "9a972d22f1ddd7e181df8e97cb078ba63d28bd49ba3c864d087ba8cdf36f4cd4",
+        urls = [
+            "https://github.com/PolymerElements/paper-fab/archive/v1.2.2.zip",
+        ],
+        strip_prefix = "paper-fab-1.2.2",
+        path = "/paper-fab",
+        srcs = [
+            "paper-fab.html",
+        ],
+        deps = [
+            "@org_polymer",
+            "@org_polymer_iron_flex_layout",
+            "@org_polymer_iron_icon",
+            "@org_polymer_paper_behaviors",
+            "@org_polymer_paper_material",
+            "@org_polymer_paper_styles",
+        ],
+    )
+    

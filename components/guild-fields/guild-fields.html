@@ -34,6 +34,8 @@ limitations under the License.
     </div>
   </template>
   <script>
+   import { runForId } from "../guild-run/run.js";
+   
    Polymer({
        is: "guild-fields",
 
@@ -62,7 +64,7 @@ limitations under the License.
                return this.fields;
            }
            this.lastFieldsRun = selected;
-           var run = GuildRun.runForId(selected, runs);
+           var run = runForId(selected, runs);
            // TODO: use scope to resolve fields
            return Guild.Project.section(project, "train-fields");
        },

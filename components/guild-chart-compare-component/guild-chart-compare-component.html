@@ -56,6 +56,8 @@ limitations under the License.
 
   </template>
   <script>
+   import { runLabel } from "../guild-run/run.js";
+
    Polymer({
        is: "guild-chart-compare-component",
 
@@ -66,6 +68,7 @@ limitations under the License.
            runs: Array,
            heading: String,
            data: {
+               type: Object,
                observer: "handleData"
            },
            options: {
@@ -87,7 +90,7 @@ limitations under the License.
            data.forEach(function(item) {
                var seriesData = this.seriesData(item[this.source]);
                if (seriesData) {
-                   var label = GuildRun.runLabel(item.run);
+                   var label = runLabel(item.run);
                    labels.push(label);
                    labelData[label] = seriesData;
                }
