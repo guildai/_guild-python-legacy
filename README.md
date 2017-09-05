@@ -4,14 +4,19 @@ This project intends to rewrite Guild AI in Python, replacing Erlang.
 
 ## Building
 
-Guild Python requires Bazel 0.5.4 or higher to
-build. See
-[Installing Bazel](https://docs.bazel.build/versions/master/install.html) for
-help with you system.
+Guild Python requires Bazel 0.5.4 or higher to build. See [Installing
+Bazel](https://docs.bazel.build/versions/master/install.html) for help
+with you system.
 
 Clone Guild Python from GitHub:
 
     $ git clone https://github.com/guildai/guild-python.git
+
+### Full build (includes Guild View)
+
+**PLEASE READ CAREFULLY BEFORE BUILDING:** The full build is currently
+broken. You may alternatively build a "lite" version that doesn't
+include Guild View. See [steps below](#building-lite).
 
 Build using Bazel:
 
@@ -24,11 +29,8 @@ The initial Guild Python build will take some time as Bazel will
 download serveral dependencies, including TensorBoard. Subsequent
 build should run much faster.
 
-If Guild Python builds successfully, run the `check` command:
-
-    $ bazel-bin/guild/guild check
-
-Finally, run the test suite:
+If Guild Python builds successfully, run the `check` command with all
+tests:
 
     $ bazel-bin/guild/guild check --all-tests
 
@@ -36,6 +38,22 @@ You may alternatively run `make check`.
 
 Note that tests are now a part of the Guild Python binary and will be
 available to run for end-users.
+
+<div id="building-lite"></div>
+
+### Lite build (does NOT include Guild View)
+
+Build using Bazel:
+
+    $ cd guild-python
+    $ bazel build guild:guild-lite
+
+You may alternatively simply run `make lite`.
+
+If Guild Python lite builds successfully, run the `check` command with
+all tests:
+
+    $ bazel-bin/guild/guild-lite check --all-tests
 
 ## Installing from a build
 
@@ -48,11 +66,15 @@ following:
 where `$GUILD_PYTHON_REPO` is the path to the cloned Guild Python
 repository.
 
+The same rules apply to `guild-lite`. Note that you can effectively
+use the `guild` command for `guild-lite` using a `guild` alias equal
+to `$GUILD_PYTHON_REPO/bazel-bin/guild/guild-lite`.
+
 ## What's working, what's not
 
-***Guild Python is still a highly volatile project and features may
-suddenly be added or break. We apologize for this instability and will
-work aggressively to stabilize the project. In the meantime, we are
+***Guild Python is still a volatile project and features may suddenly
+be added or break. We apologize for this instability and will work
+aggressively to stabilize the project. In the meantime, we are
 grateful for your patience! Please refer to [CHANGES.md](CHANGES.md)
 for updates.***
 
@@ -60,16 +82,16 @@ for updates.***
 
 Below is a list of Guild Python commands and their status:
 
-| Name     | Status                       |
-| -------- | ---------------------------- |
-| check    | working                      |
-| evaluate | stub / not implemented       |
-| prepare  | working                      |
-| project  | working                      |
-| query    | working                      |
-| runs     | working                      |
-| train    | working                      |
-| view     | active development / broken) |
+| Name     | Status                           |
+| -------- | -------------------------------- |
+| check    | working                          |
+| evaluate | stub, not implemented            |
+| prepare  | working                          |
+| project  | working                          |
+| query    | working                          |
+| runs     | working                          |
+| train    | working                          |
+| view     | active development, **BROKEN**   |
 
 Several Guild Erlang commands have either been renamed or replaced by
 new commands, or are not yet implemented in Guild Python. Refer to the
@@ -92,7 +114,7 @@ table below for details.
 | status      | ???             | not impemented, may be renamed or replaced |
 | train       | train           | equivalent |
 | uninstall   | uninstall       | not implemented |
-| view        | view            | equivalent, active development, unstable |
+| view        | view            | equivalent, active development, unstable, **BROKEN** |
 
 ### View
 

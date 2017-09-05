@@ -4,11 +4,8 @@ py_binary(
     name = "guild",
     srcs = ["main.py"],
     main = "main.py",
-    default_python_version = "PY2",
     deps = [
-        ":__init__",
-        ":app",
-        ":cli",
+        ":main_impl",
         ":check_cmd",
         ":evaluate_cmd",
         ":prepare_cmd",
@@ -17,6 +14,32 @@ py_binary(
         ":runs_cmd",
         ":train_cmd",
         ":view_cmd",
+    ],
+)
+
+py_binary(
+    name = "guild-lite",
+    srcs = ["main_lite.py"],
+    main = "main_lite.py",
+    deps = [
+        ":main_impl",
+        ":check_cmd",
+        ":evaluate_cmd",
+        ":prepare_cmd",
+        ":project_cmd",
+        ":query_cmd",
+        ":runs_cmd",
+        ":train_cmd",
+    ],
+)
+
+py_library(
+    name = "main_impl",
+    srcs = ["main_impl.py"],
+    deps = [
+        ":__init__",
+        ":app",
+        ":cli",
     ],
 )
 

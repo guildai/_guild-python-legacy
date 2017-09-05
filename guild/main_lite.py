@@ -10,7 +10,6 @@ import guild.project_cmd
 import guild.query_cmd
 import guild.runs_cmd
 import guild.train_cmd
-import guild.view_cmd
 
 if __name__ == "__main__":
     guild.main_impl.main([
@@ -21,5 +20,4 @@ if __name__ == "__main__":
         guild.query_cmd,
         guild.runs_cmd,
         guild.train_cmd,
-        guild.view_cmd,
     ])

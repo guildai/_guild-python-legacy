@@ -44,7 +44,7 @@ represented by a dict, which can easily be converted to JSON):
   'dir': '.../samples/runs/2017-08-08T13-21-53Z-intro',
   'exit_status': 0,
   'extended_status': 'completed',
-  'id': 3504324183,
+  'id': ...,
   'model': 'intro',
   'started': 1502198513402,
   'status': 'stopped',

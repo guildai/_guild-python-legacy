@@ -1,8 +1,10 @@
 GUILD = bazel-bin/guild/guild
 
-.PHONY: build
 build:
 	bazel build guild
+
+lite:
+	bazel build guild:guild-lite
 
 component-deps: components/.deps-resolved
 
