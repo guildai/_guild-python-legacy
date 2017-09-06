@@ -4,12 +4,12 @@ import re
 import sys
 import time
 
-def find_apply(funs, *args):
+def find_apply(funs, *args, **kw):
     for f in funs:
         result = f(*args)
         if result is not None:
             return result
-    return None
+    return kw.get("default")
 
 def resolve_args(args, env):
     return [_resolve_arg_env_refs(arg, env) for arg in args]

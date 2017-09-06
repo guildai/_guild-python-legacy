@@ -49,11 +49,6 @@ def add_parser(subparsers):
         help="enable HTTP request logging",
         action="store_true")
     p.add_argument(
-        "--tensorboard",
-        default="tensorboard",
-        metavar="PATH",
-        help="path to the TensorBoard executable used by Guild View")
-    p.add_argument(
         "--tf-demo",
         help=argparse.SUPPRESS,
         action="store_true")
@@ -97,8 +92,7 @@ def _try_start_tensorboard_proxy(project, args):
 
     logdir = guild.project_util.runs_dir_for_project(project)
     port = guild.util.free_port()
-    proxy = guild.tensorboard_proxy.TensorBoardProxy(
-        args.tensorboard, logdir, port)
+    proxy = guild.tensorboard_proxy.TensorBoardProxy(logdir, port)
     proxy.start()
     return proxy
 

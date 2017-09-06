@@ -13,8 +13,7 @@ import guild.log
 
 class TensorBoardProxy(object):
 
-    def __init__(self, tensorboard, logdir, port):
-        self.tensorboard = tensorboard
+    def __init__(self, logdir, port):
         self.logdir = logdir
         self.port = port
         self._proc = None
@@ -28,10 +27,11 @@ class TensorBoardProxy(object):
             raise RuntimeError("proxy is running")
         guild.log.debug("starting TensorBoard proxy on port %s", self.port)
         devnull = open(os.devnull, "w")
-        self._proc = subprocess.Popen(
-            [_tensorboard_bin(), "--logdir", self.logdir, "--port", str(self.port)],
-            stdout=devnull,
-            stderr=devnull)
+        args = [
+            _tensorboard_bin(),
+            "--logdir", self.logdir,
+            "--port", str(self.port)]
+        self._proc = subprocess.Popen(args, stdout=devnull, stderr=devnull)
 
     def stop(self):
         guild.log.debug("stopping TensorBoard proxy")
@@ -52,5 +52,8 @@ class TensorBoardProxy(object):
         return self._conn
 
 def _tensorboard_bin():
-    return guild.app.external(
+    path = guild.app.find_external(
         "org_tensorflow_tensorboard/tensorboard/tensorboard")
+    if not path:
+        raise AssertionError("cannot find tensorboard")
+    return path
