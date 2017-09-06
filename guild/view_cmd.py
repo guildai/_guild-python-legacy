@@ -57,11 +57,20 @@ def add_parser(subparsers):
         "--tf-demo",
         help=argparse.SUPPRESS,
         action="store_true")
+    p.add_argument(
+        "--force",
+        help=argparse.SUPPRESS,
+        action="store_true")
     p.set_defaults(func=main)
 
 def main(args):
     import guild.view
     import guild.view_http
+
+    if not args.force:
+        guild.cli.error(
+            "Guild View is under development and currently disabled\n"
+            "Use 'guild view --force' to bypass this check.")
 
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     settings = _view_settings_for_args(args)
