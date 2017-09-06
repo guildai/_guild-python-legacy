@@ -28,7 +28,8 @@ export function fieldsDataSource(fields) {
 }
 
 export function init(table, fields, options) {
-    return jQuery(table).DataTable({
+    // TODO: use of jQuery disabled to support compile
+    return undefined; /* jQuery(table).DataTable({
         data: [],
         rowId: "run.id",
         columns: columns(fields),
@@ -47,7 +48,7 @@ export function init(table, fields, options) {
         dom: "<'row'<'col-12'f>>"
             + "<'row'<'col-12'tr>>"
             + "<'row'<'col-12'i>>"
-    });
+    }); */
 }
 
 function columns(fields) {
@@ -345,10 +346,12 @@ export function refreshRowsForSelected(dt) {
         var select = tr.querySelector("guild-compare-table-select");
         if (select.value == "true") {
             item.selected = true;
-            $(tr).addClass("highlight");
+            // TODO: use of $ disabled to support compile
+            //$(tr).addClass("highlight");
         } else {
             item.selected = false;
-            $(tr).removeClass("highlight");
+            // TODO: use of $ disabled to support compile
+            //$(tr).removeClass("highlight");
         }
     });
 }

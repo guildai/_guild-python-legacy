@@ -18,7 +18,8 @@ namespace GuildDatatable {
     var DEFAULT_HEIGHT = "360px";
 
     export function init(table, columns, options) {
-        return jQuery(table).DataTable({
+        // TODO: Use of jQuery disabled to support compile
+        return undefined; /* jQuery(table).DataTable({
             data: [],
             columns: columns,
             order: tableOrderOption(columns),
@@ -30,7 +31,7 @@ namespace GuildDatatable {
             dom: "<'row'<'col-12'f>>"
                 + "<'row'<'col-12'tr>>"
                 + "<'row'<'col-12'i>>"
-        });
+        }); */
     }
 
     function tableOrderOption(columns) {
