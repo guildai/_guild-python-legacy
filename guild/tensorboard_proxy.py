@@ -52,8 +52,8 @@ class TensorBoardProxy(object):
         return self._conn
 
 def _tensorboard_bin():
-    path = guild.app.find_external(
-        "org_tensorflow_tensorboard/tensorboard/tensorboard")
-    if not path:
-        raise AssertionError("cannot find tensorboard")
-    return path
+    return guild.app.generated(
+        "external",
+        "org_tensorflow_tensorboard",
+        "tensorboard",
+        "tensorboard")

@@ -16,11 +16,21 @@ limitations under the License.
 
 <link rel="import" href="../app-route/app-location.html">
 <link rel="import" href="../guild-env/guild-env.html">
+<link rel="import" href="../guild-components-page/guild-components-page.html">
 
 <link rel="import" href="guild-view-route.html">
 <link rel="import" href="guild-view-app-layout.html">
 <link rel="import" href="guild-view-page.html">
 <link rel="import" href="guild-view-styles.html">
+
+<link rel="import" href="../guild-compare-page/guild-compare-page.html">
+<!--
+<link rel="import" href="../guild-run/guild-run.html">
+<link rel="import" href="../guild-tensorboard-page/guild-tensorboard-page.html">
+
+<link rel="import" href="guild-view-fullscreen.html">
+<link rel="import" href="guild-view-404.html">
+-->
 
 <dom-module id="guild-view">
   <template>
@@ -31,25 +41,34 @@ limitations under the License.
     <guild-view-route route="{{route}}" selected="{{page}}"></guild-view-route>
     <guild-env route="{{route}}" env="{{env}}"></guild-env>
 
+    <!--
+         <guild-view-fullscreen></guild-view-fullscreen>
+         -->
+
     <guild-view-app-layout selected="{{page}}">
 
       <guild-view-page id="train" label="Train" icon="av:repeat" env="{{env}}">
         <template>
-          Training page - yay!
+          <guild-components-page env="{{env}}" viewdef="[[viewdef]]" scope="train"></guild-components-page>
         </template>
       </guild-view-page>
 
       <guild-view-page id="compare" label="Compare" icon="av:playlist-add-check" env="[[env]]">
         <template>
-          Compare page - yay!
+          <guild-compare-page env="[[env]]" viewdef="[[viewdef]]"></guild-compare-page>
         </template>
       </guild-view-page>
 
       <guild-view-page id="tensorboard" label="TensorBoard" icon="timeline" env="[[env]]">
         <template>
-          TensorBoard page - yay!
+          <p>TODO: integrate guild-tensorboard-page</p>
+          <!--
+          <guild-tensorboard-page env="[[env]]"></guild-tensorboard-page>
+             -->
         </template>
       </guild-view-page>
+
+      <guild-view-404 class="not-found" path="[[route.path]]"></guild-view-404>
 
     </guild-view-app-layout>
 
@@ -58,6 +77,8 @@ limitations under the License.
   <script>
    Polymer({
        is: "guild-view",
+
+       //behaviors: [Guild.FullscreenHost],
 
        properties: {
            route: Object,

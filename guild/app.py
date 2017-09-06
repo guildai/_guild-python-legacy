@@ -37,18 +37,12 @@ def _iter_core_plugins():
         except ImportError:
             pass
 
-def find_external(name, default=None):
-    import guild.util
-    return guild.util.find_apply(
-        [_installed_external, _source_build_external],
-        name,
-        home(),
-        default=default)
-
-def _installed_external(name, home):
-    path = os.path.join(home, "..", "externa", name)
-    return path if os.path.exists(path) else None
-
-def _source_build_external(name, home):
-    path = os.path.join(home, "bazel-bin", "guild", "guild.runfiles", name)
-    return path if os.path.exists(path) else None
+def generated(*parts):
+    installed_path = os.path.join(home(), *parts)
+    if os.path.exists(installed_path):
+        return installed_path
+    dev_bin_path = os.path.join(home(), "bazel-bin", *parts)
+    if os.path.exists(dev_bin_path):
+        return dev_bin_path
+    raise AssertionError(
+        "cannot find generated output for %s" % parts.join(","))

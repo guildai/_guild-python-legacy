@@ -22,7 +22,7 @@ class AppPageHandler(object):
     """Use SharedDataMiddleware to serve index.html statically."""
 
     def __init__(self, paths):
-        index_path = os.path.join(guild.app.home(), "components", "index.html")
+        index_path = guild.app.generated("components", "index.html")
         exports = {
             path: index_path for path in paths
         }
