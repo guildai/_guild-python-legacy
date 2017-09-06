@@ -28,32 +28,26 @@ def main(args):
         _train(op)
 
 def _train_op(args):
+    import guild.op
+
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     model = guild.cmd_support.model_for_args(args, project)
     spec = model.attr("train")
-    return _train_op_for_spec(spec, model)
-
-def _train_op_for_spec(spec, model):
-    import guild.op
-
-    if spec is not None:
-        return guild.op.Op(
-            cmd_args=guild.op_support.python_cmd_for_spec(spec, model),
-            cmd_env=_cmd_env(),
-            cmd_cwd=model.project.dir,
-            opdir_pattern=_rundir_pattern(model),
-            meta=_meta(model),
-            tasks=_tasks(model))
-    else:
+    if not spec:
         _not_trainable_error(model)
+    return guild.op.Op(
+        cmd_args=guild.op_support.python_cmd_for_spec(spec, model),
+        cmd_env=guild.op_support.rundir_env(),
+        cmd_cwd=model.project.dir,
+        opdir_pattern=_rundir_pattern(model),
+        meta=_meta(model),
+        tasks=_tasks(model))
 
-def _cmd_env():
-    env = {}
-    env.update(guild.op_support.base_env())
-    env.update({
-        "RUNDIR": "%(opdir)s"
-    })
-    return env
+def _not_trainable_error(model):
+    guild.cli.error(
+        "model%s does not support a train operation\n"
+        "Try 'guild train --help' for more information."
+        % _maybe_model_name(model))
 
 def _rundir_pattern(model):
     import guild.project_util
@@ -83,12 +77,6 @@ def _tasks(model):
         (guild.tasks.sys_stats.start, []),
         (guild.tasks.gpu_stats.start, [])
     ]
-
-def _not_trainable_error(model):
-    guild.cli.error(
-        "model%s does not support a train operation\n"
-        "Try 'guild train --help' for more information."
-        % _maybe_model_name(model))
 
 def _maybe_model_name(model):
     if model.name:
