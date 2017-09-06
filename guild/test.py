@@ -37,6 +37,7 @@ def _test_name_from_path(path):
     return name
 
 def run(tests):
+    sys.stdout.write("internal tests:\n")
     success = True
     for test in tests:
         run_success = _run_test(test)
@@ -44,7 +45,7 @@ def run(tests):
     return success
 
 def _run_test(name):
-    sys.stdout.write(name + ":")
+    sys.stdout.write(" %s:" % name)
     try:
         failures, _tests = _run_test_file(_test_filename(name))
     except IOError:
@@ -52,7 +53,7 @@ def _run_test(name):
         return False
     else:
         if not failures:
-            sys.stdout.write(" " * (20 - len(name)))
+            sys.stdout.write(" " * (21 - len(name)))
             sys.stdout.write(" ok\n")
         return failures == 0
 
