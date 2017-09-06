@@ -1,46 +1,20 @@
 package(default_visibility = ["//visibility:public"])
 
-py_binary(
+guild_cmds = [
+    ":check_cmd",
+    ":evaluate_cmd",
+    ":prepare_cmd",
+    ":project_cmd",
+    ":query_cmd",
+    ":runs_cmd",
+    ":train_cmd",
+    ":view_cmd",
+]
+
+sh_binary(
     name = "guild",
-    srcs = ["main.py"],
-    main = "main.py",
-    deps = [
-        ":main_impl",
-        ":check_cmd",
-        ":evaluate_cmd",
-        ":prepare_cmd",
-        ":project_cmd",
-        ":query_cmd",
-        ":runs_cmd",
-        ":train_cmd",
-        ":view_cmd",
-    ],
-)
-
-py_binary(
-    name = "guild-lite",
-    srcs = ["main_lite.py"],
-    main = "main_lite.py",
-    deps = [
-        ":main_impl",
-        ":check_cmd",
-        ":evaluate_cmd",
-        ":prepare_cmd",
-        ":project_cmd",
-        ":query_cmd",
-        ":runs_cmd",
-        ":train_cmd",
-    ],
-)
-
-py_library(
-    name = "main_impl",
-    srcs = ["main_impl.py"],
-    deps = [
-        ":__init__",
-        ":app",
-        ":cli",
-    ],
+    srcs = ["//scripts:guild-exe"],
+    data = guild_cmds
 )
 
 py_library(
@@ -212,6 +186,7 @@ py_library(
     deps = [
         ":cmd_support",
         ":op_util",
+        ":project_util",
         ":run",
     ],
 )
