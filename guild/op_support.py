@@ -49,6 +49,13 @@ def base_env():
         "GPU_COUNT": str(guild.system.gpu_count())
     }
 
+def rundir_env():
+    env = base_env()
+    env.update({
+        "RUNDIR": "%(opdir)s"
+    })
+    return env
+
 def start_task(target, args, op):
     task_stop_conn, parent_stop_conn = multiprocessing.Pipe()
     p_args = [op, task_stop_conn] + args

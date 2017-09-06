@@ -169,6 +169,12 @@ def model_for_args(args, project):
         return model
     _no_default_model_error()
 
+def model_for_name(name, project):
+    model = _model(name, project)
+    if model:
+        return model
+    _no_such_model_error(name)
+
 def _model(name, project):
     return project.section("models", name)
 
