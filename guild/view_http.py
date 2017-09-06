@@ -184,7 +184,7 @@ def _handle_compare(view, req):
     try:
         return _view_lookup(view.compare, run_ids, sources)
     except ValueError as e:
-        _raise_bad_request("invalid source: %s" % e.message)
+        _raise_bad_request("invalid source: %s" % e.args[0])
 
 def _sources_for_params(params):
     sources = params.get("sources", "").split(",")

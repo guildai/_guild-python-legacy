@@ -1,6 +1,5 @@
 from __future__ import division
 
-import csv
 import subprocess
 import sys
 
@@ -60,11 +59,17 @@ def _read_raw_gpu_stats():
     p = subprocess.Popen(
         GPU_STATS_CMD,
         stdout=subprocess.PIPE)
-    raw = list(csv.reader(p.stdout))
+    raw = _read_csv_lines(p.stdout)
     result = p.wait()
     if result != 0:
         _read_gpu_stats_error(raw)
     return raw
+
+def _read_csv_lines(raw_in):
+    import csv
+    import io
+    csv_in = raw_in if sys.version_info[0] == 2 else io.TextIOWrapper(raw_in)
+    return list(csv.reader(csv_in))
 
 def _read_gpu_stats_error(raw):
     sys.stderr.write("WARNING: cannot read GPU stats, ")

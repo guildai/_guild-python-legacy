@@ -22,12 +22,12 @@ def _read_tf_attrs():
         guild.log.exception("reading tensorflow attrs")
         return []
     else:
-        return _parse_tf_attrs(raw.encode("UTF-8"))
+        return _parse_tf_attrs(raw.decode("UTF-8"))
 
 def _parse_tf_attrs(out):
     attrs = {}
     for line in out.split("\n"):
         if line:
-            key, val = str.split(line, "=", 1)
+            key, val = line.split("=", 1)
             attrs[key] = val
     return attrs

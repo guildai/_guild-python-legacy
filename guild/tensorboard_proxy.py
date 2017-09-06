@@ -1,6 +1,13 @@
+# pylint: disable=wrong-import-order
+
 import os
 import subprocess
-import httplib
+
+try:
+    import httplib
+except ImportError:
+    import http.client
+    httplib = http.client
 
 import guild.log
 

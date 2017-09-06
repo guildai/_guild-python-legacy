@@ -49,7 +49,7 @@ def _is_keras_module(x):
             and x.__name__.startswith("keras."))
 
 def _is_keras_model(x):
-    return (isinstance(x, (type, types.ClassType))
+    return (isinstance(x, type)
             and issubclass(x, keras.engine.training.Model))
 
 def _patch_keras_model(cls, log):
@@ -108,7 +108,7 @@ def _flags_for_params(params):
     return {
         key: val
         for key, val in params.items()
-        if isinstance(val, (basestring, numbers.Number, bool))
+        if isinstance(val, (str, numbers.Number, bool))
     }
 
 def _acc_field():
