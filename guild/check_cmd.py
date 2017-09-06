@@ -62,6 +62,7 @@ def _print_info(args):
 
 def _print_guild_info():
     sys.stdout.write("guild_version:          %s\n" % guild.app.version())
+    sys.stdout.write("guild_home:             %s\n" % guild.app.home())
 
 def _print_python_info():
     sys.stdout.write("python_version:         %s\n" % _python_version())
