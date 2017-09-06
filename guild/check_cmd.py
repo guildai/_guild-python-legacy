@@ -12,9 +12,10 @@ def add_parser(subparsers):
         help="check Guild setup")
     p.description = "Check Guild setup."
     p.add_argument(
-        "-T", "--all-tests",
+        "-T", "--tests",
         help="run Guild test suite",
-        action="store_true")
+        action="store_true",
+        dest="all_tests")
     p.add_argument(
         "-t", "--test",
         help="run TEST (may be used multiple times)",
@@ -22,16 +23,20 @@ def add_parser(subparsers):
         dest="tests",
         action="append")
     p.add_argument(
+        "-s", "--skip-info",
+        help="don't print info (useful when just running tests)",
+        action="store_true")
+    p.add_argument(
         "-v", "--verbose",
         help="show check details",
         action="store_true")
     p.set_defaults(func=main)
 
 def main(args):
+    if not args.skip_info:
+        _print_info(args)
     if args.all_tests or args.tests:
         _run_tests(args)
-    else:
-        _print_info(args)
 
 def _run_tests(args):
     import guild.test
