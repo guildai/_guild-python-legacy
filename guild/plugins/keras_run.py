@@ -4,14 +4,22 @@ import numbers
 import os
 import types
 
-import keras
+try:
+    import keras
+except ImportError:
+    keras = None
 
 FLAGS = None
 
 def main():
+    _check_keras()
     _init_flags()
     _patch_keras()
     _exec_script()
+
+def _check_keras():
+    if keras is None:
+        raise AssertionError("keras is not installed")
 
 def _init_flags():
     global FLAGS
