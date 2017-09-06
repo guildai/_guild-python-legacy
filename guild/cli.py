@@ -36,6 +36,10 @@ def parser(commands):
         metavar="FILE",
         help=("write command timing stats to FILE; use '-' to write to "
               "standard output"))
+    p.add_argument(
+        "--trace",
+        action="store_true",
+        help=argparse.SUPPRESS)
     sub_p = p.add_subparsers(
         title="commands",
         dest="command",
@@ -54,6 +58,7 @@ def _add_command(module, subparsers):
 def main(commands):
     p = parser(commands)
     args = p.parse_args()
+    _maybe_trace(args)
     _init_logging(args)
     try:
         if args.time:
@@ -64,6 +69,11 @@ def main(commands):
         _handle_keyboard_interrupt()
     except Exit as e:
         _print_error_and_exit(p.prog, e.msg, e.exit_status)
+
+def _maybe_trace(args):
+    if args.trace:
+        import pdb
+        pdb.set_trace()
 
 def _init_logging(args):
     logging.basicConfig(
