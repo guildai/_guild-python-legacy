@@ -98,6 +98,8 @@ def _delete_runs(project, args):
             "Try 'guild runs --help' for more information.")
 
 def _runs_dir_for_project(project, args):
+    import guild.project_util
+
     if project:
         return guild.project_util.runs_dir_for_project(project)
     else:
