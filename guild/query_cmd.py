@@ -8,12 +8,14 @@ def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
         subparsers,
         "query", "query a run",
-        "Prints information about a run. Use any of the "
+        "Print information about a run. Use any of the "
         "options below to print addition run details. By "
         "default, run name and status is printed.")
     p.add_argument(
         "run",
-        help="run name or index to list series for",
+        help="run name or index to list series for (defaults to latest)",
+        nargs="?",
+        default=0,
         metavar="RUN")
     guild.cmd_support.add_project_arguments(p)
     p.add_argument(
