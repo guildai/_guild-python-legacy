@@ -4,6 +4,7 @@ import sys
 
 import guild.app
 import guild.cli
+# Avoid expensive imports here
 
 def add_parser(subparsers):
     p = subparsers.add_parser(

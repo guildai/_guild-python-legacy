@@ -5,6 +5,7 @@ import sys
 
 import guild.cli
 import guild.cmd_support
+# Avoid expensive imports here
 
 DEFAULT_PORT = 6333
 DEFAULT_REFRESH_INTERVAL = 5

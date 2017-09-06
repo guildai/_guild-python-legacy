@@ -1,6 +1,7 @@
 import os
 
 import guild.cmd_support
+# Avoid expensive imports here
 
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
