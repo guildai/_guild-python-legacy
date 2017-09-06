@@ -12,13 +12,7 @@ Clone Guild Python from GitHub:
 
     $ git clone https://github.com/guildai/guild-python.git
 
-### Full build (includes Guild View)
-
-**PLEASE READ CAREFULLY BEFORE BUILDING:** The full build is currently
-broken. You may alternatively build a "lite" version that doesn't
-include Guild View. See [steps below](#building-lite).
-
-Build using Bazel:
+Build Guild Python using the `bazel` command:
 
     $ cd guild-python
     $ bazel build guild
@@ -27,33 +21,17 @@ You may alternatively simply run `make`.
 
 The initial Guild Python build will take some time as Bazel will
 download serveral dependencies, including TensorBoard. Subsequent
-build should run much faster.
+builds will run faster.
 
-If Guild Python builds successfully, run the `check` command with all
+If Guild Python builds successfully, run the `check` command with
 tests:
 
-    $ bazel-bin/guild/guild check --all-tests
+    $ bazel-bin/guild/guild check --tests
 
 You may alternatively run `make check`.
 
 Note that tests are now a part of the Guild Python binary and will be
 available to run for end-users.
-
-<div id="building-lite"></div>
-
-### Lite build (does NOT include Guild View)
-
-Build using Bazel:
-
-    $ cd guild-python
-    $ bazel build guild:guild-lite
-
-You may alternatively simply run `make lite`.
-
-If Guild Python lite builds successfully, run the `check` command with
-all tests:
-
-    $ bazel-bin/guild/guild-lite check --all-tests
 
 ## Installing from a build
 
@@ -85,7 +63,7 @@ Below is a list of Guild Python commands and their status:
 | Name     | Status                           |
 | -------- | -------------------------------- |
 | check    | working                          |
-| evaluate | stub, not implemented            |
+| evaluate | working                          |
 | prepare  | working                          |
 | project  | working                          |
 | query    | working                          |
@@ -97,24 +75,24 @@ Several Guild Erlang commands have either been renamed or replaced by
 new commands, or are not yet implemented in Guild Python. Refer to the
 table below for details.
 
-| Old command | New command     | Status / Notes      |
-| ----------- | --------------- | ------------------- |
-| check       | check           | equivalent |
-| delete-eval | evals rm        | not implemented |
-| delete-run  | runs rm         | enhanced |
-| evaluate    | evaluate        | not implemented |
-| install     | install         | not implemented |
-| list-attrs  | query attrs     | not implemented |
-| list-evals  | evals           | equivalent |
-| list-models | project models  | enhanced |
-| list-runs   | runs            | equivalent |
-| package     | package         | not implemented |
-| prepare     | prepare         | equivalent |
-| serve       | ???             | not impemented, may be dropped |
-| status      | ???             | not impemented, may be renamed or replaced |
-| train       | train           | equivalent |
-| uninstall   | uninstall       | not implemented |
-| view        | view            | equivalent, active development, unstable, **BROKEN** |
+| Old command | New command     | Status          | Feature parity / notes  |
+| ----------- | --------------- | --------------- | ----------------------- |
+| check       | check           | implemented     | equivalent              |
+| delete-eval | evals rm        | not implemented |                         |
+| delete-run  | runs rm         | implemented     | enhanced (see run help) |
+| evaluate    | evaluate        | implemented     | equivalent              |
+| install     | install         | not implemented |                         |
+| list-attrs  | query attrs     | not implemented | equivalent              |
+| list-evals  | evals           | not implemented | enhanced                |
+| list-models | project models  | implemented     | enhanced                |
+| list-runs   | runs            | implemented     | equivalent              |
+| package     | package         | not implemented |                         |
+| prepare     | prepare         | implemented     | equivalent              |
+| serve       | ???             | not impemented  | may be dropped          |
+| status      | ???             | not impemented  | may be renamed/replaced |
+| train       | train           | implemented     | equivalent              |
+| uninstall   | uninstall       | not implemented |                         |
+| view        | view            | active development, **BROKEN** |          |
 
 ### View
 
@@ -125,6 +103,7 @@ changed quite a bit since our last integration:
 - Stand alone project
 - Use of Bazel for building and dependency management
 - New plugin scheme that federates UI and backend logic
+- Migration of TypeScript namespaces to ES6 modules
 
 To simplify integration in the future, we're taking a big step in
 Guild Python:
@@ -135,31 +114,13 @@ Guild Python:
   party libraries, etc.) directly rather than duplicate them based on
   routine syncs
 
-While this step is highly disruptive, it will strictly control both
-our UI dependencies (thanks to Bazel's strict and fine-grained
-dependency management facility) and our use of TensorBoard. The result
-will be more stable builds and UI behavior and easier synchronization
-with changes made to TensorBoard.
+While this step is disruptive, it will control both our UI
+dependencies and our use of TensorBoard. The result will be more
+stable builds and UI behavior and easier synchronization with changes
+made to TensorBoard.
 
 ### Python 3
 
-***Guild Python does not currently support Python 3.***
-
-While earlier versions worked with Python 3, they suffered from some
-problems:
-
-- Third party dependencies had to be installed independently of Guild
-  for Python 2 and Python 3
-- As Python 3 is not the primary development platform, features would
-  routinely break
-
-As we are now including all of our dependencies in the build itself,
-we are focussing on Python 2 and not supporting Python 3. Support for
-Python 3, either a single distribution or a two separate
-distributions, is planned, but we're working aggressively on these
-priorities, in order:
-
-- Stabilize the project to eliminate volatile and breaking changes
-- Achieve feature parity with the Erlang version
-- Complete support for `evaluate` and its related UI/visualizations
-- Complete preliminary package support
+Guild Python now supports Python 3. If there's a bug Guild Python that
+occurs only under Python 3, we'll treat it with the same priority as a
+bug occurring under Python 2.
