@@ -15,12 +15,16 @@ genrule(
         "psutil/*.py",
         "psutil/*.c",
     ]),
-    outs = ["psutil/_psutil_linux.so",
-            "psutil/_psutil_posix.so",
+    outs = [
+        "psutil/_psutil_linux.so",
+        "psutil/_psutil_posix.so",
+        "psutil/_psutil_linux.cpython-35m-x86_64-linux-gnu.so",
+        "psutil/_psutil_posix.cpython-35m-x86_64-linux-gnu.so",
     ],
-    cmd = ("pushd `dirname $(location setup.py)` && " +
-           "python setup.py build_ext -i && " +
-           "popd && " +
-           "cp `dirname $(location setup.py)`/psutil/_psutil_linux.so $(@D)/psutil/ && " +
-           "cp `dirname $(location setup.py)`/psutil/_psutil_posix.so $(@D)/psutil/")
+    cmd = (
+        "pushd `dirname $(location setup.py)` && " +
+        "python2 setup.py build_ext -i && " +
+        "python3 setup.py build_ext -i && " +
+        "popd && " +
+        "cp `dirname $(location setup.py)`/psutil/*.so $(@D)/psutil/")
 )

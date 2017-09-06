@@ -6,7 +6,6 @@ def guild_python_workspace():
         name = "org_pyyaml",
         build_file = "//third-party:pyyaml.BUILD",
         urls = [
-            "http://mirror.bazel.build/pypi.python.org/packages/4a/85/db5a2df477072b2902b0eb892feb37d88ac635d36245a72a6a69b23b383a/PyYAML-3.12.tar.gz",
             "https://pypi.python.org/packages/4a/85/db5a2df477072b2902b0eb892feb37d88ac635d36245a72a6a69b23b383a/PyYAML-3.12.tar.gz",
         ],
         strip_prefix = "PyYAML-3.12",
@@ -17,7 +16,6 @@ def guild_python_workspace():
         name = "org_psutil",
         build_file = "//third-party:psutil.BUILD",
         urls = [
-            "http://mirror.bazel.build/pypi.python.org/packages/57/93/47a2e3befaf194ccc3d05ffbcba2cdcdd22a231100ef7e4cf63f085c900b/psutil-5.2.2.tar.gz",
             "https://pypi.python.org/packages/57/93/47a2e3befaf194ccc3d05ffbcba2cdcdd22a231100ef7e4cf63f085c900b/psutil-5.2.2.tar.gz"
         ],
         strip_prefix = "psutil-5.2.2",
