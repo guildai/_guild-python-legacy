@@ -7,9 +7,9 @@ ts_web_library(
     srcs = ["vz-field.html"],
     path = "/vz-field",
     deps = [
-        "//components/guild-icons",
         "@org_polymer_paper_card",
         "@org_polymer_paper_styles",
+        "@org_polymer_iron_icon",
     ],
 )
 
@@ -21,5 +21,6 @@ ts_web_library(
         ":vz-field",
         "@org_polymer_webcomponentsjs",
         "@org_polymer_iron_demo_helpers",
+        "//components/guild-icons",
     ]
 )
