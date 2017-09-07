@@ -44,10 +44,6 @@ following:
 where `$GUILD_PYTHON_REPO` is the path to the cloned Guild Python
 repository.
 
-The same rules apply to `guild-lite`. Note that you can effectively
-use the `guild` command for `guild-lite` using a `guild` alias equal
-to `$GUILD_PYTHON_REPO/bazel-bin/guild/guild-lite`.
-
 ## What's working, what's not
 
 ***Guild Python is still a volatile project and features may suddenly
