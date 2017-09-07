@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="guild-test">
+  <template>
+    <h2>Items as a list</h2>
+    <ul>
+      <template is="dom-repeat" items="[[items]]">
+        <li>Color: [[item.color]]<br>Size: [[item.size]]</li>
+      </template>
+    </ul>
+
+    <h2>Items as a table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Color</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template is="dom-repeat" items="[[items]]">
+          <tr>
+            <td>[[item.color]]</td>
+            <td>[[item.size]]</td>
+          </tr >
+        </template>
+      </tbody>
+    </table>    
+  </template>
+  <script>
+   Polymer({
+       is: "guild-test",
+       properties: {
+           items: {
+               type: Array,
+               value: function() {
+                   return [
+                       {color: "red", size: "large"},
+                       {color: "blue", size: "medium"},
+                       {color: "yellow", size: "small"},
+                   ]
+               }
+           }
+       }
+   });
+  </script>
+</dom-module>

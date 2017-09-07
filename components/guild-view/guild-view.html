@@ -16,6 +16,7 @@ limitations under the License.
 
 <link rel="import" href="../app-route/app-location.html">
 <link rel="import" href="../guild-env/guild-env.html">
+<link rel="import" href="../guild-components-page/guild-components-page.html">
 
 <link rel="import" href="guild-view-route.html">
 <link rel="import" href="guild-view-app-layout.html">
@@ -35,7 +36,7 @@ limitations under the License.
 
       <guild-view-page id="train" label="Train" icon="av:repeat" env="{{env}}">
         <template>
-          Training page - yay!
+          <guild-components-page env="{{env}}" viewdef="[[viewdef]]" scope="train"></guild-components-page>
         </template>
       </guild-view-page>
 

@@ -6,7 +6,7 @@ ts_web_library(
     name = "guild-project",
     srcs = [
         "guild-project.html",
-        "project.js",
+        "project.ts",
     ],
     path = "/guild-project",
 )

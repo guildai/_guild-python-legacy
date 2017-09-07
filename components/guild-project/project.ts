@@ -13,17 +13,11 @@
  * limitations under the License.
  */
 
-var Guild = Guild || {};
-
-// TODO: move to project.ts
-Guild.Project = new function() {
-
-    this.section = function(project, type, name) {
-        var sections = project[type];
-        if (name) {
-            return sections && sections[name] || undefined;
-        } else {
-            return sections;
-        }
-    };
-};
+export function section (project, type, name) {
+    var sections = project[type];
+    if (name) {
+        return sections && sections[name] || undefined;
+    } else {
+        return sections;
+    }
+}

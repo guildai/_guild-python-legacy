@@ -4,7 +4,10 @@ load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 
 ts_web_library(
     name = "guild-components-page",
-    srcs = ["guild-components-page.html"],
+    srcs = [
+        "guild-components-page.html",
+        "util.ts",
+    ],
     path = "/guild-components-page",
     deps = [
         "//components/guild-imports:bootstrap-grid",

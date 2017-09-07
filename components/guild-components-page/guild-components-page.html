@@ -16,11 +16,8 @@ limitations under the License.
 
 <link rel="import" href="../guild-imports/bootstrap-grid.html">
 <link rel="import" href="../guild-project/guild-project.html">
-<link rel="import" href="../guild-run/guild-run.html">
 <link rel="import" href="../guild-run-select-page-header/guild-run-select-page-header.html">
 <link rel="import" href="../guild-styles/guild-styles.html">
-<link rel="import" href="../guild-view/guild-view-page-overlay.html">
-<link rel="import" href="../paper-card/paper-card.html">
 
 <!-- Page components
 
@@ -45,10 +42,7 @@ limitations under the License.
        element string.
 -->
 <link rel="import" href="../guild-attrs/guild-attrs.html">
-<link rel="import" href="../guild-fields/guild-fields.html">
 <link rel="import" href="../guild-flags/guild-flags.html">
-<link rel="import" href="../guild-output/guild-output.html">
-<link rel="import" href="../guild-series/guild-series.html">
 
 <dom-module id="guild-components-page">
   <template>
@@ -84,77 +78,48 @@ limitations under the License.
         <guild-run-select-page-header env="{{env}}"></guild-run-select-page-header>
       </div>
 
-      <guild-view-page-overlay id="overlay"></guild-view-page-overlay>
-
-      <!-- NOTE The hard-codedness of "evals" here is not ideal - we'd like
-           abstract the content from the "components page" entirely and just
-           drive content from the view. In this case, we're stopping short of
-           a full blown abstraction and relying on our understanding of "scope"
-           here, which can be "train" or "eval". In time this may become a
-           more complete abstraction.
-      -->
-
-      <template is="dom-if" if="[[waitingForEval]]">
-        <div class="row row-20">
-          <div class="col-6 offset-3">
-            <paper-card heading="Waiting for evaluation">
-              <div class="card-content">
-                This run has not been evaluated. To evaluate, run the
-                following command in your project:
-                <div class="code">
-                  guild evaluate [[runDir]]
-                </div>
+      <div class="row row-20">
+        <div class="col-lg-8 col-xl-9">
+          <template is="dom-repeat" items="[[components.main]]" as="c">
+            <div class="row row-20">
+              <div class="component col-12">
+                <template is="dom-if" if="[[isFields(c)]]">
+                  <guild-fields env="[[env]]" active="[[active]]" scope="[[scope]]"></guild-fields>
+                </template>
+                <template is="dom-if" if="[[isSeries(c)]]">
+                  <guild-series env="[[env]]" active="[[active]]" scope="[[scope]]"></guild-series>
+                </template>
+                <template is="dom-if" if="[[isOutput(c)]]">
+                  <guild-output env="[[env]]" active="[[active]]" scope="[[scope]]"></guild-output>
+                </template>
               </div>
-            </paper-card>
-          </div>
+            </div>
+          </template>
         </div>
-      </template>
-
-      <template is="dom-if" if="[[eval]]">
-        You're looking at an eval page yo.
-      </template>
-
-      <template is="dom-if" if="[[!waitingForEval]]">
-        <div class="row row-20">
-          <div class="col-lg-8 col-xl-9">
-            <template is="dom-repeat" items="[[components.main]]" as="c">
-              <div class="row row-20">
-                <div class="component col-12">
-                  <template is="dom-if" if="[[isFields(c)]]">
-                    <guild-fields env="[[env]]" active="[[active]]" scope="[[scope]]"></guild-fields>
-                  </template>
-                  <template is="dom-if" if="[[isSeries(c)]]">
-                    <guild-series env="[[env]]" active="[[active]]" scope="[[scope]]"></guild-series>
-                  </template>
-                  <template is="dom-if" if="[[isOutput(c)]]">
-                    <guild-output env="[[env]]" active="[[active]]" scope="[[scope]]"></guild-output>
-                  </template>
-                </div>
+        <div class="col-12 col-lg-4 col-xl-3">
+          <template is="dom-repeat" items="[[components.sidebar]]" as="c">
+            <div class="row row-20">
+              <div class="component col-12">
+                <template is="dom-if" if="[[isFlags(c)]]">
+                  <guild-flags env="[[env]]" scope="[[scope]]"></guild-flags>
+                </template>
+                <template is="dom-if" if="[[isAttrs(c)]]">
+                  <guild-attrs env="[[env]]" scope="[[scope]]"></guild-attrs>
+                </template>
               </div>
-            </template>
-          </div>
-          <div class="col-12 col-lg-4 col-xl-3">
-            <template is="dom-repeat" items="[[components.sidebar]]" as="c">
-              <div class="row row-20">
-                <div class="component col-12">
-                  <template is="dom-if" if="[[isFlags(c)]]">
-                    <guild-flags env="[[env]]" scope="[[scope]]"></guild-flags>
-                  </template>
-                  <template is="dom-if" if="[[isAttrs(c)]]">
-                    <guild-attrs env="[[env]]" scope="[[scope]]"></guild-attrs>
-                  </template>
-                </div>
-              </div>
-            </template>
-          </div>
+            </div>
+          </template>
         </div>
-      </template>
+      </div>
 
     </div>
   </template>
+
+  <script src="util.js"></script>
   <script>
    import { runForId } from "../guild-run/run.js";
-   
+   import { viewForRun, viewComponents } from "./util.js";
+
    Polymer({
        is: "guild-components-page",
 
@@ -162,60 +127,26 @@ limitations under the License.
            env: Object,
            scope: String,
            active: Boolean,
-           waitingForEval: {
-               type: Boolean,
-               computed: "computeWaitingForEval(scope, env.selectedRun, env.runs)"
-           },
-           runDir: {
-               type: String,
-               computed: "computeRunDir(env.selectedRun, env.runs)"
-           },
            components: {
                type: Array,
                computed: "computeComponents(env.project, env.selectedRun, env.runs, scope)"
            }
        },
 
-       observers: [
-           "runChanged(env.selectedRun, env.runs)"
-       ],
-
-       computeWaitingForEval: function(scope, selected, runs) {
-           var run = runForId(selected, runs);
-           return scope == "eval" && run && !run.has_eval;
-       },
-
-       computeRunDir: function(selected, runs) {
-           var run = runForId(selected, runs);
-           return run && run.dir;
-       },
-
        computeComponents: function(project, selected, runs, scope) {
            var run = runForId(selected, runs);
            if (run) {
-               var view = this.util.viewForRun(project, run, scope);
+               var view = viewForRun(project, run, scope);
                if (view) {
                    return {
-                       main: this.viewComponents(view, "content", project),
-                       sidebar: this.viewComponents(view, "sidebar", project)
+                       main: viewComponents(view, "content", project),
+                       sidebar: viewComponents(view, "sidebar", project)
                    }
                } else {
                    console.warn("view not defined for scope", this.scope);
                }
            }
            return [];
-       },
-
-       viewComponents: function(view, type, project) {
-           var refs = view[type] || [];
-           var comps = [];
-           for (var i = 0; i < refs.length; i++) {
-               var cdef = this.util.resolveContent(refs[i], project);
-               if (cdef) {
-                   comps.push(cdef);
-               }
-           }
-           return comps;
        },
 
        isFields: function(c) {
@@ -237,30 +168,7 @@ limitations under the License.
        isOutput: function(c) {
            return c.element == "guild-output";
        },
-
-       runChanged: function(selected, runs) {
-           var run = runForId(selected, runs);
-           if (run) {
-               if (this.lastContentRun != run.id) {
-                   this.lastContentRun = run.id;
-                   this.$.overlay.close();
-               }
-           } else {
-               // run was deleted
-               this.$.overlay.open();
-           }
-       },
-
-       util: new function() {
-
-           this.viewForRun = function(project, run, scope) {
-               return Guild.Project.section(project, "views", scope);
-           };
-
-           this.resolveContent = function(name, project) {
-               return Guild.Project.section(project, "components", name);
-           };
-       }
+       
    });
   </script>
 </dom-module>
