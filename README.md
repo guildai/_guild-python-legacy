@@ -41,8 +41,15 @@ following:
 - Add `$GUILD_PYTHON_REPO/bazel-bin/guild` to your `PATH`
 - Create a `guild` alias equal to `$GUILD_PYTHON_REPO/bazel-bin/guild/guild`
 
+You also must set the following:
+```
+PYTHONPATH=$GUILD_PYTHON_REPO:$PYTHONPATH
+```
+
 where `$GUILD_PYTHON_REPO` is the path to the cloned Guild Python
 repository.
+
+Note:  `$GUILD_PYTHON_REPO` is not a required env variable.  It's here for convenience.
 
 The same rules apply to `guild-lite`. Note that you can effectively
 use the `guild` command for `guild-lite` using a `guild` alias equal
