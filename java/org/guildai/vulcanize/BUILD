@@ -9,6 +9,7 @@ java_binary(
         "-Djava.util.logging.SimpleFormatter.format='%1$$tY-%1$$tm-%1$$td %1$$tH:%1$$tM:%1$$tS.%1$$tL %4$$-6s %5$$s%6$$s%n'",  # Less log spam
     ],
     deps = [
+        "//java/org/jsoup/parser:HtmlTreeBuilder2",
         "@com_google_guava",
         "@com_google_protobuf_java",
         "@io_bazel_rules_closure//closure/compiler",
@@ -32,4 +33,3 @@ filegroup(
         "@com_google_javascript_closure_library//:closure/goog/deps.js",
     ],
 )
-

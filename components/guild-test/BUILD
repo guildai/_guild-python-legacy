@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
-load("@org_tensorflow_tensorboard//tensorboard/defs:vulcanize.bzl", "tensorboard_html_binary")
+load("//components:vulcanize.bzl", "guild_html_binary")
 
 ts_web_library(
     name = "guild-test",
@@ -21,10 +21,9 @@ ts_web_library(
     ]
 )
 
-tensorboard_html_binary(
+guild_html_binary(
     name = "demo-bin",
     input_path = "/guild-test/demo.html",
     output_path = "/guild-test/demo-bin.html",
-    deps = [":demo"],
-    _Vulcanize = "//java/org/guildai/vulcanize:Vulcanize",
+    deps = [":demo"]
 )

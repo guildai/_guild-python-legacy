@@ -66,6 +66,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Html5Printer;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.parser.HtmlTreeBuilder2;
 import org.jsoup.parser.Parser;
 import org.jsoup.parser.Tag;
 
@@ -80,7 +81,6 @@ public final class Vulcanize {
 
   private static final Pattern WEBPATH_PATTERN = Pattern.compile("//~~WEBPATH~~([^\n]+)");
 
-  private static final Parser parser = Parser.htmlParser();
   private static final Map<Webpath, Path> webfiles = new HashMap<>();
   private static final Set<Webpath> alreadyInlined = new HashSet<>();
   private static final Set<String> legalese = new HashSet<>();
@@ -581,6 +581,7 @@ public final class Vulcanize {
   }
 
   private static Document parse(InputStream input) {
+    Parser parser = new Parser(new HtmlTreeBuilder2());
     Document document;
     try {
       document = Jsoup.parse(input, null, "", parser);

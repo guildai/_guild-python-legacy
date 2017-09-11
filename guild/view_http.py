@@ -19,10 +19,10 @@ DEFAULT_MAX_EPOCHS = 400
 ####################################################################
 
 class AppPageHandler(object):
-    """Use SharedDataMiddleware to serve index.html statically."""
+    """Use SharedDataMiddleware to serve guild-bin.html statically."""
 
     def __init__(self, paths):
-        index_path = guild.app.generated("components", "index.html")
+        index_path = guild.app.generated("components", "guild-bin.html")
         exports = {
             path: index_path for path in paths
         }

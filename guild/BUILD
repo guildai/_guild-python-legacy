@@ -286,7 +286,7 @@ py_library(
     data = [
         "//include:project-base.yml",
         "//assets",
-        "//components:index.html",
+        "//components:guild-bin.html",
     ],
     deps = [
         ":cli",
