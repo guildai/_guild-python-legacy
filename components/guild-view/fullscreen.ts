@@ -69,3 +69,41 @@ export let FullscreenBehavior = {
         this.fullscreen = false;
     }
 }
+
+export let FullscreenHost = {
+
+    properties: {
+        fullscreenNotifyTarget: Object,
+        notifyingFullscreenCanceled: {
+            type: Boolean,
+            value: false
+        }
+    },
+
+    listeners: {
+        'fullscreen': 'handleFullscreen',
+        'fullscreen-exit': 'handleFullscreenExit',
+        'fullscreen-canceled': 'handleFullscreenCanceled'
+    },
+
+    handleFullscreen: function(e) {
+        var fullscreen = this.$$("guild-view-fullscreen");
+        fullscreen.content = e.detail.content;
+        this.fullscreenNotifyTarget = e.detail.notifyTarget;
+        fullscreen.open();
+    },
+
+    handleFullscreenExit: function(e) {
+        var fullscreen = this.$$("guild-view-fullscreen");
+        fullscreen.cancel();
+    },
+
+    handleFullscreenCanceled: function(e) {
+        if (!this.notifyingFullscreenCanceled
+            && this.fullscreenNotifyTarget) {
+            this.notifyingFullscreenCanceled = true;
+            this.fullscreenNotifyTarget.fire(e.type);
+            this.notifyingFullscreenCanceled = false;
+        }
+    }
+}

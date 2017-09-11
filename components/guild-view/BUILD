@@ -11,6 +11,7 @@ ts_web_library(
         ":guild-view-app-layout",
         ":guild-view-page",
         ":guild-view-styles",
+        ":guild-view-fullscreen",
         "//components/guild-env",
         "//components/guild-components-page",
         "//components/guild-compare-page",
@@ -91,12 +92,21 @@ ts_web_library(
 )
 
 ts_web_library(
-    name = "guild-fullscreen-behavior",
+    name = "fullscreen-behavior",
     srcs = [
-        "guild-fullscreen-behavior.html",
-        "fullscreen-behavior.ts"
+        "fullscreen-behavior.html",
+        "fullscreen.ts"
     ],
     path = "/guild-view",
     deps = [
+    ],
+)
+
+ts_web_library(
+    name = "guild-view-fullscreen",
+    srcs = ["guild-view-fullscreen.html"],
+    path = "/guild-view",
+    deps = [
+        "@org_polymer_iron_overlay_behavior",
     ],
 )

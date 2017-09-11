@@ -11,7 +11,7 @@ ts_web_library(
         "//components/guild-component-panel",
         "//components/guild-line-chart",
         "//components/guild-run:guild-run-data-listener",
-        "//components/guild-view:guild-fullscreen-behavior",
+        "//components/guild-view:fullscreen-behavior",
         "@org_polymer_iron_icons",
         "@org_polymer_paper_icon_button",
     ],
