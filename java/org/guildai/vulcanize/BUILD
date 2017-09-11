@@ -1,3 +1,21 @@
+# This package takes Vulcanize in house for a couple reasons:
+#
+# - We need to replace JSoup's aggressive DOM mangling with something
+#   that doesn't break Polymer templates inside various HTML elements
+#   (e.g. tables)
+#
+# - We need to control our own 'externs.js', which is how Vulcanize is
+#   inserting various top-level declarations or other structures needed by
+#   non ES6 module JavaScript code
+#
+# This is a *lot* to bring in house and duplicate and so is a vector for
+# ongoing bugs.
+#
+# Packages/labels to manually sync with TensorBoard upstream:
+#
+# - //java/org/guildai/vulcanize
+# - //components:vulcanize.bzl
+
 package(default_visibility = ["//visibility:public"])
 
 java_binary(
@@ -28,7 +46,7 @@ filegroup(
         # Ordering probably matters
         "@com_google_javascript_closure_compiler_externs",
         "@com_google_javascript_closure_compiler_externs_polymer",
-        "@org_tensorflow_tensorboard//tensorboard/java/org/tensorflow/tensorboard/vulcanize:externs.js",
+        "externs.js",
         "@com_google_javascript_closure_library//:closure/goog/base.js",
         "@com_google_javascript_closure_library//:closure/goog/deps.js",
     ],

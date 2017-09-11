@@ -99,7 +99,7 @@ guild_html_binary = rule(
         "external_assets": attr.string_dict(default={"/_/runfiles": "."}),
         "path_regexs_for_noinline": attr.string_list(),
         "_jslibs": attr.label(
-            default=Label("@org_tensorflow_tensorboard//tensorboard/java/org/tensorflow/tensorboard/vulcanize:jslibs"),
+            default=Label("//java/org/guildai/vulcanize:jslibs"),
             allow_files=True),
         "_Vulcanize": attr.label(
             default=Label("//java/org/guildai/vulcanize:Vulcanize"),

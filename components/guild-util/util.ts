@@ -34,9 +34,7 @@ export function formatValue(value, format) {
     if (split.format.endsWith("e")) {
         formatted = formatExponential(value, split.format.slice(0, -1));
     } else {
-        //TODO: removed to fix build
-        //formatted = numeral(value).format(split.format);
-        formatted = "XXX";
+        formatted = numeral(value).format(split.format);
     }
     return formatted + split.suffix;
 
