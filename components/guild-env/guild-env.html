@@ -16,6 +16,8 @@ limitations under the License.
 
 <link rel="import" href="../guild-data/guild-data-listener.html">
 
+<script src="env.js"></script>
+
 <dom-module id="guild-env">
   <template>
 
@@ -38,6 +40,8 @@ limitations under the License.
 
   </template>
   <script>
+   import { applyRunParam, deleteRunParam, selectedRun } from "./env.js";
+   
    Polymer({
        is: "guild-env",
 
@@ -66,37 +70,14 @@ limitations under the License.
        ],
 
        runsChanged: function(runs, route) {
-           this.set("env.selectedRun", this.util.selectedRun(runs, route))
+           this.set("env.selectedRun", selectedRun(runs, route))
        },
 
        selectedRunChanged: function(selected, route) {
            var params = selected
-                      ? this.util.applyRunParam(selected, route.__queryParams)
-                      : this.util.deleteRunParam(route.__queryParams);
+                      ? applyRunParam(selected, route.__queryParams)
+                      : deleteRunParam(route.__queryParams);
            this.set("route.__queryParams", params);
-       },
-
-       util: new function() {
-
-           this.selectedRun = function(runs, route) {
-               var runId = route.__queryParams.run;
-               if (runId) {
-                   return parseInt(runId, 10) || null;
-               } else {
-                   return runs.length > 0 ? runs[0].id : null;
-               }
-           };
-
-           this.applyRunParam = function(runId, params) {
-               var base = Object.assign({}, params);
-               return Object.assign(base, {"run": runId.toString()});
-           };
-
-           this.deleteRunParam = function(params) {
-               var base = Object.assign({}, params);
-               delete base["run"];
-               return base;
-           };
        }
    });
   </script>

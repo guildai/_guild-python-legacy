@@ -6,6 +6,7 @@ ts_web_library(
     name = "guild-env",
     srcs = [
         "guild-env.html",
+        "env.ts",
     ],
     path = "/guild-env",
     deps = [
