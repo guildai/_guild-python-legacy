@@ -13,8 +13,9 @@
  * limitations under the License.
  */
 
-export function section (project, type, name) {
-    var sections = project[type];
+// TODO: gretting closure compiler warning when using two args here
+export function section (project, type, name?) {
+    let sections = project[type];
     if (name) {
         return sections && sections[name] || undefined;
     } else {
