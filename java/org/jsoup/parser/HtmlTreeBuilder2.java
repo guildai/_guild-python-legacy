@@ -334,7 +334,7 @@ public class HtmlTreeBuilder2 extends TreeBuilder {
     }
 
     void clearStackToTableContext() {
-        clearStackToContext("table");
+        clearStackToContext("table", "template");
     }
 
     void clearStackToTableBodyContext() {

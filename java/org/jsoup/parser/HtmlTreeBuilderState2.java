@@ -855,6 +855,8 @@ enum HtmlTreeBuilderState2 {
                     else {
                         tb.insertForm(startTag, false);
                     }
+                } else if (name.equals("template")) {
+                    tb.insert(startTag);
                 } else {
                     return anythingElse(t, tb);
                 }
@@ -1037,14 +1039,14 @@ enum HtmlTreeBuilderState2 {
                         tb.clearStackToTableBodyContext();
                         tb.insert(startTag);
                         tb.transition(InRow);
-                    } else if (name.equals("template")) {
-                        tb.insert(startTag);
                     } else if (StringUtil.in(name, "th", "td")) {
                         tb.error(this);
                         tb.processStartTag("tr");
                         return tb.process(startTag);
                     } else if (StringUtil.in(name, "caption", "col", "colgroup", "tbody", "tfoot", "thead")) {
                         return exitTableBody(t, tb);
+                    } else if (name.equals("template")) {
+                        tb.insert(startTag);
                     } else
                         return anythingElse(t, tb);
                     break;
@@ -1100,10 +1102,10 @@ enum HtmlTreeBuilderState2 {
                     tb.insert(startTag);
                     tb.transition(InCell);
                     tb.insertMarkerToFormattingElements();
-                } else if (name.equals("template")) {
-                    tb.insert(startTag);
                 } else if (StringUtil.in(name, "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr")) {
                     return handleMissingTr(t, tb);
+                } else if (name.equals("template")) {
+                    tb.insert(startTag);
                 } else {
                     return anythingElse(t, tb);
                 }

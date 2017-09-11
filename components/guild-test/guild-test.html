@@ -2,15 +2,10 @@
 
 <dom-module id="guild-test">
   <template>
-    <h2>Items as a list</h2>
-    <ul>
-      <template is="dom-repeat" items="[[items]]">
-        <li>Color: [[item.color]]<br>Size: [[item.size]]</li>
-      </template>
-    </ul>
-
-    <h2>Items as a table</h2>
     <table>
+      <template is="dom-if" if="[[showCaption]]">
+        <caption>You should not see me</caption>
+      </template>
       <thead>
         <tr>
           <th>Color</th>
@@ -22,7 +17,7 @@
           <tr>
             <td>[[item.color]]</td>
             <td>[[item.size]]</td>
-          </tr >
+          </tr>
         </template>
       </tbody>
     </table>    
@@ -31,6 +26,10 @@
    Polymer({
        is: "guild-test",
        properties: {
+           showCaption: {
+               type: Boolean,
+               value: false
+           },
            items: {
                type: Array,
                value: function() {
