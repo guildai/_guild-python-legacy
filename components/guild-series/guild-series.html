@@ -16,6 +16,7 @@ limitations under the License.
 
 <link rel="import" href="../guild-chart/guild-chart.html">
 <link rel="import" href="../guild-styles/guild-styles.html">
+<link rel="import" href="../guild-run/guild-run.html">
 
 <dom-module id="guild-series">
   <template>
@@ -33,9 +34,11 @@ limitations under the License.
       </template>
     </div>
   </template>
+
+  <script src="util.js"></script>
   <script>
    import { runForId } from "../guild-run/run.js";
-   import { section as projectSection } from "../guild-project/project.js";
+   import { projectSeries, extraSeries } from "./util.js";
 
    Polymer({
        is: "guild-series",
@@ -66,9 +69,9 @@ limitations under the License.
            }
            this.lastSeriesRun = selected;
            var run = runForId(selected, runs);
-           var projectSeries = this.util.projectSeries(project, run);
-           var extraSeries = this.util.extraSeries(project);
-           return projectSeries.concat(extraSeries);
+           var series = projectSeries(project, run);
+           var extra = extraSeries(project);
+           return series.concat(extra);
        },
 
        activeChanged: function(val) {
@@ -76,30 +79,6 @@ limitations under the License.
            charts.forEach(function(c) {
                c.active = val;
            });
-       },
-
-       util: new function() {
-           this.projectSeries = function(project, run) {
-               // TODO use scope to resolve series
-               return projectSection(project, "train-series");
-           };
-
-           this.extraSeries = function(project) {
-               var series = [];
-               var componentDef = projectSection(
-                   project, "components", "series");
-               if (componentDef) {
-                   var names = componentDef.extra_series_templates || [];
-                   for (var i = 0; i < names.length; i++) {
-                       var template = projectSection(
-                           project, "templates", names[i]);
-                       if (template) {
-                           series.push(template);
-                       }
-                   }
-               }
-               return series;
-           };
        }
    });
   </script>

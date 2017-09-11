@@ -67,7 +67,10 @@ limitations under the License.
                notify: true,
                computed: "computeFormattedValue(data)"
            },
-           formattedDefault: String
+           formattedDefault: {
+               type: String,
+               value: "FORMATTING ERROR"
+           }
        },
 
        computeDataSource: function(runDataSource, selectedRun, scope) {
@@ -84,7 +87,7 @@ limitations under the License.
 
        computeDataFetchInterval: function(interval, stopWithRun, selected,
                                           runs, settings) {
-           if (stopWithRun && !this.util.isRunning(selected, runs)) {
+           if (stopWithRun && isRunning(runForId(selected, runs))) {
                return 0;
            } else {
                return interval != null
@@ -99,16 +102,12 @@ limitations under the License.
 
        computeFormattedValue: function(data) {
            if (this.dataFormat) {
+               // TODO: Closure compiler warning that formatData is not defined, but
+               // this comes by way of the DataListener behavior/mixin
                return this.formatData(data, this.formattedDefault);
+           } else {
+               return data;
            }
-       },
-
-       util: new function() {
-
-           this.isRunning = function(selected, runs) {
-               var run = runForId(selected, runs);
-               return isRunning(run);
-           };
        }
    });
   </script>

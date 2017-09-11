@@ -65,6 +65,7 @@ limitations under the License.
          if (e.target == this) {
              this.contentParent.appendChild(this.content);
              this.fire("fullscreen-canceled");
+             // TODO: Closure compiler complaining about this assignment :(
              this.content = undefined;
          }
      }

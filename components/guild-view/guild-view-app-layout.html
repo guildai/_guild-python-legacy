@@ -67,7 +67,11 @@ limitations under the License.
 
     <content select="guild-view-page"></content>
   </template>
+  
+  <script src="app-layout-util.js"></script>
   <script>
+   import { containersChanged, containerHasInstance } from "./app-layout-util.js";
+   
    Polymer({
        is: "guild-view-app-layout",
 
@@ -91,6 +95,7 @@ limitations under the License.
 
        ready: function() {
            this.registerContainerNodeListener();
+           // TODO: Closure compiler is complaining about getContentChildNodes :(
            this.pages = this.getContentChildNodes("[select='guild-view-page']");
            this.containers = [];
        },
@@ -103,7 +108,7 @@ limitations under the License.
 
        containerNodesChanged: function(info) {
            var current = this.pageContainers();
-           if (this.util.containersChanged(current, this.containers)) {
+           if (containersChanged(current, this.containers)) {
                this.containers = current;
            }
        },
@@ -119,7 +124,7 @@ limitations under the License.
 
        ensureInstance: function(selected, containers) {
            var container = this.containerForId(selected);
-           if (container && !this.util.containerHasInstance(container)) {
+           if (container && !containerHasInstance(container)) {
                var page = this.pageForId(selected);
                if (page) {
                    page.initialize();
@@ -146,23 +151,6 @@ limitations under the License.
 
        closeDrawer: function() {
            this.$$("app-drawer").close();
-       },
-
-       util: new function() {
-
-           this.containersChanged = function(a, b) {
-               return containerPageIds(a).join() != containerPageIds(b).join();
-           };
-
-           var containerPageIds = function(a) {
-               return a.map(function(c) {
-                   return c.getAttribute("page-id");
-               });
-           };
-
-           this.containerHasInstance = function(c) {
-               return c.children.length > 0;
-           };
        }
    });
   </script>

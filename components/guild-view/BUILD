@@ -29,7 +29,10 @@ ts_web_library(
 
 ts_web_library(
     name = "guild-view-app-layout",
-    srcs = ["guild-view-app-layout.html"],
+    srcs = [
+        "guild-view-app-layout.html",
+        "app-layout-util.ts",
+    ],
     path = "/guild-view",
     deps = [
         ":guild-view-app-menu",

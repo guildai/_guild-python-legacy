@@ -99,7 +99,7 @@ export let DataListener = {
         }
     },
 
-    dataFetchIntervalChanged(interval, old) {
+    dataFetchIntervalChanged: function(interval, old) {
         if (interval > 0) {
             this.maybeFetch(this.dataSource, this.active);
         }
