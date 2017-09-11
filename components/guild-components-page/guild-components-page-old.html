@@ -154,6 +154,7 @@ limitations under the License.
   </template>
   <script>
    import { runForId } from "../guild-run/run.js";
+   import { section as projectSection } from "../guild-project/project.js";
    
    Polymer({
        is: "guild-components-page",
@@ -254,11 +255,11 @@ limitations under the License.
        util: new function() {
 
            this.viewForRun = function(project, run, scope) {
-               return Guild.Project.section(project, "views", scope);
+               return projectSection(project, "views", scope);
            };
 
            this.resolveContent = function(name, project) {
-               return Guild.Project.section(project, "components", name);
+               return projectSection(project, "components", name);
            };
        }
    });

@@ -35,6 +35,7 @@ limitations under the License.
   </template>
   <script>
    import { runForId } from "../guild-run/run.js";
+   import { section as projectSection } from "../guild-project/project.js";
 
    Polymer({
        is: "guild-series",
@@ -80,17 +81,17 @@ limitations under the License.
        util: new function() {
            this.projectSeries = function(project, run) {
                // TODO use scope to resolve series
-               return Guild.Project.section(project, "train-series");
+               return projectSection(project, "train-series");
            };
 
            this.extraSeries = function(project) {
                var series = [];
-               var componentDef = Guild.Project.section(
+               var componentDef = projectSection(
                    project, "components", "series");
                if (componentDef) {
                    var names = componentDef.extra_series_templates || [];
                    for (var i = 0; i < names.length; i++) {
-                       var template = Guild.Project.section(
+                       var template = projectSection(
                            project, "templates", names[i]);
                        if (template) {
                            series.push(template);
