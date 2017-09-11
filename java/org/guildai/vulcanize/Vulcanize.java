@@ -74,7 +74,7 @@ import org.jsoup.parser.Tag;
 public final class Vulcanize {
 
   private static final Pattern IGNORE_PATHS_PATTERN =
-      Pattern.compile("/(?:polymer|marked-element)/.*");
+      Pattern.compile("/(?:polymer|marked-element|fa-awesome)/.*");
 
   private static final ImmutableSet<String> EXTRA_JSDOC_TAGS =
       ImmutableSet.of("attribute", "hero", "group", "required");
@@ -425,7 +425,8 @@ public final class Vulcanize {
             if (error.getDefaultLevel() == CheckLevel.WARNING
                 && (error.sourceName.startsWith("/iron-")
                     || error.sourceName.startsWith("/neon-")
-                    || error.sourceName.startsWith("/paper-"))) {
+                    || error.sourceName.startsWith("/paper-")
+                    || error.sourceName.startsWith("/app-"))) {
               // Suppress warnings in the Polymer standard libraries.
               return CheckLevel.OFF;
             }
