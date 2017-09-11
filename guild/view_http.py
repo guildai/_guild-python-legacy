@@ -224,5 +224,7 @@ def _handle_tf_data(view, _req, path):
 def _app_page_handler():
     paths = [
         "/train",
+        "/compare",
+        "/tensorboard",
     ]
     return AppPageHandler(paths)
