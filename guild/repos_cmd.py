@@ -77,7 +77,6 @@ def _add_repo(args):
         "url": args.url
     })
     guild.user.write_config("repos", repos)
-    guild.cli.out("repo '%s' added", args.name)
     _maybe_sync(args)
 
 def _verify_repo_not_exists(name, repos):
@@ -91,10 +90,6 @@ def _repo_exists_error(name):
 def _maybe_sync(args):
     if args.sync:
         _sync()
-    else:
-        guild.cli.out(
-            "Run 'guild sync' to synchronize with your repos before "
-            "searching or installing packages.")
 
 def _sync():
     print("TODO: run sync")
@@ -111,8 +106,8 @@ def _delete_repo(args):
     else:
         _repo_not_exists_error(args.name)
     guild.user.write_config("repos", repos)
-    guild.cli.out("repo '%s' deleted", args.name)
     _maybe_sync(args)
+
 def _repo_not_exists_error(name):
     guild.cli.error("repo '%s' does not exist" % name)
 
