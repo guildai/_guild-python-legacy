@@ -9,8 +9,6 @@ import guild.util
 # NOTE: Avoid time consuming imports here and instead move into
 # functions that use them.
 
-__CONSOLE_WIDTH = None
-
 def add_parser(subparsers, cmd, help, description):
     return subparsers.add_parser(
         cmd,
@@ -24,30 +22,12 @@ def _format_description(desc):
 
 def _format_par(par):
     normalized = _strip_repeating_ws(par).strip()
-    wrapper = textwrap.TextWrapper(
-        width=_safe_console_width() - 10)
+    wrapper = textwrap.TextWrapper(width=guild.cli.safe_console_width() - 10)
     lines = wrapper.wrap(normalized)
     return "\n".join(lines)
 
 def _strip_repeating_ws(s):
     return re.sub(r"\s+", " ", s)
-
-def _safe_console_width():
-    return max(_console_width(), 72)
-
-def _console_width():
-    global __CONSOLE_WIDTH
-    if __CONSOLE_WIDTH is None:
-        __CONSOLE_WIDTH = _stty_size_or_zero()
-    return __CONSOLE_WIDTH
-
-def _stty_size_or_zero():
-    out = os.popen('stty size', 'r').read()
-    if out:
-        _, cols = out.split()
-        return int(cols)
-    else:
-        return 0
 
 def add_project_arguments(parser, flag_support=False):
     parser.add_argument(
