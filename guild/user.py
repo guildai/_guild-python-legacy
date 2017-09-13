@@ -6,11 +6,14 @@ def read_config(section, default=None):
     return read_all_config().get(section, default)
 
 def read_all_config():
-    path = _user_config_path()
+    path = user_config_path()
     return _read_config(path) if os.path.exists(path) else {}
 
-def _user_config_path():
-    return os.path.expanduser(os.path.join("~", ".guild", "config.yml"))
+def user_config_path():
+    return os.path.join(home(), "config.yml")
+
+def home():
+    return os.path.expanduser(os.path.join("~", ".guild"))
 
 def _read_config(path):
     with open(path, "r") as f:
@@ -22,7 +25,7 @@ def write_config(section, value):
     write_all_config(config)
 
 def write_all_config(config):
-    path = _user_config_path()
+    path = user_config_path()
     try:
         os.makedirs(os.path.dirname(path))
     except OSError as e:
