@@ -9,6 +9,8 @@ import guild.util
 # NOTE: Avoid time consuming imports here and instead move into
 # functions that use them.
 
+CONSOLE_WIDTH = None
+
 def add_parser(subparsers, cmd, help, description):
     return subparsers.add_parser(
         cmd,
@@ -22,7 +24,7 @@ def _format_description(desc):
 
 def _format_par(par):
     normalized = _strip_repeating_ws(par).strip()
-    wrapper = textwrap.TextWrapper(width=guild.cli.safe_console_width() - 10)
+    wrapper = textwrap.TextWrapper(width=_safe_console_width() - 10)
     lines = wrapper.wrap(normalized)
     return "\n".join(lines)
 
@@ -270,3 +272,20 @@ def _bad_run_index_error(index):
     guild.cli.error(
         "Run index '%i' is out of range\n"
         "Try 'guild runs' for a list of runs." % index)
+
+def _safe_console_width():
+    return max(_console_width(), 72)
+
+def _console_width():
+    global CONSOLE_WIDTH
+    if CONSOLE_WIDTH is None:
+        CONSOLE_WIDTH = _stty_size_or_zero()
+    return CONSOLE_WIDTH
+
+def _stty_size_or_zero():
+    out = os.popen('stty size', 'r').read()
+    if out:
+        _, cols = out.split()
+        return int(cols)
+    else:
+        return 0

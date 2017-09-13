@@ -1,13 +1,11 @@
 import argparse
 import logging
-import os
 import sys
 
 import guild.app
 # Avoid expensive imports here
 
 STOPPED_BY_USER_EXIT = 2
-CONSOLE_WIDTH = None
 
 class Exit(Exception):
 
@@ -116,35 +114,3 @@ def _print_error_and_exit(prog, msg, exit_status):
 
 def error(msg=None, exit_status=1):
     raise Exit(msg, exit_status)
-
-def out(msg, args=()):
-    wrapped = wrap_output_text(msg % args)
-    sys.stdout.write(wrapped)
-    sys.stdout.write("\n")
-
-def wrap_output_text(text):
-    import textwrap
-    lines0 = text.split("\n")
-    lines = []
-    wrapper = textwrap.TextWrapper(width=safe_console_width() - 10)
-    for line in lines0:
-        for wrapped in wrapper.wrap(line):
-            lines.append(wrapped)
-    return "\n".join(lines)
-
-def safe_console_width():
-    return max(console_width(), 72)
-
-def console_width():
-    global CONSOLE_WIDTH
-    if CONSOLE_WIDTH is None:
-        CONSOLE_WIDTH = _stty_size_or_zero()
-    return CONSOLE_WIDTH
-
-def _stty_size_or_zero():
-    out = os.popen('stty size', 'r').read()
-    if out:
-        _, cols = out.split()
-        return int(cols)
-    else:
-        return 0
