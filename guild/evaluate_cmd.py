@@ -5,7 +5,7 @@ import guild.cmd_support
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
         subparsers,
-        "evaluate", "evaluates a trained model",
+        "evaluate", "evaluate a trained model",
         """Evaluate a run.
 
         Note that some models may not support the evalute operation.
