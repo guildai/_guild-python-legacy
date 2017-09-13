@@ -18,7 +18,7 @@ def add_parser(subparsers):
         """)
     p.set_defaults(func=main)
 
-def main(args):
+def main(_args):
     import guild.git
     import guild.user
 
