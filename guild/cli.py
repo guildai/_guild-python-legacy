@@ -1,9 +1,9 @@
 import argparse
 import logging
-import cProfile
+import os
 import sys
 
-import guild.app
+# Avoid expensive imports here
 
 STOPPED_BY_USER_EXIT = 2
 
@@ -50,6 +50,7 @@ def parser(commands):
     return p
 
 def _version_pattern():
+    import guild.app
     return "%(prog)s " + guild.app.version()
 
 def _add_command(module, subparsers):
@@ -87,6 +88,7 @@ def _logging_level_for_args(args):
         return logging.INFO
 
 def _profile_call(f, a, filename):
+    import cProfile
     p = cProfile.Profile()
     try:
         p.runcall(f, *a)
