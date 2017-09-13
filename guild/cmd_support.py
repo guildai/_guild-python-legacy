@@ -263,7 +263,7 @@ def _no_such_run_error(name):
 
 def _run_for_index(index, runs):
     if index >= 0 and index < len(runs):
-        return runs[0]
+        return runs[index]
     _bad_run_index_error(index)
 
 def _bad_run_index_error(index):
