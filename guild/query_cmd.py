@@ -64,7 +64,7 @@ def _print_series(run):
 
 def _print_files(run):
     cwd = os.path.abspath(".")
-    for root, dirs, files in os.walk(run.opdir):
+    for root, _dirs, files in os.walk(run.opdir):
         for f in files:
             path = os.path.join(root, f)
             print(os.path.relpath(path, cwd))

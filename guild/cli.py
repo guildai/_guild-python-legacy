@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 
+import guild.app
 # Avoid expensive imports here
 
 STOPPED_BY_USER_EXIT = 2
@@ -51,7 +52,6 @@ def parser(commands):
     return p
 
 def _version_pattern():
-    import guild.app
     return "%(prog)s " + guild.app.version()
 
 def _add_command(module, subparsers):

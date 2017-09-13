@@ -69,7 +69,7 @@ def main(args):
 
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     settings = _view_settings_for_args(args)
-    tb_proxy = _try_start_tensorboard_proxy(project, args)
+    tb_proxy = _try_start_tensorboard_proxy(project)
     view = guild.view.ProjectView(project, settings, tb_proxy)
 
     sys.stdout.write("Guild View running on port %i\n" % args.port)
@@ -87,7 +87,7 @@ def main(args):
         view.close()
         sys.stdout.write("Guild View stopped\n")
 
-def _try_start_tensorboard_proxy(project, args):
+def _try_start_tensorboard_proxy(project):
     import guild.tensorboard_proxy
 
     logdir = guild.project_util.runs_dir_for_project(project)

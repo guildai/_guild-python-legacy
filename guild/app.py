@@ -45,4 +45,4 @@ def generated(*parts):
     if os.path.exists(dev_bin_path):
         return dev_bin_path
     raise AssertionError(
-        "cannot find generated output for %s" % parts.join(","))
+        "cannot find generated output for %s" % ",".join(parts))
