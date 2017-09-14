@@ -68,7 +68,7 @@ def _cached_repos():
     return [path for path in all_paths if os.path.isdir(path)]
 
 def _repos_home():
-    return os.path.join(guild.user.home(), "repos")
+    return guild.user.user_dir("repos")
 
 def _repo_name_exists(name, repos):
     for repo in repos:

@@ -13,7 +13,10 @@ def user_config_path():
     return os.path.join(home(), "config.yml")
 
 def home():
-    return os.path.expanduser(os.path.join("~", ".guild"))
+    return os.path.join(os.getenv("HOME"), ".guild")
+
+def user_dir(name):
+    return os.path.join(home(), name)
 
 def _read_config(path):
     with open(path, "r") as f:
