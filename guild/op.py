@@ -122,7 +122,6 @@ class Op(object):
     def _resolve_val(self, val):
         attrs = {
             "opdir": self._opdir,
-            "pkg_home": guild.app.pkg_home()
         }
         return val % attrs
 

@@ -19,12 +19,6 @@ def script(name):
 def include_src(name):
     return os.path.join(home(), "include", name)
 
-def pkg_home():
-    return user_dir("pkg")
-
-def user_dir(name):
-    return os.path.join(os.getenv("HOME"), ".guild", name)
-
 def plugins():
     return _iter_core_plugins()
 

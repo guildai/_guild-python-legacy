@@ -45,7 +45,6 @@ def _flag_args(flags):
 
 def base_env():
     return {
-        "PKG_HOME": "%(pkg_home)s",
         "GPU_COUNT": str(guild.system.gpu_count())
     }
 
