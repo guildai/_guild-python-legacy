@@ -1,20 +1,56 @@
 package(default_visibility = ["//visibility:public"])
 
-guild_cmds = [
-    ":check_cmd",
-    ":evaluate_cmd",
-    ":prepare_cmd",
-    ":project_cmd",
-    ":query_cmd",
-    ":runs_cmd",
-    ":train_cmd",
-    ":view_cmd",
-]
-
 sh_binary(
     name = "guild",
     srcs = ["//scripts:guild-exe"],
-    data = guild_cmds
+    data = [
+        ":guild_main",
+        ":check_cmd",
+        ":evaluate_cmd",
+        ":prepare_cmd",
+        ":project_cmd",
+        ":query_cmd",
+        ":runs_cmd",
+        ":train_cmd",
+        ":view_cmd",
+    ]
+)
+
+sh_binary(
+    name = "gpkg",
+    srcs = ["//scripts:gpkg-exe"],
+    data = [
+        ":gpkg_main",
+        ":info_cmd",
+        ":search_cmd",
+        ":sync_cmd",
+        ":sources_cmd",
+    ]
+)
+
+py_library(
+    name = "guild_main",
+    srcs = ["guild_main.py"],
+    deps = [
+        ":main_impl",
+    ]
+)
+
+py_library(
+    name = "gpkg_main",
+    srcs = ["gpkg_main.py"],
+    deps = [
+        ":main_impl",
+    ]
+)
+
+py_library(
+    name = "main_impl",
+    srcs = ["main_impl.py"],
+    deps = [
+        ":__init__",
+        ":app",
+    ]
 )
 
 py_library(
@@ -306,4 +342,59 @@ py_library(
         ":view",
         "@org_pocoo_werkzeug",
     ],
+)
+
+py_library(
+    name = "sources_cmd",
+    srcs = ["sources_cmd.py"],
+    deps = [
+        ":cmd_support",
+        ":cli",
+        ":user",
+    ],
+)
+
+py_library(
+    name = "user",
+    srcs = ["user.py"],
+    deps = [
+        "@org_pyyaml",
+    ],
+)
+
+py_library(
+    name = "sync_cmd",
+    srcs = ["sync_cmd.py"],
+    deps = [
+        ":cmd_support",
+        ":cli",
+        ":git",
+        ":user",
+    ]
+)
+
+py_library(
+    name = "git",
+    srcs = ["git.py"],
+    deps = [
+        ":log",
+    ],
+)
+
+py_library(
+    name = "search_cmd",
+    srcs = ["search_cmd.py"],
+    deps = [
+        ":cmd_support",
+        ":cli",
+        ":user",
+    ]
+)
+
+py_library(
+    name = "info_cmd",
+    srcs = ["info_cmd.py"],
+    deps = [
+        ":cmd_support",
+    ]
 )

@@ -9,11 +9,11 @@ import guild.cmd_support
 def add_parser(subparsers):
     p = guild.cmd_support.add_parser(
         subparsers,
-        "sync", "synchronize with package repositories",
-        """Synchronizes with configured package repositories.
+        "sync", "synchronize with package sources",
+        """Synchronizes with configured package sources.
 
         When searching or installing packages, Guild uses locally
-        cached repository data. Use sync to ensure repository data is
+        cached source data. Use sync to ensure package data is
         up-to-date before running search or install.
         """)
     p.set_defaults(func=main)
@@ -22,28 +22,28 @@ def main(_args):
     import guild.git
     import guild.user
 
-    current_repos = guild.user.read_config("repos", [])
-    for repo in current_repos:
-        _sync_repo(repo)
-    for path in _deleted_repos(current_repos):
-        _delete_repo(path)
+    current_sources = guild.user.read_config("package-sources", [])
+    for source in current_sources:
+        _sync_source(source)
+    for path in _deleted_sources(current_sources):
+        _delete_source(path)
 
-def _sync_repo(repo):
-    name, url = _repo_attrs(repo)
-    sys.stdout.write("Synchronizing %s repo\n" % name)
-    repo_path = os.path.join(_repos_home(), name)
+def _sync_source(source):
+    name, url = _source_attrs(source)
+    sys.stdout.write("Synchronizing %s source\n" % name)
+    source_path = os.path.join(_sources_home(), name)
     resolved_url = _resolve_url(url)
-    if os.path.exists(repo_path):
-        guild.git.pull(repo_path, resolved_url)
+    if os.path.exists(source_path):
+        guild.git.pull(source_path, resolved_url)
     else:
-        guild.git.clone(repo_path, resolved_url)
+        guild.git.clone(source_path, resolved_url)
 
-def _repo_attrs(repo):
+def _source_attrs(source):
     try:
-        return repo["name"], repo["url"]
+        return source["name"], source["url"]
     except KeyError:
         guild.cli.error(
-            "error in repos config\n"
+            "error in sources config\n"
             "Try editing %s to resolve this problem."
             % guild.user.user_config_path())
 
@@ -53,36 +53,36 @@ def _resolve_url(url):
     else:
         return url
 
-def _deleted_repos(current):
-    installed = _cached_repos()
+def _deleted_sources(current):
+    installed = _cached_sources()
     for path in installed:
         name = os.path.basename(path)
-        if not _repo_name_exists(name, current):
+        if not _source_name_exists(name, current):
             yield path
 
-def _cached_repos():
-    repos_home = _repos_home()
+def _cached_sources():
+    sources_home = _sources_home()
     all_paths = [
-        os.path.join(repos_home, name)
-        for name in os.listdir(repos_home)]
+        os.path.join(sources_home, name)
+        for name in os.listdir(sources_home)]
     return [path for path in all_paths if os.path.isdir(path)]
 
-def _repos_home():
-    return guild.user.user_dir("repos")
+def _sources_home():
+    return guild.user.user_dir("package-sources")
 
-def _repo_name_exists(name, repos):
-    for repo in repos:
-        if repo.get("name") == name:
+def _source_name_exists(name, sources):
+    for source in sources:
+        if source.get("name") == name:
             return True
     return False
 
-def _delete_repo(path):
+def _delete_source(path):
     sys.stdout.write(
-        "Removing deleted %s repo\n"
+        "Removing deleted %s source\n"
         % os.path.basename(path))
-    _assert_cached_repo(path)
+    _assert_cached_source(path)
     shutil.rmtree(path)
 
-def _assert_cached_repo(path):
-    if not path.startswith(_repos_home()):
+def _assert_cached_source(path):
+    if not path.startswith(_sources_home()):
         raise AssertionError(path)

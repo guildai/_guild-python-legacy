@@ -1,10 +1,12 @@
 GUILD = bazel-bin/guild/guild
 
-build:
-	bazel build guild
+build: build-guild build-gpkg
 
-lite:
-	bazel build guild:guild-lite
+build-guild:
+	bazel build guild:guild
+
+build-gpkg:
+	bazel build guild:gpkg
 
 component-deps: components/.deps-resolved
 

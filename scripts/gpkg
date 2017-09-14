@@ -10,8 +10,8 @@ def main():
         module_space_import_paths(root)
     )
     sys.path.extend(import_paths)
-    import guild.guild_main
-    guild.guild_main.main()
+    import guild.gpkg_main
+    guild.gpkg_main.main()
 
 def module_space():
     module_space = os.path.abspath(sys.argv[0]) + '.runfiles'

@@ -17,11 +17,11 @@ class Exit(Exception):
     def __str__(self):
         return "(%i) %s" % (self.exit_status, self.msg)
 
-def parser(commands):
+def parser(prog, desc, commands):
     p = argparse.ArgumentParser(
-        description="Guild AI command line interface.",
-        epilog="For details on a command, use 'guild COMMAND --help'",
-        prog="guild")
+        description=desc,
+        epilog="For details on a command, use '%s COMMAND --help'" % prog,
+        prog=prog)
     p.add_argument(
         "--version",
         action="version",
@@ -30,12 +30,11 @@ def parser(commands):
     p.add_argument(
         "--debug",
         action="store_true",
-        help="enable debugging (useful for troubleshooting issues)")
+        help=argparse.SUPPRESS)
     p.add_argument(
         "--time",
         metavar="FILE",
-        help=("write command timing stats to FILE; use '-' to write to "
-              "standard output"))
+        help=argparse.SUPPRESS)
     p.add_argument(
         "--trace",
         action="store_true",
@@ -55,8 +54,8 @@ def _version_pattern():
 def _add_command(module, subparsers):
     module.add_parser(subparsers)
 
-def main(commands):
-    p = parser(commands)
+def main(prog, desc, commands):
+    p = parser(prog, desc, commands)
     args = p.parse_args()
     _maybe_trace(args)
     _init_logging(args)

@@ -1,0 +1,117 @@
+import guild.cli
+import guild.cmd_support
+# Avoid expensive imports here
+
+def add_parser(subparsers):
+    p = guild.cmd_support.add_parser(
+        subparsers,
+        "sources", "manage package sources",
+        """With no arguments, prints a list of package sources.
+
+        Use 'add' to add a new source. When adding a source, specify a
+        full Git repository repository URL or a path consisting of the
+        pattern ACCOUNT/REPO, where ACCOUNT is a GitHub account and
+        REPO is the name of the GitHub repository. For example 'guild
+        sources add guild guildai/packages' will add a source named
+        'guild' with a URL of the 'guildai/packages' GitHub
+        repository.
+
+        Use 'remove' (or 'rm') to delete a source.
+        """)
+    p.add_argument(
+        "sources_command",
+        help="optional command: add, remove (or rm)",
+        metavar="COMMAND",
+        nargs="?")
+    p.add_argument(
+        "name",
+        help="source name to add or delete",
+        metavar="NAME",
+        nargs="?")
+    p.add_argument(
+        "url",
+        help="source URL to add",
+        metavar="URL",
+        nargs="?")
+    p.add_argument(
+        "--nosync",
+        help="do not synchronize with sources after modifying them",
+        action="store_true")
+    p.add_argument(
+        "-v", "--verbose",
+        help="show source details when printing a list",
+        action="store_true")
+    p.set_defaults(func=main)
+
+def main(args):
+    import guild.user
+    if args.sources_command is None:
+        _list_sources(args)
+    elif args.sources_command == "add":
+        _add_source(args)
+        _maybe_sync(args)
+    elif args.sources_command == "remove" or args.sources_command == "rm":
+        _delete_source(args)
+        _maybe_sync(args)
+    else:
+        _unknown_command_error(args.sources_command)
+
+def _list_sources(args):
+    for source in guild.user.read_config("package-sources", []):
+        _print_source(source, args)
+
+def _print_source(source, args):
+    if args.verbose:
+        print("%s\t%s" % (source.get("name", "-"), source.get("url", "-")))
+    else:
+        print(source.get("name", "-"))
+
+def _add_source(args):
+    if not args.name:
+        guild.cli.error("missing required source NAME")
+    if not args.url:
+        guild.cli.error("missing required source URL")
+    sources = guild.user.read_config("package-sources", [])
+    _verify_source_not_exists(args.name, sources)
+    sources.append({
+        "name": args.name,
+        "url": args.url
+    })
+    guild.user.write_config("package-sources", sources)
+
+def _verify_source_not_exists(name, sources):
+    for source in sources:
+        if source.get("name") == name:
+            _source_exists_error(name)
+
+def _source_exists_error(name):
+    guild.cli.error("source '%s' already exists" % name)
+
+def _maybe_sync(args):
+    if not args.nosync:
+        _sync()
+
+def _sync():
+    import guild.sync_cmd
+    guild.sync_cmd.main([])
+
+def _delete_source(args):
+    if not args.name:
+        guild.cli.error("missing required source NAME")
+    sources = guild.user.read_config("package-sources", [])
+    for source in sources:
+        if source.get("name") == args.name:
+            sources.remove(source)
+            break
+    else:
+        _source_not_exists_error(args.name)
+    guild.user.write_config("package-sources", sources)
+
+def _source_not_exists_error(name):
+    guild.cli.error("source '%s' does not exist" % name)
+
+def _unknown_command_error(cmd):
+    guild.cli.error(
+        "unknown runs command '%s'\n"
+        "Try 'guild sources --help' for a list of commands"
+        % cmd)

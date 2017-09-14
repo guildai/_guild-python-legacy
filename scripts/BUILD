@@ -13,3 +13,9 @@ filegroup(
     srcs = ["guild"],
     visibility = ["//visibility:public"],
 )
+
+filegroup(
+    name = "gpkg-exe",
+    srcs = ["gpkg"],
+    visibility = ["//visibility:public"],
+)
