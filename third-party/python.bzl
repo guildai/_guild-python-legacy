@@ -21,3 +21,13 @@ def guild_python_workspace():
         strip_prefix = "psutil-5.2.2",
         sha256 = "44746540c0fab5b95401520d29eb9ffe84b3b4a235bd1d1971cbe36e1f38dd13",
     )
+
+    native.new_http_archive(
+        name = "org_semantic_version",
+        build_file = "//third-party:semantic_version.BUILD",
+        urls = [
+            "https://pypi.python.org/packages/72/83/f76958017f3094b072d8e3a72d25c3ed65f754cc607fdb6a7b33d84ab1d5/semantic_version-2.6.0.tar.gz"
+        ],
+        strip_prefix = "semantic_version-2.6.0",
+        sha256 = "2a4328680073e9b243667b201119772aefc5fc63ae32398d6afafff07c4f54c0",
+    )

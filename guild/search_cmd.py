@@ -1,4 +1,3 @@
-import os
 import re
 
 import guild.cli
@@ -8,12 +7,13 @@ import guild.cmd_support
 class PkgIndex(object):
 
     def __init__(self):
-        self._term_pkgs = {}
+        self._term_keys = {}
         self._pkgs = {}
 
-    def pkg_term(self, term, key, pkg):
-        pkgs = self._term_pkgs.setdefault(term, [])
-        pkgs.append(key)
+    def pkg_term(self, term, pkg):
+        term_keys = self._term_keys.setdefault(term, [])
+        key = _pkg_key(pkg)
+        term_keys.append(key)
         self._pkgs[key] = pkg
 
     def matches_all(self, terms):
@@ -24,11 +24,11 @@ class PkgIndex(object):
 
     def _match(self, terms, set_join):
         matching_keys = [
-            set(self._term_pkgs.get(term, []))
+            set(self._term_keys.get(term, []))
             for term in terms
         ]
         intersection_keys = set_join(*matching_keys)
-        return [(key, self._pkgs[key]) for key in intersection_keys]
+        return [self._pkgs[key] for key in intersection_keys]
 
 
 def add_parser(subparsers):
@@ -55,60 +55,44 @@ def add_parser(subparsers):
         action="store_true")
     p.set_defaults(func=main)
 
+def _pkg_key(pkg):
+    return (pkg.repo, pkg.name)
+
 def main(args):
-    import guild.user
+    import guild.source
     index = _init_index()
-    for key, pkg in _match(args, index):
-        _print_pkg(key, pkg)
+    for pkg in _match(args, index):
+        _print_pkg(pkg)
 
 def _init_index():
     index = PkgIndex()
-    repos_home = guild.user.user_dir("repos")
-    for parent, dirs, _files in os.walk(repos_home, topdown=True):
-        try:
-            dirs.remove(".git")
-        except ValueError:
-            pass
-        pkg_path = os.path.join(parent, "pkg.yml")
-        if os.path.isfile(pkg_path):
-            _index_pkg(pkg_path, index)
+    for pkg in guild.source.all_packages():
+        _index_pkg(pkg, index)
     return index
 
-def _index_pkg(pkg_path, index):
-    pkg = _load_pkg(pkg_path)
-    repo_name = _repo_name_from_pkg_path(pkg_path)
-    for term in _pkg_search_terms(repo_name, pkg):
-        _update_index_term(term, repo_name, pkg, index)
-
-def _load_pkg(pkg_path):
-    import yaml
-    return yaml.load(open(pkg_path, "r"))
+def _index_pkg(pkg, index):
+    for term in _pkg_search_terms(pkg):
+        _update_index_term(term, pkg, index)
 
 # TODO: fill in
 DROP_TERMS = set([
     "and", "the", "a", "an", "in", "of"
 ])
 
-def _pkg_search_terms(repo_name, pkg):
-    yield repo_name
-    yield pkg.get("name")
-    for tag in pkg.get("tags", []):
+def _pkg_search_terms(pkg):
+    yield pkg.repo
+    yield pkg.name
+    for tag in pkg.tags:
         yield tag
-    for term in _split_desc(pkg.get("description")):
+    for term in _split_desc(pkg.description):
         if term not in DROP_TERMS:
             yield term
 
 def _split_desc(desc):
     return re.split("[^(a-z)]+", desc.lower())
 
-def _repo_name_from_pkg_path(pkg_path):
-    return pkg_path.split(os.sep)[-3]
-
-def _update_index_term(term, repo_name, pkg, index):
-    index.pkg_term(term, _pkg_key(repo_name, pkg), pkg)
-
-def _pkg_key(repo_name, pkg):
-    return (repo_name, pkg.get("name"))
+def _update_index_term(term, pkg, index):
+    index.pkg_term(term, pkg)
 
 def _match(args, index):
     if args.all:
@@ -116,6 +100,5 @@ def _match(args, index):
     else:
         return index.matches_any(args.terms)
 
-def _print_pkg(key, pkg):
-    repo_name, pkg_name = key
-    print("%s:%s\t%s" % (repo_name, pkg_name, pkg.get("description", "")))
+def _print_pkg(pkg):
+    print("%s:%s\t%s" % (pkg.repo, pkg.name, pkg.description))

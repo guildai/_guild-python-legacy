@@ -13,6 +13,7 @@ sh_binary(
         ":runs_cmd",
         ":train_cmd",
         ":view_cmd",
+        ":gpkg",
     ]
 )
 
@@ -355,6 +356,16 @@ py_library(
 )
 
 py_library(
+    name = "source",
+    srcs = ["source.py"],
+    deps = [
+        ":user",
+        "@org_pyyaml",
+        "@org_semantic_version",
+    ],
+)
+
+py_library(
     name = "user",
     srcs = ["user.py"],
     deps = [
@@ -387,7 +398,7 @@ py_library(
     deps = [
         ":cmd_support",
         ":cli",
-        ":user",
+        ":source",
     ]
 )
 
@@ -396,5 +407,6 @@ py_library(
     srcs = ["info_cmd.py"],
     deps = [
         ":cmd_support",
+        ":source",
     ]
 )

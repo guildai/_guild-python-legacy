@@ -1,12 +1,7 @@
 GUILD = bazel-bin/guild/guild
 
-build: build-guild build-gpkg
-
-build-guild:
-	bazel build guild:guild
-
-build-gpkg:
-	bazel build guild:gpkg
+build:
+	bazel build guild
 
 component-deps: components/.deps-resolved
 
@@ -19,7 +14,7 @@ check: $(GUILD)
 	@if [ -z "$(TESTS)" ]; then \
 	  opts="--tests"; \
 	else \
-	  opts=""; \
+	  opts="-s "; \
 	  for test in $(TESTS); do \
 	    opts="$$opts -t $$test"; \
 	  done; \
@@ -27,7 +22,7 @@ check: $(GUILD)
 	$(GUILD) check $$opts; \
 
 lint:
-	PYTHONPATH=bazel-bin/guild/guild.runfiles/org_pyyaml/lib:bazel-bin/guild/guild.runfiles/org_psutil:bazel-bin/guild/guild.runfiles/org_pocoo_werkzeug pylint -rn guild
+	PYTHONPATH=bazel-bin/guild/guild.runfiles/org_pyyaml/lib:bazel-bin/guild/guild.runfiles/org_psutil:bazel-bin/guild/guild.runfiles/org_pocoo_werkzeug:bazel-bin/guild/gpkg.runfiles/org_semantic_version pylint -rn guild
 
 clean:
 	bazel clean

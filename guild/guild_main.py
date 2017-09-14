@@ -6,10 +6,7 @@ import guild.evaluate_cmd
 import guild.prepare_cmd
 import guild.project_cmd
 import guild.query_cmd
-import guild.repos_cmd
 import guild.runs_cmd
-import guild.search_cmd
-import guild.sync_cmd
 import guild.train_cmd
 import guild.view_cmd
 

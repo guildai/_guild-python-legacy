@@ -1,0 +1,4 @@
+name: mnist
+description: MNIST intro and expert models
+version: 0.1.0
+tags: [example, tutorial, mnist]

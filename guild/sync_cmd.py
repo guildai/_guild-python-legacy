@@ -31,7 +31,7 @@ def main(_args):
 def _sync_source(source):
     name, url = _source_attrs(source)
     sys.stdout.write("Synchronizing %s source\n" % name)
-    source_path = os.path.join(_sources_home(), name)
+    source_path = os.path.join(_packages_home(), name)
     resolved_url = _resolve_url(url)
     if os.path.exists(source_path):
         guild.git.pull(source_path, resolved_url)
@@ -61,14 +61,14 @@ def _deleted_sources(current):
             yield path
 
 def _cached_sources():
-    sources_home = _sources_home()
+    packages_home = _packages_home()
     all_paths = [
-        os.path.join(sources_home, name)
-        for name in os.listdir(sources_home)]
+        os.path.join(packages_home, name)
+        for name in os.listdir(packages_home)]
     return [path for path in all_paths if os.path.isdir(path)]
 
-def _sources_home():
-    return guild.user.user_dir("package-sources")
+def _packages_home():
+    return guild.user.user_dir("packages")
 
 def _source_name_exists(name, sources):
     for source in sources:
@@ -84,5 +84,5 @@ def _delete_source(path):
     shutil.rmtree(path)
 
 def _assert_cached_source(path):
-    if not path.startswith(_sources_home()):
+    if not path.startswith(_packages_home()):
         raise AssertionError(path)
