@@ -64,7 +64,7 @@ def main(args):
 def _init_index():
     index = PkgIndex()
     repos_home = guild.user.user_dir("repos")
-    for parent, dirs, files in os.walk(repos_home, topdown=True):
+    for parent, dirs, _files in os.walk(repos_home, topdown=True):
         try:
             dirs.remove(".git")
         except ValueError:
