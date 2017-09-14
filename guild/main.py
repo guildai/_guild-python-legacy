@@ -12,6 +12,7 @@ import guild.project_cmd
 import guild.query_cmd
 import guild.repos_cmd
 import guild.runs_cmd
+import guild.search_cmd
 import guild.sync_cmd
 import guild.train_cmd
 import guild.view_cmd
@@ -25,6 +26,7 @@ def main():
         guild.project_cmd,
         guild.query_cmd,
         guild.repos_cmd,
+        guild.search_cmd,
         guild.sync_cmd,
         guild.runs_cmd,
         guild.train_cmd,
