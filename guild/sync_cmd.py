@@ -34,7 +34,10 @@ def _sync_source(source):
     source_path = os.path.join(_packages_home(), name)
     resolved_url = _resolve_url(url)
     if os.path.exists(source_path):
-        guild.git.pull(source_path, resolved_url)
+        if os.path.islink(source_path):
+            sys.stdout.write("%s is a link, skipping\n" % source_path)
+        else:
+            guild.git.pull(source_path, resolved_url)
     else:
         guild.git.clone(source_path, resolved_url)
 

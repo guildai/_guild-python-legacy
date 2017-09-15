@@ -37,7 +37,7 @@ def _repo_name_for_path(path):
 
 def all_packages():
     repos_home = guild.user.user_dir("packages")
-    for parent, dirs, _files in os.walk(repos_home, topdown=True):
+    for parent, dirs, _files in _walk(repos_home):
         try:
             dirs.remove(".git")
         except ValueError:
@@ -45,6 +45,9 @@ def all_packages():
         pkg_path = os.path.join(parent, "pkg.yml")
         if os.path.isfile(pkg_path):
             yield Pkg(pkg_path)
+
+def _walk(path):
+    return os.walk(path, topdown=True, followlinks=True)
 
 def compare_versions(v1, v2):
     try:
