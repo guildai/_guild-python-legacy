@@ -112,3 +112,20 @@ def free_port():
         else:
             sock.close()
         attempts += 1
+
+def url_basename(url):
+    import urlparse
+    path = urlparse.urlsplit(url).path
+    return os.path.basename(path)
+
+def sha256_sum(filename):
+    import hashlib
+    sha = hashlib.sha256()
+    with open(filename, "rb") as f:
+        while True:
+            part = f.read(1024)
+            if part:
+                sha.update(part)
+            else:
+                break
+    return sha.hexdigest()

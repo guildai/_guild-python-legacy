@@ -3,7 +3,9 @@ import os
 import semantic_version
 import yaml
 
+import guild.log
 import guild.user
+import guild.util
 
 class Pkg(object):
 
@@ -118,3 +120,63 @@ def _latest_package(p1, p2):
 
 def resolve_all_packages(specs):
     return [resolve_one_package(spec) for spec in specs]
+
+class MissingSourcesError(Exception):
+
+    def __init__(self, pkg):
+        super(MissingSourcesError, self).__init__(pkg)
+
+def ensure_pkg_sources(pkg):
+    if not pkg.sources:
+        raise MissingSourcesError(pkg)
+    for src in pkg.sources:
+        _ensure_source(src)
+
+class AlreadyInstalled(Exception):
+
+    def __init__(self, src):
+        super(AlreadyInstalled, self).__init__(src)
+
+def _ensure_source(src):
+    local_path = _cache_path_for_source(src)
+    already_installed = os.path.exists(local_path)
+    if not already_installed:
+        _get_source(src, local_path)
+    _validate_source(src, local_path)
+    if already_installed:
+        raise AlreadyInstalled(src)
+
+def _cache_path_for_source(src):
+    sha256 = src.get("sha256")
+    if not sha256:
+        raise ValueError("src missing sha256: %s" % src)
+    return os.path.join(guild.user.user_dir("cache"), sha256)
+
+def _get_source(src, dest_dir):
+    import guild.wget # expensive, import lazily
+    for url in src.get("urls", []):
+        dest_basename = guild.util.url_basename(url)
+        dest_filename = os.path.join(dest_dir, dest_basename)
+        try:
+            guild.wget.get_to_file(url, dest_filename)
+        except:
+            guild.log.exception("wget: %s" % url)
+        else:
+            break
+
+class ValidationError(Exception):
+
+    def __init__(self, msg):
+        super(ValidationError, self).__init__(msg)
+
+def _validate_source(src, local_path):
+    files = os.listdir(local_path)
+    if len(files) != 1:
+        raise AssertionError("%s: %s", (local_path, files))
+    src_filename = os.path.join(local_path, files[0])
+    expected_sha256 = src["sha256"]
+    actual_sha256 = guild.util.sha256_sum(src_filename)
+    if expected_sha256 != actual_sha256:
+        raise ValidationError(
+            "bad sha256 for %s - expected %s but got %s"
+            % (src_filename, expected_sha256, actual_sha256))

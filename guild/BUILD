@@ -360,7 +360,9 @@ py_library(
     name = "source",
     srcs = ["source.py"],
     deps = [
+        ":log",
         ":user",
+        ":util",
         "@org_pyyaml",
         "@org_semantic_version",
     ],
@@ -418,6 +420,7 @@ py_library(
     deps = [
         ":cmd_support",
         ":source_cmd_support",
+        ":wget",
     ]
 )
 
@@ -426,5 +429,14 @@ py_library(
     srcs = ["source_cmd_support.py"],
     deps = [
         ":source",
+    ]
+)
+
+py_library(
+    name = "wget",
+    srcs = ["wget.py"],
+    deps = [
+        ":util",
+        "@org_tqdm",
     ]
 )
