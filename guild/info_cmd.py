@@ -77,5 +77,6 @@ def _latest_package(p1, p2):
 
 def _print_pkg_info(pkg):
     print("Name: %s" % pkg.name)
+    print("Version: %s" % pkg.version)
     print("Description: %s" % pkg.description)
     print("Tags: %s" % ", ".join(pkg.tags))
