@@ -14,13 +14,10 @@ def main():
     guild.gpkg_main.main()
 
 def module_space():
-    module_space = os.path.abspath(sys.argv[0]) + '.runfiles'
+    script_home = os.path.abspath(os.path.dirname(sys.argv[0]))
+    module_space = os.path.join(script_home, 'guild.runfiles')
     if os.path.isdir(module_space):
         return module_space
-    runfiles_pattern = "(.*\.runfiles)/.*"
-    m = re.match(runfiles_pattern, os.path.abspath(sys.argv[0]))
-    if m:
-        return m.group(1)
     raise AssertionError('Cannot find .runfiles directory for %s' % sys.argv[0])
 
 def special_import_paths(root):
