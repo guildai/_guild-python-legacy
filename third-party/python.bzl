@@ -31,3 +31,13 @@ def guild_python_workspace():
         strip_prefix = "semantic_version-2.6.0",
         sha256 = "2a4328680073e9b243667b201119772aefc5fc63ae32398d6afafff07c4f54c0",
     )
+
+    native.new_http_archive(
+        name = "org_tqdm",
+        build_file = "//third-party:tqdm.BUILD",
+        urls = [
+            "https://pypi.python.org/packages/01/f7/2058bd94a903f445e8ff19c0af64b9456187acab41090ff2da21c7c7e193/tqdm-4.15.0.tar.gz"
+        ],
+        strip_prefix = "tqdm-4.15.0",
+        sha256 = "6ec1dc74efacf2cda936b4a6cf4082ce224c76763bdec9f17e437c8cfcaa9953",
+    )

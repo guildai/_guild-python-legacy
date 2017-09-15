@@ -23,6 +23,7 @@ sh_binary(
     data = [
         ":gpkg_main",
         ":info_cmd",
+        ":install_cmd",
         ":search_cmd",
         ":sync_cmd",
         ":sources_cmd",
@@ -407,6 +408,23 @@ py_library(
     srcs = ["info_cmd.py"],
     deps = [
         ":cmd_support",
+        ":source_cmd_support",
+    ]
+)
+
+py_library(
+    name = "install_cmd",
+    srcs = ["install_cmd.py"],
+    deps = [
+        ":cmd_support",
+        ":source_cmd_support",
+    ]
+)
+
+py_library(
+    name = "source_cmd_support",
+    srcs = ["source_cmd_support.py"],
+    deps = [
         ":source",
     ]
 )

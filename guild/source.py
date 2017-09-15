@@ -29,6 +29,10 @@ class Pkg(object):
         v = self.data.get("version")
         return str(v) if v is not None else None
 
+    @property
+    def sources(self):
+        return self.data.get("sources", [])
+
 def _load_pkg_data(pkg_path):
     return yaml.load(open(pkg_path, "r"))
 
@@ -71,7 +75,7 @@ class MultiplePackagesError(Exception):
         self.spec = spec
         self.pkgs = pkgs
 
-def find_one_package(spec):
+def resolve_one_package(spec):
     all_matches = _find_packages(spec)
     pkgs = _remove_outdated_packages(all_matches)
     if len(pkgs) == 0:
@@ -96,7 +100,7 @@ def _packages_for_repo_and_name(repo, name):
 
 def _packages_for_name(name):
     return [pkg for pkg in all_packages() if pkg.name == name]
-    
+
 def _remove_outdated_packages(pkgs):
     current = {}
     for pkg in pkgs:
@@ -111,3 +115,6 @@ def _remove_outdated_packages(pkgs):
 
 def _latest_package(p1, p2):
     return p1 if compare_versions(p1.version, p2.version) > 0 else p2
+
+def resolve_all_packages(specs):
+    return [resolve_one_package(spec) for spec in specs]

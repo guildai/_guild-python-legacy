@@ -19,27 +19,9 @@ def add_parser(subparsers):
     p.set_defaults(func=main)
 
 def main(args):
-    import guild.source
-    try:
-        pkg = guild.source.find_one_package(args.package)
-    except guild.source.MultiplePackagesError as e:
-        _multiple_matches_error(e.spec, e.pkgs)
-    except guild.source.NoSuchPackageError as e:
-        _no_such_package_error(e.spec)
-    else:
-        _print_pkg_info(pkg)
-
-def _no_such_package_error(spec):
-    guild.cli.error("no packages match '%s'" % spec)
-
-def _multiple_matches_error(spec, pkgs):
-    guild.cli.error(
-        "multiple packages matching '%s'\n"
-        "Specify one of: %s"
-        % (spec, _multiple_matches_list(pkgs)))
-
-def _multiple_matches_list(pkgs):
-    return ", ".join(["%s:%s" % (pkg.repo, pkg.name) for pkg in pkgs])
+    import guild.source_cmd_support
+    pkg = guild.source_cmd_support.resolve_one_package(args.package)
+    _print_pkg_info(pkg)
 
 def _print_pkg_info(pkg):
     print("Package: %s:%s" % (pkg.repo, pkg.name))
