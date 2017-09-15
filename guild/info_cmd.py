@@ -20,33 +20,14 @@ def add_parser(subparsers):
 
 def main(args):
     import guild.source
-    all_matches = _find_packages(args.package)
-    pkgs = _remove_outdated_packages(all_matches)
-    if len(pkgs) == 0:
-        _no_such_package_error(args.package)
-    if len(pkgs) == 1:
-        _print_pkg_info(pkgs[0])
+    try:
+        pkg = guild.source.find_one_package(args.package)
+    except guild.source.MultiplePackagesError as e:
+        _multiple_matches_error(e.spec, e.pkgs)
+    except guild.source.NoSuchPackageError as e:
+        _no_such_package_error(e.spec)
     else:
-        _multiple_matches_error(args.package, pkgs)
-
-def _find_packages(spec):
-    parts = spec.split(":", 1)
-    if len(parts) == 2:
-        return _packages_for_repo_and_name(*parts)
-    else:
-        return _packages_for_name(*parts)
-
-def _packages_for_repo_and_name(repo, name):
-    return [
-        pkg for pkg in guild.source.all_packages()
-        if pkg.repo == repo and pkg.name == name
-    ]
-
-def _packages_for_name(name):
-    return [
-        pkg for pkg in guild.source.all_packages()
-        if pkg.name == name
-    ]
+        _print_pkg_info(pkg)
 
 def _no_such_package_error(spec):
     guild.cli.error("no packages match '%s'" % spec)
@@ -60,23 +41,8 @@ def _multiple_matches_error(spec, pkgs):
 def _multiple_matches_list(pkgs):
     return ", ".join(["%s:%s" % (pkg.repo, pkg.name) for pkg in pkgs])
 
-def _remove_outdated_packages(pkgs):
-    current = {}
-    for pkg in pkgs:
-        key = "%s:%s" % (pkg.repo, pkg.name)
-        try:
-            pkg0 = current[key]
-        except KeyError:
-            current[key] = pkg
-        else:
-            current[key] = _latest_package(pkg0, pkg)
-    return current.values()
-
-def _latest_package(p1, p2):
-    return p1 if p1.version >= p2.version else p2
-
 def _print_pkg_info(pkg):
-    print("Name: %s" % pkg.name)
+    print("Package: %s:%s" % (pkg.repo, pkg.name))
     print("Version: %s" % pkg.version)
     print("Description: %s" % pkg.description)
     print("Tags: %s" % ", ".join(pkg.tags))
