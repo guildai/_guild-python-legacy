@@ -11,7 +11,6 @@ class Pkg(object):
         self.path = pkg_path
         self.data = _load_pkg_data(pkg_path)
         self.repo = _repo_name_for_path(pkg_path)
-        self._version = None
 
     @property
     def name(self):
