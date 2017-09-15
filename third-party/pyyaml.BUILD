@@ -1,5 +1,3 @@
-#-*-python-*-
-
 py_library(
     name = "org_pyyaml",
     srcs = glob([

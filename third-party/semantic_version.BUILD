@@ -1,5 +1,3 @@
-#-*-python-*-
-
 py_library(
     name = "org_semantic_version",
     srcs = glob([
