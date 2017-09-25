@@ -5,6 +5,13 @@ sh_binary(
     srcs = ["//scripts:guild-exe"],
     data = [
         ":guild_main",
+    ]
+)
+
+py_library(
+    name = "guild_main",
+    srcs = ["guild_main.py"],
+    deps = [
         ":check_cmd",
         ":evaluate_cmd",
         ":info_cmd",
@@ -18,23 +25,7 @@ sh_binary(
         ":sync_cmd",
         ":train_cmd",
         ":view_cmd",
-    ]
-)
-
-py_library(
-    name = "guild_main",
-    srcs = ["guild_main.py"],
-    deps = [
-        ":main_impl",
-    ]
-)
-
-py_library(
-    name = "main_impl",
-    srcs = ["main_impl.py"],
-    deps = [
-        ":__init__",
-        ":app",
+        "@org_click",
     ]
 )
 

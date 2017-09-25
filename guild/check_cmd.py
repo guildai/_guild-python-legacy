@@ -4,71 +4,49 @@ import sys
 
 import guild.app
 import guild.cli
-# Avoid expensive imports here
+import guild.test
 
-def add_parser(subparsers):
-    p = subparsers.add_parser(
-        "check",
-        help="check Guild setup")
-    p.description = "Check Guild setup."
-    p.add_argument(
-        "-T", "--tests",
-        help="run Guild test suite",
-        action="store_true",
-        dest="all_tests")
-    p.add_argument(
-        "-t", "--test",
-        help="run TEST (may be used multiple times)",
-        metavar="TEST",
-        dest="tests",
-        action="append")
-    p.add_argument(
-        "-s", "--skip-info",
-        help="don't print info (useful when just running tests)",
-        action="store_true")
-    p.add_argument(
-        "-v", "--verbose",
-        help="show check details",
-        action="store_true")
-    p.set_defaults(func=main)
+def main(all_tests, tests, skip_info, verbose):
+    if not skip_info:
+        _print_info(verbose)
+    if all_tests or tests:
+        _run_tests(all_tests, tests)
 
-def main(args):
-    if not args.skip_info:
-        _print_info(args)
-    if args.all_tests or args.tests:
-        _run_tests(args)
-
-def _run_tests(args):
-    import guild.test
-    if args.all_tests:
-        if args.tests:
+def _run_tests(all_tests, tests):
+    if all_tests:
+        if tests:
             sys.stdout.write(
                 "Running all tests (--all-tests specified) - "
                 "ignoring individual tests\n")
         success = guild.test.run_all()
-    elif args.tests:
-        success = guild.test.run(args.tests)
+    elif tests:
+        success = guild.test.run(tests)
     if not success:
         guild.cli.error()
 
-def _print_info(args):
+def _print_info(verbose):
     _print_guild_info()
-    _print_python_info()
-    _print_tensorflow_info(args.verbose)
+    _print_python_info(verbose)
+    _print_tensorflow_info(verbose)
     _print_nvidia_tools_info()
     _print_werkzeug_info()
     _print_psutil_info()
     _print_pyyaml_info()
 
 def _print_guild_info():
-    sys.stdout.write("guild_version:          %s\n" % guild.app.version())
-    sys.stdout.write("guild_home:             %s\n" % guild.app.home())
+    guild.cli.out("guild_version:          %s" % guild.app.version())
+    guild.cli.out("guild_home:             %s" % guild.app.home())
 
-def _print_python_info():
-    sys.stdout.write("python_version:         %s\n" % _python_version())
+def _print_python_info(verbose):
+    guild.cli.out("python_version:         %s" % _python_version())
+    if verbose:
+        guild.cli.out("python_path:            %s" % _python_path())
 
 def _python_version():
     return sys.version.replace("\n", "")
+
+def _python_path():
+    return os.path.pathsep.join(sys.path)
 
 def _print_tensorflow_info(verbose):
     # Run externally to avoid tf logging to our stderr
@@ -81,19 +59,19 @@ def _print_check_results(script_name, verbose=False):
     script_path = guild.app.script(script_name)
     stderr = None if verbose else open(os.devnull, "w")
     out = subprocess.check_output(script_path, stderr=stderr)
-    sys.stdout.write(out.decode(sys.stdout.encoding))
+    sys.stdout.write(out.decode(sys.stdout.encoding or "UTF-8"))
 
 def _print_werkzeug_info():
     ver = _try_module_version("werkzeug")
-    sys.stdout.write("werkzeug_version:       %s\n" % ver)
+    guild.cli.out("werkzeug_version:       %s" % ver)
 
 def _print_psutil_info():
     ver = _try_module_version("psutil")
-    sys.stdout.write("psutil_version:         %s\n" % ver)
+    guild.cli.out("psutil_version:         %s" % ver)
 
 def _print_pyyaml_info():
     ver = _try_module_version("yaml")
-    sys.stdout.write("pyyaml_version:         %s\n" % ver)
+    guild.cli.out("pyyaml_version:         %s" % ver)
 
 def _try_module_version(name):
     try:
