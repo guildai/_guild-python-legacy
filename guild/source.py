@@ -159,7 +159,7 @@ def _get_source(src, dest_dir):
         dest_filename = os.path.join(dest_dir, dest_basename)
         try:
             guild.wget.get_to_file(url, dest_filename)
-        except:
+        except Exception:
             guild.log.exception("wget: %s" % url)
         else:
             break

@@ -17,7 +17,7 @@ class FileDownload(tqdm.tqdm):
             unit_divisor=1024,
             miniters=1
         )
-        
+
     def update(self, b=1, bsize=1, tsize=None):
         if tsize is not None:
             self.total = tsize
