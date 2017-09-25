@@ -1,60 +1,9 @@
-import argparse
 import os
 import re
 import sys
-import textwrap
 
 import guild.cli
 import guild.util
-# NOTE: Avoid time consuming imports here and instead move into
-# functions that use them.
-
-CONSOLE_WIDTH = None
-
-def add_parser(subparsers, cmd, help, description):
-    return subparsers.add_parser(
-        cmd,
-        help=help,
-        formatter_class=argparse.RawTextHelpFormatter,
-        description=_format_description(description))
-
-def _format_description(desc):
-    pars = desc.split("\n\n")
-    return "\n\n".join([_format_par(par) for par in pars])
-
-def _format_par(par):
-    normalized = _strip_repeating_ws(par).strip()
-    wrapper = textwrap.TextWrapper(width=_safe_console_width() - 10)
-    lines = wrapper.wrap(normalized)
-    return "\n".join(lines)
-
-def _strip_repeating_ws(s):
-    return re.sub(r"\s+", " ", s)
-
-def add_project_arguments(parser, flag_support=False):
-    parser.add_argument(
-        "-P", "--project",
-        help="project directory (default is current directory)",
-        metavar="DIR",
-        dest="project_dir",
-        default=".")
-    if flag_support:
-        add_flag_arguments(parser)
-
-def add_flag_arguments(parser):
-    parser.add_argument(
-        "-p", "--profile", dest="profiles",
-        help="use alternate flags profile",
-        action="append",
-        default=[],
-        metavar="NAME")
-    parser.add_argument(
-        "-F", "--flag", dest="flags",
-        help="define a project flag; may be used multiple times",
-        nargs="?",
-        action="append",
-        default=[],
-        metavar="NAME[=VAL]")
 
 def project_for_args(args, name="guild.yml", use_plugins=False, required=True):
     try:
@@ -272,20 +221,3 @@ def _bad_run_index_error(index):
     guild.cli.error(
         "Run index '%i' is out of range\n"
         "Try 'guild runs' for a list of runs." % index)
-
-def _safe_console_width():
-    return max(_console_width(), 72)
-
-def _console_width():
-    global CONSOLE_WIDTH
-    if CONSOLE_WIDTH is None:
-        CONSOLE_WIDTH = _stty_size_or_zero()
-    return CONSOLE_WIDTH
-
-def _stty_size_or_zero():
-    out = os.popen('stty size', 'r').read()
-    if out:
-        _, cols = out.split()
-        return int(cols)
-    else:
-        return 0

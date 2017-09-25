@@ -6,21 +6,21 @@ import guild.app
 import guild.cli
 import guild.test
 
-def main(all_tests, tests, skip_info, verbose):
-    if not skip_info:
-        _print_info(verbose)
-    if all_tests or tests:
-        _run_tests(all_tests, tests)
+def main(args):
+    if not args.skip_info:
+        _print_info(args.verbose)
+    if args.all_tests or args.tests:
+        _run_tests(args)
 
-def _run_tests(all_tests, tests):
-    if all_tests:
-        if tests:
+def _run_tests(args):
+    if args.all_tests:
+        if args.tests:
             sys.stdout.write(
                 "Running all tests (--all-tests specified) - "
                 "ignoring individual tests\n")
         success = guild.test.run_all()
-    elif tests:
-        success = guild.test.run(tests)
+    elif args.tests:
+        success = guild.test.run(args.tests)
     if not success:
         guild.cli.error()
 

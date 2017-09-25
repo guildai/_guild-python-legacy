@@ -1,29 +1,6 @@
-import guild.cli
 import guild.cmd_support
-# Avoid expensive imports here
-
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "evaluate", "evaluate a trained model",
-        """Evaluate a run.
-
-        Note that some models may not support the evalute operation.
-        Refer to the the Guild project and the run's associated model
-        spec for details.
-        """)
-    p.add_argument(
-        "run",
-        help="run name or index to evaluate (defaults to latest run)",
-        nargs="?",
-        default=0,
-        metavar="RUN")
-    guild.cmd_support.add_project_arguments(p, flag_support=True)
-    p.add_argument(
-        "--preview",
-        action="store_true",
-        help="print evaluate details but do not evaluate")
-    p.set_defaults(func=main)
+import guild.op
+import guild.op_support
 
 def main(args):
     op = _evaluate_op(args)
@@ -33,9 +10,6 @@ def main(args):
         _evaluate(op)
 
 def _evaluate_op(args):
-    import guild.op
-    import guild.op_support
-
     project = guild.cmd_support.project_for_args(args)
     run = guild.cmd_support.run_for_args(args)
     model = guild.cmd_support.model_for_name(run.attr("model"), project)
