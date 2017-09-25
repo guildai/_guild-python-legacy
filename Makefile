@@ -22,7 +22,7 @@ check: $(GUILD)
 	$(GUILD) check $$opts; \
 
 lint:
-	PYTHONPATH=bazel-bin/guild/guild.runfiles/org_pyyaml/lib:bazel-bin/guild/guild.runfiles/org_psutil:bazel-bin/guild/guild.runfiles/org_pocoo_werkzeug:bazel-bin/guild/gpkg.runfiles/org_semantic_version pylint -rn guild
+	PYTHONPATH=bazel-bin/guild/guild.runfiles/org_pyyaml/lib:bazel-bin/guild/guild.runfiles/org_psutil:bazel-bin/guild/guild.runfiles/org_pocoo_werkzeug:bazel-bin/guild/guild.runfiles/org_semantic_version:bazel-bin/guild/guild.runfiles/org_tqdm pylint -rn guild
 
 clean:
 	bazel clean
