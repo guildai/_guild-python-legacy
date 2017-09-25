@@ -22,15 +22,21 @@ def _init_logging(debug):
     logging.basicConfig(level=level, format="%(levelname)s: %(message)s")
 
 def apply_main(cmd):
-    prog = os.path.basename(sys.argv[1])
+    prog = os.path.basename(sys.argv[0])
     try:
         cmd.main(standalone_mode=False)
     except click.exceptions.Abort:
         _handle_keyboard_interrupt()
+    except click.exceptions.ClickException as e:
+        _handle_click_exception(e)
     except Exit as e:
         _print_error_and_exit(prog, e.msg, e.exit_status)
 
 def _handle_keyboard_interrupt():
+    sys.exit(1)
+
+def _handle_click_exception(e):
+    e.show()
     sys.exit(1)
 
 def _print_error_and_exit(prog, msg, exit_status):

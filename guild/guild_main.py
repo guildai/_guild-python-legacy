@@ -94,10 +94,7 @@ cli.add_command(check)
 ###################################################################
 
 @click.command(short_help="Evaluate a trained model.")
-@click.argument(
-    "run",
-    default=0,
-    metavar="RUN")
+@click.argument("run", default=0, metavar="RUN")
 @project_options(flag_options=True)
 @click.option(
     "--preview",
@@ -116,39 +113,120 @@ def evaluate(**kw):
 
 cli.add_command(evaluate)
 
-"""
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "evaluate", "evaluate a trained model",
-)
-    p.add_argument(
-        "run",
-        help="run name or index to evaluate (defaults to latest run)",
-        nargs="?",
-        default=0,
-        metavar="RUN")
-    guild.cmd_support.add_project_arguments(p, flag_support=True)
-    p.add_argument(
-        "--preview",
-        action="store_true",
-        help="print evaluate details but do not evaluate")
-    p.set_defaults(func=main)
-"""
+###################################################################
+# Info command
+###################################################################
 
+@click.command(short_help="Print information about a package.")
+@click.argument("package", metavar="PACKAGE")
 
-"""
-import guild.check_cmd
-import guild.evaluate_cmd
-import guild.info_cmd
-import guild.install_cmd
-import guild.prepare_cmd
-import guild.project_cmd
-import guild.query_cmd
-import guild.runs_cmd
-import guild.search_cmd
-import guild.sources_cmd
-import guild.sync_cmd
-import guild.train_cmd
-import guild.view_cmd
-"""
+def info(**kw):
+    """Prints information about a package.
+
+    PACKAGE must be in the form [REPO:]NAME where REPO is an optional
+    package repository and NAME is the package name. If REPO is
+    omitted, NAME must be unique for all cached repositories.
+    """
+    import guild.info_cmd
+    guild.info_cmd.main(Args(kw))
+
+cli.add_command(info)
+
+###################################################################
+# Install command
+###################################################################
+
+@click.command(short_help="")
+
+def install(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(install)
+
+###################################################################
+# Prepare command
+###################################################################
+
+@click.command(short_help="")
+
+def prepare(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(prepare)
+
+###################################################################
+# Project command
+###################################################################
+
+@click.command(short_help="")
+
+def project(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(project)
+
+###################################################################
+# Query command
+###################################################################
+
+@click.command(short_help="")
+
+def query(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(query)
+
+###################################################################
+# Runs command
+###################################################################
+
+@click.command(short_help="")
+
+def runs(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(runs)
+
+###################################################################
+# Search command
+###################################################################
+
+@click.command(short_help="")
+
+def search(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(search)
+
+###################################################################
+# Sources command
+###################################################################
+
+@click.command(short_help="")
+
+def sources(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(sources)
+
+###################################################################
+# Train command
+###################################################################
+
+@click.command(short_help="")
+
+def train(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(train)
+
+###################################################################
+# View command
+###################################################################
+
+@click.command(short_help="")
+
+def view(**kw):
+    print("TODO: pass through %s" % kw)
+
+cli.add_command(view)
