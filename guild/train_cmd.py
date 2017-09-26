@@ -4,14 +4,6 @@ import guild.cmd_support
 import guild.op
 import guild.project_util
 
-import guild.tasks.log_flags
-import guild.tasks.log_system_attrs
-import guild.tasks.snapshot_project
-import guild.tasks.tensorflow_events
-import guild.tasks.op_stats
-import guild.tasks.sys_stats
-import guild.tasks.gpu_stats
-
 def main(args):
     op = _train_op(args)
     if args.preview:
@@ -49,6 +41,15 @@ def _meta(model):
     }
 
 def _tasks(model):
+    # Expensive imports
+    import guild.tasks.log_flags
+    import guild.tasks.log_system_attrs
+    import guild.tasks.snapshot_project
+    import guild.tasks.tensorflow_events
+    import guild.tasks.op_stats
+    import guild.tasks.sys_stats
+    import guild.tasks.gpu_stats
+
     return [
         (guild.tasks.log_flags.start, [model.all_flags()]),
         (guild.tasks.log_system_attrs.start, []),
