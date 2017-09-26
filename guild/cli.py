@@ -27,6 +27,8 @@ def apply_main(cmd):
         cmd.main(standalone_mode=False)
     except click.exceptions.Abort:
         _handle_keyboard_interrupt()
+    except click.exceptions.MissingParameter as e:
+        _handle_missing_parameter(e)
     except click.exceptions.ClickException as e:
         _handle_click_exception(e)
     except Exit as e:
@@ -35,9 +37,23 @@ def apply_main(cmd):
 def _handle_keyboard_interrupt():
     sys.exit(1)
 
+def _handle_missing_parameter(e):
+    """Workaround for https://github.com/pallets/click/issues/855"""
+    click.echo(
+        "%s\n"
+        "Try '%s %s' for help.\n"
+        "\n"
+        "Error: missing argument for %s"
+        % (e.ctx.get_usage(),
+           e.ctx.command_path,
+           e.ctx.help_option_names[0],
+           e.param.human_readable_name),
+        err=True)
+    sys.exit(e.exit_code)
+
 def _handle_click_exception(e):
     e.show()
-    sys.exit(1)
+    sys.exit(e.exit_code)
 
 def _print_error_and_exit(prog, msg, exit_status):
     if msg:

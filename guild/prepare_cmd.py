@@ -1,29 +1,6 @@
-import guild.cli
 import guild.cmd_support
-# Avoid expensive imports here
-
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "prepare", "prepare model for training",
-        """Prepare MODEL_OR_RESOURCE for training if specified, otherwise
-        prepares the model designed as 'default' in the project.
-
-        Models and resources are prepared by their configured 'prepare'
-        operation, if specified. If the specified model or resource doesn't
-        define a prepare operation, the command exits with an error message.
-        """)
-    p.add_argument(
-        "model_or_resource",
-        metavar="MODEL_OR_RESOURCE",
-        nargs="?",
-        help="model or resource to prepare")
-    guild.cmd_support.add_project_arguments(p, flag_support=True)
-    p.add_argument(
-        "--preview",
-        action="store_true",
-        help="print prepare details but do not prepare")
-    p.set_defaults(func=main)
+import guild.op
+import guild.op_support
 
 def main(args):
     op = _prepare_op(args)
@@ -33,9 +10,6 @@ def main(args):
         _prepare(op)
 
 def _prepare_op(args):
-    import guild.op
-    import guild.op_support
-
     project = guild.cmd_support.project_for_args(args)
     section = guild.cmd_support.model_or_resource_for_args(args, project)
     spec = section.attr("prepare")

@@ -1,8 +1,7 @@
 import re
 
-import guild.cli
 import guild.cmd_support
-# Avoid expensive imports here
+import guild.source
 
 class PkgIndex(object):
 
@@ -30,36 +29,10 @@ class PkgIndex(object):
         intersection_keys = set_join(*matching_keys)
         return [self._pkgs[key] for key in intersection_keys]
 
-
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "search", "search repositories for packages",
-        """Searches repositories for terms.
-
-        By default packages matching any term are displayed. To match
-        packages matching all terms, use the --all option.
-        """)
-    p.add_argument(
-        "terms",
-        help="a term to search for",
-        metavar="TERM",
-        nargs="+")
-    p.add_argument(
-        "--any",
-        help="find packages matching any term (default)",
-        action="store_true")
-    p.add_argument(
-        "--all",
-        help="find packages matching all terms",
-        action="store_true")
-    p.set_defaults(func=main)
-
 def _pkg_key(pkg):
     return (pkg.repo, pkg.name)
 
 def main(args):
-    import guild.source
     index = _init_index()
     for pkg in _match(args, index):
         _print_pkg(pkg)

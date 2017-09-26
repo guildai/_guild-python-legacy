@@ -1,50 +1,7 @@
 import guild.cli
-import guild.cmd_support
-# Avoid expensive imports here
-
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "sources", "manage package sources",
-        """With no arguments, prints a list of package sources.
-
-        Use 'add' to add a new source. When adding a source, specify a
-        full Git repository repository URL or a path consisting of the
-        pattern ACCOUNT/REPO, where ACCOUNT is a GitHub account and
-        REPO is the name of the GitHub repository. For example 'guild
-        sources add guild guildai/packages' will add a source named
-        'guild' with a URL of the 'guildai/packages' GitHub
-        repository.
-
-        Use 'remove' (or 'rm') to delete a source.
-        """)
-    p.add_argument(
-        "sources_command",
-        help="optional command: add, remove (or rm)",
-        metavar="COMMAND",
-        nargs="?")
-    p.add_argument(
-        "name",
-        help="source name to add or delete",
-        metavar="NAME",
-        nargs="?")
-    p.add_argument(
-        "url",
-        help="source URL to add",
-        metavar="URL",
-        nargs="?")
-    p.add_argument(
-        "--nosync",
-        help="do not synchronize with sources after modifying them",
-        action="store_true")
-    p.add_argument(
-        "-v", "--verbose",
-        help="show source details when printing a list",
-        action="store_true")
-    p.set_defaults(func=main)
+import guild.user
 
 def main(args):
-    import guild.user
     if args.sources_command is None:
         _list_sources(args)
     elif args.sources_command == "add":

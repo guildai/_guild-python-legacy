@@ -5,49 +5,9 @@ import sys
 
 import guild.cli
 import guild.cmd_support
-# Avoid expensive imports here
-
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "runs", "manage project runs",
-        """With no arguments, prints runs for a project.
-
-        Use the 'remove' (or 'rm') command to delete runs. Specify either
-        run names or index values returned by the 'runs' command.
-
-        Deleted runs may be recovered using the 'recovered' command. To
-        view the list of deleted runs use 'guild runs --deleted'.
-
-        To purge (i.e. permanantly delete) all deleted runs, use the
-        'purge' command. By default you will be prompted before the
-        runs are permanently deleted. Use the '--yes' option to purge
-        the runs without a prompt.
-        """)
-    p.add_argument(
-        "runs_command",
-        help=("optional command: remove (or rm), purge, recover"),
-        metavar="COMMAND",
-        nargs="?")
-    p.add_argument(
-        "runs",
-        help="run names or indexes applied to the command",
-        metavar="RUN",
-        nargs="*")
-    guild.cmd_support.add_project_arguments(p)
-    p.add_argument(
-        "--all",
-        help="",
-        action="store_true")
-    p.add_argument(
-        "--yes",
-        help="answer 'Y' to any prompts",
-        action="store_true")
-    p.add_argument(
-        "--deleted",
-        help="prints deleted runs, which may be purged or recovered",
-        action="store_true")
-    p.set_defaults(func=main)
+import guild.op_util
+import guild.run
+import guild.project_util
 
 def main(args):
     project = guild.cmd_support.project_for_args(args, required=False)
@@ -63,8 +23,6 @@ def main(args):
         _unknown_command_error(args.runs_command)
 
 def _list_runs(project, args):
-    import guild.op_util
-
     runs = _runs_for_project(project, args)
     index = 0
     for rundir in runs:
@@ -81,7 +39,6 @@ def _runs_for_project(project, args):
     return [run.opdir for run in runs]
 
 def _runs_for_runs_dir(d):
-    import guild.run
     return guild.run.runs_for_runs_dir(d)
 
 def _delete_runs(project, args):
@@ -98,8 +55,6 @@ def _delete_runs(project, args):
             "Try 'guild runs --help' for more information.")
 
 def _runs_dir_for_project(project, args):
-    import guild.project_util
-
     if project:
         return guild.project_util.runs_dir_for_project(project)
     else:

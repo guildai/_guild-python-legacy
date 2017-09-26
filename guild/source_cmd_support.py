@@ -1,3 +1,4 @@
+import guild.cli
 import guild.source
 
 def resolve_one_package(spec):

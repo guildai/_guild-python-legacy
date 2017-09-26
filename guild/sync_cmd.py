@@ -3,25 +3,10 @@ import shutil
 import sys
 
 import guild.cli
-import guild.cmd_support
-# Avoid expensive imports here
-
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "sync", "synchronize with package sources",
-        """Synchronizes with configured package sources.
-
-        When searching or installing packages, Guild uses locally
-        cached source data. Use sync to ensure package data is
-        up-to-date before running search or install.
-        """)
-    p.set_defaults(func=main)
+import guild.git
+import guild.user
 
 def main(_args):
-    import guild.git
-    import guild.user
-
     current_sources = guild.user.read_config("package-sources", [])
     for source in current_sources:
         _sync_source(source)

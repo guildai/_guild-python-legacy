@@ -402,6 +402,7 @@ py_library(
     name = "source_cmd_support",
     srcs = ["source_cmd_support.py"],
     deps = [
+        ":cli",
         ":source",
     ]
 )

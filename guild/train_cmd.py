@@ -1,24 +1,16 @@
 import os
 
 import guild.cmd_support
-# Avoid expensive imports here
+import guild.op
+import guild.project_util
 
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "train", "train a model",
-        """Trains a model.""")
-    p.add_argument(
-        "model",
-        metavar="MODEL",
-        nargs="?",
-        help="model to train")
-    guild.cmd_support.add_project_arguments(p, flag_support=True)
-    p.add_argument(
-        "--preview",
-        action="store_true",
-        help="print train details but do not train")
-    p.set_defaults(func=main)
+import guild.tasks.log_flags
+import guild.tasks.log_system_attrs
+import guild.tasks.snapshot_project
+import guild.tasks.tensorflow_events
+import guild.tasks.op_stats
+import guild.tasks.sys_stats
+import guild.tasks.gpu_stats
 
 def main(args):
     op = _train_op(args)
@@ -28,8 +20,6 @@ def main(args):
         _train(op)
 
 def _train_op(args):
-    import guild.op
-
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
     model = guild.cmd_support.model_for_args(args, project)
     spec = model.attr("train")
@@ -50,7 +40,6 @@ def _not_trainable_error(model):
         % _maybe_model_name(model))
 
 def _rundir_pattern(model):
-    import guild.project_util
     runs_dir = guild.project_util.runs_dir_for_project(model.project)
     return os.path.join(runs_dir, "%(started)s-" + model.path[1])
 
@@ -60,14 +49,6 @@ def _meta(model):
     }
 
 def _tasks(model):
-    import guild.tasks.log_flags
-    import guild.tasks.log_system_attrs
-    import guild.tasks.snapshot_project
-    import guild.tasks.tensorflow_events
-    import guild.tasks.op_stats
-    import guild.tasks.sys_stats
-    import guild.tasks.gpu_stats
-
     return [
         (guild.tasks.log_flags.start, [model.all_flags()]),
         (guild.tasks.log_system_attrs.start, []),

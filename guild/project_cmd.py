@@ -2,37 +2,9 @@ import json
 import sys
 
 import guild.cmd_support
-# Avoid expensive imports here
+import guild.view
 
-def add_parser(subparsers):
-    p = guild.cmd_support.add_parser(
-        subparsers,
-        "project", "print project information",
-        """With no arguments, prints a project.
-
-        By default, projects are printed in YAML format. You may
-        alternatively print them in JSON format by specifying the
-        --json option.
-
-        To print a fully resolved project (useful for debugging Guild
-        View issues) use the --resolve option.
-        """)
-    p.add_argument(
-        "types",
-        nargs="*",
-        metavar="TYPE",
-        help=("print the specified type (e.g. models, profiles, "
-              "resources, etc.)"))
-    guild.cmd_support.add_project_arguments(p)
-    p.add_argument(
-        "--json",
-        help="print project in JSON format (default format is YAML)",
-        action="store_true")
-    p.add_argument(
-        "--resolve",
-        help="fully resolve extends references and includes",
-        action="store_true")
-    p.set_defaults(func=main)
+import yaml
 
 def main(args):
     project = guild.cmd_support.project_for_args(args, use_plugins=True)
@@ -42,8 +14,6 @@ def main(args):
         _print_project(project, args)
 
 def _print_resolved_project(project, args):
-    import guild.view
-
     view = guild.view.ProjectView(project, {})
     resolved = view.resolved_project()
     _print_project(resolved, args)
@@ -73,7 +43,6 @@ def _print_project_json(project):
             separators=(',', ': ')))
 
 def _print_project_yaml(project):
-    import yaml
     sys.stdout.write(
         yaml.dump(
             project.data,
