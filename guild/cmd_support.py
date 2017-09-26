@@ -76,9 +76,9 @@ def _no_such_dir_error(dir):
 
 def project_dir_desc(d):
     if d == ".":
-        return "This directory"
+        return "the current directory"
     else:
-        return "Directory '%s'" % d
+        return "'%s'" % d
 
 def _project_dir_opt(d):
     if d == ".":
