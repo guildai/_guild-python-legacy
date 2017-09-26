@@ -378,6 +378,24 @@ def sources(**kw):
 cli.add_command(sources)
 
 ###################################################################
+# Sync command
+###################################################################
+
+@click.command(short_help="Synchronize with package sources.")
+
+def sync(**kw):
+    """Synchronizes with configured package sources.
+
+    When searching or installing packages, Guild uses locally
+    cached source data. Use sync to ensure package data is
+    up-to-date before running search or install.
+    """
+    import guild.sync_cmd
+    guild.sync_cmd.main(Args(kw))
+
+cli.add_command(sync)
+
+###################################################################
 # Train command
 ###################################################################
 
