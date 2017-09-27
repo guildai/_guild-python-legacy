@@ -19,7 +19,7 @@ def _multiple_matches_error(spec, pkgs):
         % (spec, _multiple_matches_list(pkgs)))
 
 def _multiple_matches_list(pkgs):
-    return ", ".join(["%s:%s" % (pkg.repo, pkg.name) for pkg in pkgs])
+    return ", ".join([pkg.key for pkg in pkgs])
 
 def resolve_all_packages(specs):
     try:

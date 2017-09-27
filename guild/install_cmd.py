@@ -5,19 +5,20 @@ import guild.source_cmd_support
 
 def main(args):
     pkgs = guild.source_cmd_support.resolve_all_packages(args.packages)
-    _ensure_pkg_sources(pkgs)
+    _install_packages(pkgs)
 
-def _ensure_pkg_sources(pkgs):
+def _install_packages(pkgs):
     for pkg in pkgs:
-        try:
-            guild.source.ensure_pkg_sources(pkg)
-        except guild.source.ValidationError as e:
-            guild.cli.error(e.args[0])
-        except guild.source.MissingSourcesError:
-            sys.stderr.write(
-                "%s:%s is not configured with sources, skipping\n"
-                % (pkg.repo, pkg.name))
-        except guild.source.AlreadyInstalled:
-            sys.stdout.write(
-                "%s:%s is already installed\n"
-                % (pkg.repo, pkg.name))
+        _install_package(pkg)
+
+def _install_package(pkg):
+    try:
+        guild.source.install_pkg(pkg)
+    except guild.source.MissingSourcesError:
+        guild.cli.out(
+            "%s is not configured with sources, skipping"
+            % pkg.key, err=True)
+    except guild.source.AlreadyInstalled:
+        guild.cli.out(
+            "%s is already installed"
+            % pkg.key, err=True)

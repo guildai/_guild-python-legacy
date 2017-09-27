@@ -12,7 +12,15 @@ def main(args):
         _train(op)
 
 def _train_op(args):
-    project = guild.cmd_support.project_for_args(args, use_plugins=True)
+    project = guild.cmd_support.project_for_args(
+        args,
+        use_plugins=True,
+        required=False)
+    if project is None:
+        project = _try_installed_model(args)
+        if project is None:
+            _no_project_or_model_error(args)
+    _log_project_found(project)
     model = guild.cmd_support.model_for_args(args, project)
     spec = model.attr("train")
     if not spec:
@@ -24,6 +32,22 @@ def _train_op(args):
         opdir_pattern=_rundir_pattern(model),
         meta=_meta(model),
         tasks=_tasks(model))
+
+def _try_installed_model(args):
+    if not args.model:
+        return None
+    guild.cli.error("TODO: find installed model matching %s" % args.model)
+
+def _no_project_or_model_error(args):
+    guild.cli.error(
+        "%s does not appear to be a Guild project\n"
+        "Try a different directory or specify an installed model to train."
+        % guild.cmd_support.project_dir_desc(args.project_dir))
+
+def _log_project_found(project):
+    guild.cli.out(
+        "Using project in %s"
+        % guild.cmd_support.project_dir_desc(project.dir))
 
 def _not_trainable_error(model):
     guild.cli.error(

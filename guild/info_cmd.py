@@ -5,7 +5,7 @@ def main(args):
     _print_pkg_info(pkg)
 
 def _print_pkg_info(pkg):
-    print("Package: %s:%s" % (pkg.repo, pkg.name))
+    print("Package: %s" % pkg.key)
     print("Version: %s" % pkg.version)
     print("Description: %s" % pkg.description)
     print("Tags: %s" % ", ".join(pkg.tags))

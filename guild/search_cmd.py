@@ -74,4 +74,4 @@ def _match(args, index):
         return index.matches_any(args.terms)
 
 def _print_pkg(pkg):
-    print("%s:%s\t%s" % (pkg.repo, pkg.name, pkg.description))
+    print("%s\t%s" % (pkg.key, pkg.description))

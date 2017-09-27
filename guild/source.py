@@ -7,6 +7,34 @@ import guild.log
 import guild.user
 import guild.util
 
+class NoSuchPackageError(Exception):
+
+    def __init__(self, spec):
+        super(NoSuchPackageError, self).__init__(self)
+        self.spec = spec
+
+class MultiplePackagesError(Exception):
+
+    def __init__(self, spec, pkgs):
+        super(MultiplePackagesError, self).__init__(spec, pkgs)
+        self.spec = spec
+        self.pkgs = pkgs
+
+class ValidationError(Exception):
+
+    def __init__(self, msg):
+        super(ValidationError, self).__init__(msg)
+
+class MissingSourcesError(Exception):
+
+    def __init__(self, pkg):
+        super(MissingSourcesError, self).__init__(pkg)
+
+class AlreadyInstalled(Exception):
+
+    def __init__(self, src):
+        super(AlreadyInstalled, self).__init__(src)
+
 class Pkg(object):
 
     def __init__(self, pkg_path):
@@ -17,6 +45,10 @@ class Pkg(object):
     @property
     def name(self):
         return self.data.get("name")
+
+    @property
+    def key(self):
+        return "%s:%s" % (self.repo, self.name)
 
     @property
     def tags(self):
@@ -64,19 +96,6 @@ def compare_versions(v1, v2):
     else:
         return cmp(sv1, sv2)
 
-class NoSuchPackageError(Exception):
-
-    def __init__(self, spec):
-        super(NoSuchPackageError, self).__init__(self)
-        self.spec = spec
-
-class MultiplePackagesError(Exception):
-
-    def __init__(self, spec, pkgs):
-        super(MultiplePackagesError, self).__init__(spec, pkgs)
-        self.spec = spec
-        self.pkgs = pkgs
-
 def resolve_one_package(spec):
     all_matches = _find_packages(spec)
     pkgs = _remove_outdated_packages(all_matches)
@@ -106,13 +125,12 @@ def _packages_for_name(name):
 def _remove_outdated_packages(pkgs):
     current = {}
     for pkg in pkgs:
-        key = "%s:%s" % (pkg.repo, pkg.name)
         try:
-            pkg0 = current[key]
+            pkg0 = current[pkg.key]
         except KeyError:
-            current[key] = pkg
+            current[pkg.key] = pkg
         else:
-            current[key] = _latest_package(pkg0, pkg)
+            current[pkg.key] = _latest_package(pkg0, pkg)
     return current.values()
 
 def _latest_package(p1, p2):
@@ -121,21 +139,17 @@ def _latest_package(p1, p2):
 def resolve_all_packages(specs):
     return [resolve_one_package(spec) for spec in specs]
 
-class MissingSourcesError(Exception):
-
-    def __init__(self, pkg):
-        super(MissingSourcesError, self).__init__(pkg)
+def install_pkg(pkg):
+    if not pkg.sources:
+        raise MissingSourcesError(pkg)
+    tmp = guild
+    print("TODO: install %s" % pkg.key)
 
 def ensure_pkg_sources(pkg):
     if not pkg.sources:
         raise MissingSourcesError(pkg)
     for src in pkg.sources:
         _ensure_source(src)
-
-class AlreadyInstalled(Exception):
-
-    def __init__(self, src):
-        super(AlreadyInstalled, self).__init__(src)
 
 def _ensure_source(src):
     local_path = _cache_path_for_source(src)
@@ -163,11 +177,6 @@ def _get_source(src, dest_dir):
             guild.log.exception("wget: %s" % url)
         else:
             break
-
-class ValidationError(Exception):
-
-    def __init__(self, msg):
-        super(ValidationError, self).__init__(msg)
 
 def _validate_source(src, local_path):
     files = os.listdir(local_path)

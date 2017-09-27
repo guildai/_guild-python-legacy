@@ -5,6 +5,17 @@ sh_binary(
     srcs = ["//scripts:guild-exe"],
     data = [
         ":guild_main",
+    ],
+    deps = [
+        ":gpkg"
+    ]
+)
+
+sh_binary(
+    name = "gpkg",
+    srcs = ["//scripts:gpkg-exe"],
+    data = [
+        ":gpkg_main",
     ]
 )
 
@@ -12,20 +23,28 @@ py_library(
     name = "guild_main",
     srcs = ["guild_main.py"],
     deps = [
+        "@org_click",
         ":check_cmd",
         ":evaluate_cmd",
-        ":info_cmd",
-        ":install_cmd",
         ":prepare_cmd",
         ":project_cmd",
         ":query_cmd",
         ":runs_cmd",
+        ":train_cmd",
+        ":view_cmd",
+    ]
+)
+
+py_library(
+    name = "gpkg_main",
+    srcs = ["gpkg_main.py"],
+    deps = [
+        "@org_click",
+        ":info_cmd",
+        ":install_cmd",
         ":search_cmd",
         ":sources_cmd",
         ":sync_cmd",
-        ":train_cmd",
-        ":view_cmd",
-        "@org_click",
     ]
 )
 
